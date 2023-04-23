@@ -46,6 +46,64 @@ namespace probe::util::registry
         return to_utf8(value);
     }
 
+    int RegistryListener::listen(const std::any& obj, const std::function<void(const std::any&)>& callback)
+    {
+        const auto& [key, subkey] = std::any_cast<std::pair<HKEY, std::string>>(obj);
+
+        if(::RegOpenKeyEx(key, to_utf16(subkey).c_str(), 0, KEY_NOTIFY, &key_) != ERROR_SUCCESS) {
+            return -1;
+        }
+
+        if((STOP_EVENT = ::CreateEvent(nullptr, TRUE, FALSE, L"Registry Stop Event")) == nullptr) {
+            return -1;
+        }
+
+        if((NOTIFY_EVENT = ::CreateEvent(nullptr, FALSE, FALSE, L"Registry Notify Evnent")) == nullptr) {
+            return -1;
+        }
+
+        running_ = true;
+        thread_  = std::thread([=]() {
+            thread_set_name("listen-" + subkey);
+
+            const HANDLE events[] = { STOP_EVENT, NOTIFY_EVENT };
+
+            while(running_) {
+                if(::RegNotifyChangeKeyValue(key_, TRUE, REG_LEGAL_CHANGE_FILTER, NOTIFY_EVENT, TRUE) !=
+                   ERROR_SUCCESS) {
+                    ::SetEvent(STOP_EVENT);
+                }
+
+                switch(::WaitForMultipleObjects(2, events, false, INFINITE)) {
+                case WAIT_OBJECT_0 + 0: // STOP_EVENT
+                    running_ = false;
+                    break;
+
+                case WAIT_OBJECT_0 + 1: // NOTIFY_EVENT
+                    callback(key_);
+                    break;
+
+                default: break;
+                }
+            }
+        });
+
+        return 0;
+    }
+
+    void RegistryListener::stop()
+    {
+        auto expected = true;
+        if(running_.compare_exchange_strong(expected, false)) {
+            ::SetEvent(STOP_EVENT);
+
+            if(thread_.joinable()) thread_.join();
+
+            ::CloseHandle(NOTIFY_EVENT);
+            ::CloseHandle(STOP_EVENT);
+            ::RegCloseKey(key_);
+        }
+    }
 } // namespace probe::util::registry
 
 namespace probe::util

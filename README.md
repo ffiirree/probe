@@ -117,3 +117,25 @@ Operating System:
 | size           | &#10004; | &#10004; | 1568 x 995                               |
 | navtive handle | &#10004; | &#10004; | 132198                                   |
 | visible        | &#10004; | &#10004; | true / false                             |
+
+
+### Utils
+
+| functions       | Windows  | Linux    | commments     |
+| --------------- | -------- | -------- | ------------- |
+| thread_set_name | &#10004; | &#10004; |               |
+| thread_get_name | &#10004; | &#10004; |               |
+| to_utf8         | &#10004; |          | wchar -> utf8 |
+| to_utf16        | &#10004; |          | utf8 -> wchar |
+
+#### Windows
+
+| functions / classes        | commments                                    |
+| -------------------------- | -------------------------------------------- |
+| registry::read             | read the value of the registry key           |
+| registry::RegistryListener | listen the change events of the registry key |
+
+#### Linux
+
+| functions | commments |
+| --------- | --------- |

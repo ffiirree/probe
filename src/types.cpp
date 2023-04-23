@@ -4,27 +4,27 @@ namespace probe
 {
     static uint64_t numeric_combined(uint32_t h, uint32_t l) { return static_cast<uint64_t>(h) << 32 | l; }
 
-    bool version_t::operator>=(const version_t& r) const
+    bool operator>=(const version_t& l, const version_t& r)
     {
-        if(numeric_combined(major, minor) > numeric_combined(r.major, r.minor)) return true;
+        if(numeric_combined(l.major, l.minor) > numeric_combined(r.major, r.minor)) return true;
 
-        if(numeric_combined(major, minor) < numeric_combined(r.major, r.minor)) return false;
+        if(numeric_combined(l.major, l.minor) < numeric_combined(r.major, r.minor)) return false;
 
-        return numeric_combined(patch, build) >= numeric_combined(r.patch, r.build);
+        return numeric_combined(l.patch, l.build) >= numeric_combined(r.patch, r.build);
     }
 
-    bool version_t::operator<=(const version_t& r) const
+    bool operator<=(const version_t& l, const version_t& r)
     {
-        if(numeric_combined(major, minor) > numeric_combined(r.major, r.minor)) return false;
+        if(numeric_combined(l.major, l.minor) > numeric_combined(r.major, r.minor)) return false;
 
-        if(numeric_combined(major, minor) < numeric_combined(r.major, r.minor)) return true;
+        if(numeric_combined(l.major, l.minor) < numeric_combined(r.major, r.minor)) return true;
 
-        return numeric_combined(patch, build) <= numeric_combined(r.patch, r.build);
+        return numeric_combined(l.patch, l.build) <= numeric_combined(r.patch, r.build);
     }
 
-    bool version_t::operator==(const version_t& r) const
+    bool operator==(const version_t& l, const version_t& r)
     {
-        return major == r.major && minor == r.minor && patch == r.patch && build == r.build;
+        return l.major == r.major && l.minor == r.minor && l.patch == r.patch && l.build == r.build;
     }
 
     template<> vendor_t vendor_cast(uint32_t id)

@@ -3,6 +3,8 @@
 
 #include "probe/dllport.h"
 
+#include <any>
+#include <functional>
 #include <string>
 
 namespace probe
@@ -15,11 +17,11 @@ namespace probe
         uint32_t build{};
 
         std::string codename{};
-
-        bool operator>=(const version_t&) const;
-        bool operator<=(const version_t&) const;
-        bool operator==(const version_t&) const;
     };
+
+    PROBE_API bool operator>=(const version_t&, const version_t&);
+    PROBE_API bool operator<=(const version_t&, const version_t&);
+    PROBE_API bool operator==(const version_t&, const version_t&);
 
     enum class vendor_t
     {
@@ -44,6 +46,25 @@ namespace probe
     template<> PROBE_API vendor_t vendor_cast(std::string_view name);
 
     PROBE_API std::string to_string(version_t);
+} // namespace probe
+
+// listener interface
+namespace probe
+{
+    class PROBE_API Listener
+    {
+    public:
+        Listener()                           = default;
+        Listener(const Listener&)            = delete;
+        Listener& operator=(const Listener&) = delete;
+        Listener(Listener&&)                 = delete;
+        Listener& operator=(Listener&&)      = delete;
+        virtual ~Listener()                  = default;
+
+        virtual int listen(const std::any&, const std::function<void(const std::any&)>&) = 0;
+
+        virtual void stop() = 0;
+    };
 } // namespace probe
 
 #ifdef _WIN32

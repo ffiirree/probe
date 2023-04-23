@@ -47,7 +47,7 @@ target_link_libraries(${PROJECT_NAME}
         $<$<PLATFORM_ID:Windows>:dwmapi>
         $<$<PLATFORM_ID:Windows>:strmiids>
         $<$<PLATFORM_ID:Windows>:ntdll>
-        $<$<PLATFORM_ID:Windows>:Shcore> 
+        $<$<PLATFORM_ID:Windows>:Shcore>
         $<$<PLATFORM_ID:Windows>:DXGI>
         $<$<PLATFORM_ID:Windows>:D3D11>
         $<$<PLATFORM_ID:Linux>:pthread>
@@ -72,7 +72,7 @@ if(BUILD_SHARED_LIBS)
 endif()
 
 if(PROBE_EXAMPLES)
-    foreach(example cpu;graphics;system)
+    foreach(example cpu;graphics;system;util)
         add_executable(probe_${example} examples/${example}.cpp)
         target_link_libraries(probe_${example} PUBLIC probe::probe)
 

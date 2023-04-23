@@ -1,14 +1,17 @@
 #ifndef PROBE_UTIL_H
 #define PROBE_UTIL_H
 
+#include <atomic>
 #include <optional>
 #include <string>
+#include <thread>
 
 #ifdef _WIN32
 #include <Windows.h>
 #endif
 
 #include "probe/dllport.h"
+#include "probe/types.h"
 
 namespace probe::util
 {
@@ -38,6 +41,22 @@ namespace probe::util::registry
     PROBE_API std::optional<std::string> read<std::string>(HKEY, const std::string&, const std::string&);
 
     template<> PROBE_API std::optional<DWORD> read<DWORD>(HKEY, const std::string&, const std::string&);
+
+    class RegistryListener : public Listener
+    {
+    public:
+        PROBE_API ~RegistryListener() override { stop(); }
+
+        PROBE_API int listen(const std::any&, const std::function<void(const std::any&)>&) override;
+        PROBE_API void stop() override;
+
+    private:
+        HKEY key_;
+        HANDLE STOP_EVENT{ nullptr };
+        HANDLE NOTIFY_EVENT{ nullptr };
+        std::thread thread_;
+        std::atomic<bool> running_{ false };
+    };
 } // namespace probe::util::registry
 #endif
 
