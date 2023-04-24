@@ -64,6 +64,8 @@ namespace probe
         virtual int listen(const std::any&, const std::function<void(const std::any&)>&) = 0;
 
         virtual void stop() = 0;
+
+        virtual bool running() = 0;
     };
 } // namespace probe
 

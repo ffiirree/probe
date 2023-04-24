@@ -130,12 +130,15 @@ Operating System:
 
 #### Windows
 
-| functions / classes        | commments                                    |
-| -------------------------- | -------------------------------------------- |
-| registry::read             | read the value of the registry key           |
-| registry::RegistryListener | listen the change events of the registry key |
+| functions / classes        | commments                                |
+| -------------------------- | ---------------------------------------- |
+| registry::read             | read value of the registry key           |
+| registry::RegistryListener | listen change events of the registry key |
 
 #### Linux
 
-| functions | commments |
-| --------- | --------- |
+| functions    | commments                                                      |
+| ------------ | -------------------------------------------------------------- |
+| exec_sync    | execute a commond and return the standard output               |
+| pipe_open    | execute a commond and redirect the standard output to the pipe |
+| PipeListener | listen the pipe of the the executed commond                    |

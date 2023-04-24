@@ -49,6 +49,7 @@ namespace probe::util::registry
 
         PROBE_API int listen(const std::any&, const std::function<void(const std::any&)>&) override;
         PROBE_API void stop() override;
+        PROBE_API bool running() override { return running_; }
 
     private:
         HKEY key_;
@@ -64,7 +65,23 @@ namespace probe::util::registry
 #ifdef __linux__
 namespace probe::util
 {
-    PROBE_API std::optional<std::string> exec(const char *);
+    PROBE_API std::pair<FILE *, pid_t> pipe_open(std::vector<const char *>);
+    PROBE_API void pipe_close(std::pair<FILE *, pid_t>);
+
+    PROBE_API std::optional<std::string> exec_sync(const std::vector<const char *>&);
+
+    class PipeListener : public Listener
+    {
+    public:
+        PROBE_API int listen(const std::any&, const std::function<void(const std::any&)>&) override;
+        PROBE_API void stop() override;
+        PROBE_API bool running() override { return running_; }
+
+    private:
+        std::pair<FILE *, pid_t> pipe_{};
+        std::thread thread_;
+        std::atomic<bool> running_{ false };
+    };
 } // namespace probe::util
 #endif
 #endif //! PROBE_UTIL_H

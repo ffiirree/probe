@@ -43,8 +43,9 @@ namespace probe::system
     {
         if(desktop() == desktop_t::GNOME || desktop() == desktop_t::Unity) {
 
-            auto color_scheme =
-                probe::util::exec("gsettings get org.gnome.desktop.interface color-scheme").value_or("");
+            auto color_scheme = probe::util::exec_sync(
+                                    { "gsettings", "get", "org.gnome.desktop.interface", "color-scheme" })
+                                    .value_or("");
             if(!color_scheme.empty()) {
                 if(color_scheme.find("dark") != std::string::npos) {
                     return theme_t::dark;
@@ -55,7 +56,8 @@ namespace probe::system
             }
 
             auto gtk_theme =
-                probe::util::exec("gsettings get org.gnome.desktop.interface gtk-theme").value_or("");
+                probe::util::exec_sync({ "gsettings", "get", "org.gnome.desktop.interface", "gtk-scheme" })
+                    .value_or("");
             if(!gtk_theme.empty()) {
                 if(gtk_theme.find("dark") != std::string::npos) {
                     return theme_t::dark;
