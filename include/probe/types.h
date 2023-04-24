@@ -23,6 +23,14 @@ namespace probe
     PROBE_API bool operator<=(const version_t&, const version_t&);
     PROBE_API bool operator==(const version_t&, const version_t&);
 
+    // version pattern
+    // major.minor.path.build or major.minor.path-build
+    inline constexpr char verion_regex[] =
+        "(?:[^\\.]*[^\\d\\.]{1})*(\\d+)\\.(\\d+)(?:\\.(\\d+))?(?:[\\.-]{1}(\\d+))?(?:[^\\d\\.]{1}[^\\.]*)*";
+
+    // use above version_regex to parse version string
+    PROBE_API version_t to_version(const std::string&);
+
     enum class vendor_t
     {
         unknown   = 0x0000,
@@ -43,7 +51,7 @@ namespace probe
     template<> PROBE_API std::string vendor_cast(vendor_t);
 
     // gausses what vendor_t the string is
-    template<> PROBE_API vendor_t vendor_cast(std::string_view name);
+    template<> PROBE_API vendor_t vendor_cast(const std::string& name);
 
     PROBE_API std::string to_string(version_t);
 } // namespace probe

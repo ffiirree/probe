@@ -13,7 +13,8 @@ int main()
               << "    Kernel           : " << kernel.name << '\n'
               << "    Kernel Version   : " << probe::to_string(kernel.version) << '\n'
               << "    Theme            : " << probe::to_string(os.theme) << '\n'
-              << "    Desktop ENV      : " << probe::to_string(probe::system::desktop()) << '\n';
+              << "    Desktop ENV      : " << probe::to_string(probe::system::desktop()) << " ("
+              << probe::to_string(probe::system::desktop_version(probe::system::desktop())) << ")\n";
 
     return 0;
 }

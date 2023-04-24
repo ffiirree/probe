@@ -10,6 +10,8 @@ namespace probe::system
 
     desktop_t desktop() { return desktop_t::Windows; }
 
+    version_t desktop_version(desktop_t) { return os_version(); }
+
     theme_t theme()
     {
         if(os_version() >= probe::WIN_10_1ST) {

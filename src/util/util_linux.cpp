@@ -3,6 +3,7 @@
 #include "probe/util.h"
 
 #include <chrono>
+#include <cstring>
 #include <pthread.h>
 #include <signal.h>
 #include <stdio.h>
@@ -51,25 +52,46 @@ namespace probe::util
 
     void pipe_close(std::pair<FILE *, pid_t> pp)
     {
-        ::kill(pp.second, SIGTERM);
-        ::fclose(pp.first);
+        if(pp.second > 0) {
+            ::kill(pp.second, SIGTERM);
+        }
+
+        if(pp.first) {
+            ::fclose(pp.first);
+        }
     }
 
-    std::optional<std::string> exec_sync(const std::vector<const char *>& cmd)
+    std::vector<std::string> exec_sync(const std::vector<const char *>& cmd)
     {
-        char buffer[128];
-        std::string result{};
+        char buffer[4096];
+        std::vector<std::string> ret{};
 
         auto pp = pipe_open(cmd);
 
-        if(!pp.first) return std::nullopt;
+        if(!pp.first) return ret;
 
         while(::fgets(buffer, sizeof(buffer), pp.first) != nullptr) {
-            result += buffer;
+            if(buffer[std::strlen(buffer) - 1] == '\n') buffer[std::strlen(buffer) - 1] = '\0';
+            ret.emplace_back(buffer);
         }
 
         pipe_close(pp);
-        return result;
+        return ret;
+    }
+
+    void exec_sync(const std::vector<const char *>& args,
+                   const std::function<bool(const std::string&)>& callback)
+    {
+        auto pp = pipe_open(args);
+        if(!pp.first) return;
+
+        char buffer[4096];
+        while(::fgets(buffer, sizeof(buffer), pp.first)) {
+            if(buffer[std::strlen(buffer) - 1] == '\n') buffer[std::strlen(buffer) - 1] = '\0';
+            if(!callback(buffer)) break;
+        }
+
+        pipe_close(pp);
     }
 } // namespace probe::util
 

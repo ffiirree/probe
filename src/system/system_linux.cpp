@@ -4,39 +4,39 @@
 #include "probe/util.h"
 
 #include <algorithm>
+#include <filesystem>
 #include <fstream>
+#include <regex>
 #include <sys/stat.h>
 #include <sys/utsname.h>
 #include <unordered_map>
 
+static probe::version_t gnome_version();
+
 namespace probe::system
 {
-    static version_t parse_version(const std::string& str)
-    {
-        version_t version{};
-
-        char *marker  = const_cast<char *>(&str[0]);
-        version.major = std::strtoul(marker, &marker, 10);
-        version.minor = std::strtoul(marker + 1, &marker, 10);
-        version.patch = std::strtoul(marker + 1, &marker, 10);
-        version.build = std::strtoul(marker + 1, nullptr, 10);
-        return version;
-    }
-
     desktop_t desktop()
     {
-        const char *de = std::getenv("XDG_CURRENT_DESKTOP");
+        const std::string de = std::getenv("XDG_CURRENT_DESKTOP");
         // GNOME
-        if(std::string_view(de).find("GNOME") != std::string::npos ||
-           std::string_view(de).find("gnome") != std::string::npos) {
+        if(std::regex_search(de, std::regex("gnome", std::regex_constants::icase))) {
             return desktop_t::GNOME;
         }
         // Unity
-        if(std::string_view(de).find("Unity") != std::string::npos ||
-           std::string_view(de).find("unity") != std::string::npos) {
+        if(std::regex_search(de, std::regex("unity", std::regex_constants::icase))) {
             return desktop_t::Unity;
         }
         return desktop_t::unknown;
+    }
+
+    version_t desktop_version(desktop_t de)
+    {
+        switch(de) {
+        case desktop_t::Unity:
+        case desktop_t::GNOME: return gnome_version();
+        // TODO:
+        default: return {};
+        }
     }
 
     theme_t theme()
@@ -44,25 +44,23 @@ namespace probe::system
         if(desktop() == desktop_t::GNOME || desktop() == desktop_t::Unity) {
 
             auto color_scheme = probe::util::exec_sync(
-                                    { "gsettings", "get", "org.gnome.desktop.interface", "color-scheme" })
-                                    .value_or("");
+                { "gsettings", "get", "org.gnome.desktop.interface", "color-scheme" });
             if(!color_scheme.empty()) {
-                if(color_scheme.find("dark") != std::string::npos) {
+                if(color_scheme[0].find("dark") != std::string::npos) {
                     return theme_t::dark;
                 }
-                if(color_scheme.find("light") != std::string::npos) {
+                if(color_scheme[0].find("light") != std::string::npos) {
                     return theme_t::light;
                 }
             }
 
             auto gtk_theme =
-                probe::util::exec_sync({ "gsettings", "get", "org.gnome.desktop.interface", "gtk-scheme" })
-                    .value_or("");
+                probe::util::exec_sync({ "gsettings", "get", "org.gnome.desktop.interface", "gtk-scheme" });
             if(!gtk_theme.empty()) {
-                if(gtk_theme.find("dark") != std::string::npos) {
+                if(gtk_theme[0].find("dark") != std::string::npos) {
                     return theme_t::dark;
                 }
-                if(gtk_theme.find("light") != std::string::npos) {
+                if(gtk_theme[0].find("light") != std::string::npos) {
                     return theme_t::light;
                 }
             }
@@ -81,7 +79,7 @@ namespace probe::system
             return {};
         }
 
-        return parse_version(uts.release);
+        return to_version(uts.release);
     }
 
     kernel_info_t kernel_info() { return { kernel_name(), kernel_version() }; }
@@ -106,38 +104,36 @@ namespace probe::system
         return kvs;
     }
 
-    static bool file_exists(const char *name)
-    {
-        struct stat buffer
-        {
-        };
-        return stat(name, &buffer) == 0;
-    }
-
     // https://gist.github.com/natefoo/814c5bf936922dad97ff
     version_t os_version()
     {
         version_t ver{};
-        if(file_exists("/etc/os-release")) {
+        if(std::filesystem::exists("/etc/os-release")) {
             std::ifstream release("/etc/os-release");
             if(release && release.is_open()) {
                 auto kvs = parse_kv(release);
 
-                if(auto version_id = kvs.find("VERSION_ID"); version_id != kvs.end()) {
-                    ver = parse_version(version_id->second);
+                // version
+                if(auto version = kvs.find("VERSION"); version != kvs.end()) {
+                    ver = to_version(version->second);
                 }
+                else if(auto version_id = kvs.find("VERSION_ID"); version_id != kvs.end()) {
+                    ver = to_version(version_id->second);
+                }
+
+                // codename
                 if(auto codename = kvs.find("VERSION_CODENAME"); codename != kvs.end()) {
                     ver.codename = codename->second;
                 }
             }
         }
-        else if(file_exists("/etc/lsb-release")) {
+        else if(std::filesystem::exists("/etc/lsb-release")) {
             std::ifstream release("/etc/os-release");
             if(release && release.is_open()) {
                 auto kvs = parse_kv(release);
 
                 if(auto version_id = kvs.find("DISTRIB_RELEASE"); version_id != kvs.end()) {
-                    ver = parse_version(version_id->second);
+                    ver = to_version(version_id->second);
                 }
 
                 if(auto codename = kvs.find("DISTRIB_CODENAME"); codename != kvs.end()) {
@@ -151,7 +147,7 @@ namespace probe::system
 
     std::string os_name()
     {
-        if(file_exists("/etc/os-release")) {
+        if(std::filesystem::exists("/etc/os-release")) {
             std::ifstream release("/etc/os-release");
             if(release && release.is_open()) {
                 auto kvs = parse_kv(release);
@@ -163,7 +159,7 @@ namespace probe::system
                 }
             }
         }
-        else if(file_exists("/etc/lsb-release")) {
+        else if(std::filesystem::exists("/etc/lsb-release")) {
             std::ifstream release("/etc/lsb-release");
             if(release && release.is_open()) {
                 auto kvs = parse_kv(release);
@@ -182,5 +178,53 @@ namespace probe::system
 
     os_info_t os_info() { return { os_name(), theme(), os_version() }; }
 } // namespace probe::system
+
+// GNOME 4 : gnome-shell
+// GNOME 3 : /usr/share/gnome/gnome-version.xml
+// GNOME 2 : /usr/share/gnome-about/gnome-version.xml
+static probe::version_t gnome_version()
+{
+    probe::version_t version{};
+    std::string filename{};
+
+    if(std::filesystem::exists("/usr/share/gnome/gnome-version.xml")) {
+        filename = "/usr/share/gnome/gnome-version.xml";
+    }
+    else if(std::filesystem::exists("/usr/share/gnome-about/gnome-version.xml")) {
+        filename = "/usr/share/gnome-about/gnome-version.xml";
+    }
+
+    if(!filename.empty()) {
+        std::ifstream verfile(filename);
+        if(verfile && verfile.is_open()) {
+            for(std::string line{}; std::getline(verfile, line);) {
+                std::smatch matchs;
+                if(std::regex_match(line, matchs, std::regex("[ \t]*<platform>(\\d+)</platform>\\s*"))) {
+                    if(matchs.size() == 2 && !matchs[1].str().empty()) {
+                        version.major = std::stoi(matchs[1].str());
+                    }
+                }
+                else if(std::regex_match(line, matchs, std::regex("[ \t]*<minor>(\\d+)</minor>\\s*"))) {
+                    if(matchs.size() == 2 && !matchs[1].str().empty()) {
+                        version.minor = std::stoi(matchs[1].str());
+                    }
+                }
+                else if(std::regex_match(line, matchs, std::regex("[ \t]*<micro>(\\d+)</micro>\\s*"))) {
+                    if(matchs.size() == 2 && !matchs[1].str().empty()) {
+                        version.patch = std::stoi(matchs[1].str());
+                    }
+                }
+            }
+        }
+    }
+    else {
+        auto ver = probe::util::exec_sync({ "gnome-shell", "--version" });
+        if(!ver.empty()) {
+            version = probe::to_version(ver[0]);
+        }
+    }
+
+    return version;
+}
 
 #endif // __linux__

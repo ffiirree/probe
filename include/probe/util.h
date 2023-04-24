@@ -68,7 +68,10 @@ namespace probe::util
     PROBE_API std::pair<FILE *, pid_t> pipe_open(std::vector<const char *>);
     PROBE_API void pipe_close(std::pair<FILE *, pid_t>);
 
-    PROBE_API std::optional<std::string> exec_sync(const std::vector<const char *>&);
+    PROBE_API std::vector<std::string> exec_sync(const std::vector<const char *>&);
+
+    PROBE_API void exec_sync(const std::vector<const char *>&,
+                             const std::function<bool(const std::string&)>&);
 
     class PipeListener : public Listener
     {
@@ -83,5 +86,23 @@ namespace probe::util
         std::atomic<bool> running_{ false };
     };
 } // namespace probe::util
+
+// GNOME: gsettings
+namespace probe::util::gsettings
+{
+    PROBE_API version_t version();
+
+    // list installed schemas
+    PROBE_API std::vector<std::string> list_schemas();
+
+    // list keys in a schema
+    PROBE_API std::vector<std::string> list_keys(const std::string&);
+
+    // wheather contains a schema
+    PROBE_API bool contains(const std::string&);
+
+    // wheather contains a key
+    PROBE_API bool contains(const std::string&, const std::string&);
+} // namespace probe::util::gsettings
 #endif
 #endif //! PROBE_UTIL_H

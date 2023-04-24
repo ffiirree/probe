@@ -29,9 +29,14 @@ int main()
         [](auto) { std::cout << " -- [" << probe::util::thread_get_name() << "] mode changed\n"; });
 
     std::cout << "\nlistening the dark/light mode change event..\n";
-    for(;listener.running();) {}
+    for(; listener.running();) {}
 
 #elif defined(__linux__)
+
+    std::cout << "gsettings contains 'org.gnome.desktop.interface': "
+              << probe::util::gsettings::contains("org.gnome.desktop.interface") << "\n";
+    std::cout << "gsettings contains 'org.gnome.desktop.interface' 'gtk-theme': "
+              << probe::util::gsettings::contains("org.gnome.desktop.interface", "gtk-theme") << "\n";
 
     // listen the theme change event
     probe::util::PipeListener listener;

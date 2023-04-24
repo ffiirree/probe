@@ -46,14 +46,15 @@ Operating System:
 
 ### System
 
-| properties          | Windows  | Linux           | commments             |
-| ------------------- | -------- | --------------- | --------------------- |
-| os name             | &#10004; | &#10004;        | Windows 11 Pro        |
-| os version          | &#10004; | &#10004;        | 10.0.25346.1001(22H2) |
-| kernel name         | &#10004; | &#10004;        | Windows NT            |
-| kernel version      | &#10004; | &#10004;        | 10.0.25346.1001       |
-| dark/light mode     | &#10004; | `Ubuntu 22.04`  | dark                  |
-| desktop environment | &#10004; | `GNOME`/`Unity` | GNOME                 |
+| properties          | Windows            | Linux           | commments             |
+| ------------------- | ------------------ | --------------- | --------------------- |
+| os name             | &#10004;           | &#10004;        | Windows 11 Pro        |
+| os version          | &#10004;           | &#10004;        | 10.0.25346.1001(22H2) |
+| kernel name         | &#10004;           | &#10004;        | Windows NT            |
+| kernel version      | &#10004;           | &#10004;        | 10.0.25346.1001       |
+| dark/light mode     | &#10004;           | `Ubuntu 22.04`  | dark                  |
+| desktop environment | `= Windows`        | `GNOME`/`Unity` | GNOME                 |
+| DE version          | same as os version | `GNOME`/`Unity` | GNOME (3.28.2.0)      |
 
 ### CPU
 
@@ -137,8 +138,9 @@ Operating System:
 
 #### Linux
 
-| functions    | commments                                                      |
-| ------------ | -------------------------------------------------------------- |
-| exec_sync    | execute a commond and return the standard output               |
-| pipe_open    | execute a commond and redirect the standard output to the pipe |
-| PipeListener | listen the pipe of the the executed commond                    |
+| functions           | commments                                                      |
+| ------------------- | -------------------------------------------------------------- |
+| exec_sync           | execute a commond and return the standard output               |
+| pipe_open           | execute a commond and redirect the standard output to the pipe |
+| PipeListener        | listen the pipe of the the executed commond                    |
+| gsettings functions | wrapper to gsettings commond                                   |

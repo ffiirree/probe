@@ -1,7 +1,25 @@
 #include "probe/types.h"
 
+#include <iostream>
+#include <regex>
+
 namespace probe
 {
+    version_t to_version(const std::string& str)
+    {
+        std::cout << str << "\n";
+        std::smatch matchs;
+        if(std::regex_match(str, matchs, std::regex(verion_regex))) {
+            return {
+                matchs[1].str().empty() ? 0 : static_cast<uint32_t>(std::stoul(matchs[1].str())),
+                matchs[2].str().empty() ? 0 : static_cast<uint32_t>(std::stoul(matchs[2].str())),
+                matchs[3].str().empty() ? 0 : static_cast<uint32_t>(std::stoul(matchs[3].str())),
+                matchs[4].str().empty() ? 0 : static_cast<uint32_t>(std::stoul(matchs[4].str())),
+            };
+        }
+        return {};
+    }
+
     static uint64_t numeric_combined(uint32_t h, uint32_t l) { return static_cast<uint64_t>(h) << 32 | l; }
 
     bool operator>=(const version_t& l, const version_t& r)
@@ -43,28 +61,35 @@ namespace probe
 
     template<> std::string vendor_cast(vendor_t vendor)
     {
+        // clang-format off
         switch(vendor) {
-        case vendor_t::NVIDIA: return "NVIDIA Corporation";
-        case vendor_t::Intel: return "Intel Corporation";
-        case vendor_t::Microsoft: return "Microsoft Corporation";
-        case vendor_t::Qualcomm: return "Qualcomm Technologies";
-        case vendor_t::AMD: return "Advanced Micro Devices, Inc.";
-        case vendor_t::Apple: return "Apple Inc.";
+        case vendor_t::NVIDIA:          return "NVIDIA Corporation";
+        case vendor_t::Intel:           return "Intel Corporation";
+        case vendor_t::Microsoft:       return "Microsoft Corporation";
+        case vendor_t::Qualcomm:        return "Qualcomm Technologies";
+        case vendor_t::AMD:             return "Advanced Micro Devices, Inc.";
+        case vendor_t::Apple:           return "Apple Inc.";
         case vendor_t::unknown:
-        default: return "unknown";
+        default:                        return "unknown";
         }
+        // clang-format on
     }
 
-    template<> vendor_t vendor_cast(std::string_view name)
+    template<> vendor_t vendor_cast(const std::string& name)
     {
-        if(name.find("NVIDIA") != std::string::npos) return vendor_t::NVIDIA;
-        if(name.find("Intel") != std::string::npos) return vendor_t::Intel;
-        if(name.find("Microsoft") != std::string::npos) return vendor_t::Microsoft;
-        if(name.find("Qualcomm") != std::string::npos) return vendor_t::Qualcomm;
-        if(name.find("AMD") != std::string::npos ||
-           name.find("Advanced Micro Devices") != std::string::npos)
+        if(std::regex_search(name, std::regex("NVIDIA", std::regex_constants::icase)))
+            return vendor_t::NVIDIA;
+        if(std::regex_search(name, std::regex("Intel", std::regex_constants::icase)))
+            return vendor_t::Intel;
+        if(std::regex_search(name, std::regex("Microsoft", std::regex_constants::icase)))
+            return vendor_t::Microsoft;
+        if(std::regex_search(name, std::regex("Qualcomm", std::regex_constants::icase)))
+            return vendor_t::Qualcomm;
+        if(std::regex_search(name, std::regex("AMD", std::regex_constants::icase)) ||
+           std::regex_search(name, std::regex("Advanced Micro Devices", std::regex_constants::icase)))
             return vendor_t::AMD;
-        if(name.find("Apple") != std::string::npos) return vendor_t::Apple;
+        if(std::regex_search(name, std::regex("Apple", std::regex_constants::icase)))
+            return vendor_t::Apple;
 
         return vendor_t::unknown;
     }
@@ -75,7 +100,7 @@ namespace probe
         std::string vstr = std::to_string(ver.major) + "." + std::to_string(ver.minor) + "." +
                            std::to_string(ver.patch) + "." + std::to_string(ver.build);
         if(!ver.codename.empty()) {
-            vstr += "(" + ver.codename + ")";
+            vstr += " (" + ver.codename + ")";
         }
         return vstr;
     }
