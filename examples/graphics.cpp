@@ -1,5 +1,6 @@
 #include "probe/graphics.h"
 
+#include <array>
 #include <cmath>
 #include <iomanip>
 #include <iostream>
@@ -25,14 +26,25 @@ int main()
               << "\n\n";
     for(const auto& display : displays) {
         std::cout << "    Name             : " << display.name << '\n'
+#ifdef _WIN32
                   << "    ID               : " << display.id << '\n'
+                  << "    Driver           : " << display.driver << '\n'
+#endif
                   << "    Primary          : " << display.primary << '\n'
                   << "    Geometry         : " << probe::to_string(display.geometry) << '\n'
                   << "    Frequency        : " << display.frequency << " Hz\n"
                   << "    BPP              : " << display.bpp << '\n'
                   << "    Logical DPI      : " << display.dpi << " dpi\n"
                   << "    Scale            : " << std::lround(display.scale * 100) << " %\n"
-                  << "    Orientation      : " << probe::to_string(display.orientation) << "\n\n";
+                  << "    Orientation      : " << probe::to_string(display.orientation) << "\n";
+
+        probe::graphics::edid_t edid;
+        if(!probe::graphics::parse_edid(probe::graphics::edid_of(display.name, display.driver), &edid)) {
+            std::cout << "    Phsical HSize    : " << edid.hsize << " cm\n"
+                      << "    Phsical VSize    : " << edid.vsize << " cm\n"
+                      << "    Phsical DPI      : " << (display.geometry.width * 2.54) / edid.hsize << " dpi\n";
+        }
+        std::cout << "\n";
     }
 
     auto gpus = probe::graphics::info();

@@ -10,22 +10,25 @@
 
 namespace probe::graphics
 {
-    static std::string display_name_of(WCHAR *device)
+    static std::pair<std::string, std::string> display_name_and_driver_of(WCHAR *device)
     {
         DISPLAY_DEVICE device_info{};
         device_info.cb = sizeof(DISPLAY_DEVICE);
 
         int monitor_idx = 0;
-        while(EnumDisplayDevices(device, monitor_idx, &device_info, 0)) {
+        while(::EnumDisplayDevices(device, monitor_idx, &device_info, 0)) {
             //
             if(device_info.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP) {
 
+                // example: L"MONITOR\\AOC2790\\{4d36e96e-e325-11ce-bfc1-08002be10318}\\0001"
+                //          - name:     AOC2790
+                //          - driver:   {4d36e96e-e325-11ce-bfc1-08002be10318}\\0001
                 auto device_id = probe::util::to_utf8(device_info.DeviceID);
 
                 auto _1 = device_id.find_first_of("\\");
                 auto _2 = device_id.find_first_of("\\", _1 + 1);
 
-                return device_id.substr(_1 + 1, _2 - _1 - 1);
+                return std::pair{ device_id.substr(_1 + 1, _2 - _1 - 1), device_id.substr(_2 + 1) };
             }
             ++monitor_idx;
         }
@@ -103,23 +106,26 @@ namespace probe::graphics
 
                     if(::EnumDisplaySettings(info.szDevice, ENUM_CURRENT_SETTINGS, &settings)) {
 
-                        display_name_of(info.szDevice);
+                        const auto [name, driver] = display_name_and_driver_of(info.szDevice);
                         ret->push_back(display_t{
-                            display_name_of(info.szDevice),
-                            probe::util::to_utf8(info.szDevice),
-                            geometry_t{
-                                settings.dmPosition.x,
-                                settings.dmPosition.y,
-                                settings.dmPelsWidth,
-                                settings.dmPelsHeight,
-                            },
-                            static_cast<double>(settings.dmDisplayFrequency),
-                            settings.dmBitsPerPel,
-                            retrieve_dpi_for_monitor(monitor),
-                            static_cast<orientation_t>(0x01 << settings.dmDisplayOrientation),
-                            (settings.dmPosition.x == 0) && (settings.dmPosition.y == 0),
-                            static_cast<float>(settings.dmPelsWidth) /
-                                (info.rcMonitor.right - info.rcMonitor.left),
+                            .name   = name,
+                            .id     = probe::util::to_utf8(info.szDevice),
+                            .driver = driver,
+                            .geometry =
+                                geometry_t{
+                                    settings.dmPosition.x,
+                                    settings.dmPosition.y,
+                                    settings.dmPelsWidth,
+                                    settings.dmPelsHeight,
+                                },
+                            .frequency = static_cast<double>(settings.dmDisplayFrequency),
+                            .bpp       = settings.dmBitsPerPel,
+                            .dpi       = retrieve_dpi_for_monitor(monitor),
+                            .orientation =
+                                static_cast<orientation_t>(0x01 << settings.dmDisplayOrientation),
+                            .primary = (settings.dmPosition.x == 0) && (settings.dmPosition.y == 0),
+                            .scale   = static_cast<float>(settings.dmPelsWidth) /
+                                     (info.rcMonitor.right - info.rcMonitor.left),
                         });
                     }
                 }

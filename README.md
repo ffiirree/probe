@@ -83,18 +83,20 @@ Operating System:
 
 #### Display Monitor
 
-| properties   |       Windows       |    Linux     | commments      |
-| ------------ | :-----------------: | :----------: | -------------- |
-| name         |      &#10004;       |   &#10004;   | "AOC2790"      |
-| id           |      &#10004;       | same as name | "\\.\DISPLAY1" |
-| primary      |      &#10004;       |   &#10004;   | true / false   |
-| position     |      &#10004;       |   &#10004;   | (-2560, -1440) |
-| resolution   |      &#10004;       |   &#10004;   | 2560 x 1440    |
-| refresh rate |      &#10004;       |   &#10004;   | 59.9 Hz        |
-| BPP          |      &#10004;       |   &#10004;   | 32             |
-| logical DPI  | `>=Windows 10 1607` |   &#10004;   | 96             |
-| scale factor |      &#10004;       |              | 125%           |
-| orientation  |      &#10004;       |   &#10004;   | Landscape      |
+| properties    |       Windows       |    Linux     | commments      |
+| ------------- | :-----------------: | :----------: | -------------- |
+| name          |      &#10004;       |   &#10004;   | "AOC2790"      |
+| id            |      &#10004;       | same as name | "\\.\DISPLAY1" |
+| primary       |      &#10004;       |   &#10004;   | true / false   |
+| position      |      &#10004;       |   &#10004;   | (-2560, -1440) |
+| resolution    |      &#10004;       |   &#10004;   | 2560 x 1440    |
+| refresh rate  |      &#10004;       |   &#10004;   | 59.9 Hz        |
+| BPP           |      &#10004;       |   &#10004;   | 32             |
+| logical DPI   | `>=Windows 10 1607` |   &#10004;   | 96             |
+| scale factor  |      &#10004;       |              | 125%           |
+| orientation   |      &#10004;       |   &#10004;   | Landscape      |
+| physical size |      &#10004;       |              | 60 x 34 cm     |
+| physical DPI  |      &#10004;       |              | 108            |
 
 ##### Virtual Screen
 
@@ -119,7 +121,6 @@ Operating System:
 | size           | &#10004; | &#10004; | 1568 x 995                               |
 | navtive handle | &#10004; | &#10004; | 132198                                   |
 | visible        | &#10004; | &#10004; | true / false                             |
-
 
 ### Utils
 

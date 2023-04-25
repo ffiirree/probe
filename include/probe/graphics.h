@@ -53,6 +53,10 @@ namespace probe::graphics
         std::string name;
         std::string id;
 
+#ifdef _WIN32
+        std::string driver; // for registry
+#endif
+
         geometry_t geometry;
         double frequency; // Hz
 
@@ -64,6 +68,32 @@ namespace probe::graphics
     };
 
     PROBE_API std::vector<display_t> displays();
+} // namespace probe::graphics
+
+// edid of display monitor
+namespace probe::graphics
+{
+    struct edid_t
+    {
+        std::string manufacturer;
+        uint16_t product_code;
+        uint32_t serial_number;
+
+        uint16_t year;
+        uint16_t week;
+
+        uint8_t version;
+        uint8_t revision;
+
+        uint16_t hsize; // centimetres
+        uint16_t vsize; // centimetres
+
+        double gamma;
+    };
+
+    PROBE_API std::array<char, 256> edid_of(const std::string&, const std::string& = {});
+
+    PROBE_API int parse_edid(const std::array<char, 256>&, edid_t *);
 } // namespace probe::graphics
 
 // windows
