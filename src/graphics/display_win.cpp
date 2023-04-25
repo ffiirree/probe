@@ -6,9 +6,33 @@
 
 #include <ShellScalingApi.h>
 #include <dwmapi.h>
+#include <regex>
 
 namespace probe::graphics
 {
+    static std::string display_name_of(WCHAR *device)
+    {
+        DISPLAY_DEVICE device_info{};
+        device_info.cb = sizeof(DISPLAY_DEVICE);
+
+        int monitor_idx = 0;
+        while(EnumDisplayDevices(device, monitor_idx, &device_info, 0)) {
+            //
+            if(device_info.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP) {
+
+                auto device_id = probe::util::to_utf8(device_info.DeviceID);
+
+                auto _1 = device_id.find_first_of("\\");
+                auto _2 = device_id.find_first_of("\\", _1 + 1);
+
+                return device_id.substr(_1 + 1, _2 - _1 - 1);
+            }
+            ++monitor_idx;
+        }
+
+        return {};
+    }
+
     // https://learn.microsoft.com/en-us/windows/win32/hidpi/setting-the-default-dpi-awareness-for-a-process
     // <  Windows 8.1       : GetDeviceCaps(hdc, LOGPIXELSX)
     // >= Windows 8.1       : GetDpiForMonitor(, MDT_EFFECTIVE_DPI, ,) with
@@ -79,7 +103,9 @@ namespace probe::graphics
 
                     if(::EnumDisplaySettings(info.szDevice, ENUM_CURRENT_SETTINGS, &settings)) {
 
+                        display_name_of(info.szDevice);
                         ret->push_back(display_t{
+                            display_name_of(info.szDevice),
                             probe::util::to_utf8(info.szDevice),
                             geometry_t{
                                 settings.dmPosition.x,

@@ -25,6 +25,7 @@ int main()
               << "\n\n";
     for(const auto& display : displays) {
         std::cout << "    Name             : " << display.name << '\n'
+                  << "    ID               : " << display.id << '\n'
                   << "    Primary          : " << display.primary << '\n'
                   << "    Geometry         : " << probe::to_string(display.geometry) << '\n'
                   << "    Frequency        : " << display.frequency << " Hz\n"

@@ -46,14 +46,14 @@ Operating System:
 
 ### System
 
-| properties          | Windows            | Linux           | commments             |
-| ------------------- | ------------------ | --------------- | --------------------- |
-| os name             | &#10004;           | &#10004;        | Windows 11 Pro        |
-| os version          | &#10004;           | &#10004;        | 10.0.25346.1001(22H2) |
-| kernel name         | &#10004;           | &#10004;        | Windows NT            |
-| kernel version      | &#10004;           | &#10004;        | 10.0.25346.1001       |
-| dark/light mode     | &#10004;           | `Ubuntu 22.04`  | dark                  |
-| desktop environment | `= Windows`        | `GNOME`/`Unity` | GNOME                 |
+| properties          |      Windows       |      Linux      | commments             |
+| ------------------- | :----------------: | :-------------: | --------------------- |
+| os name             |      &#10004;      |    &#10004;     | Windows 11 Pro        |
+| os version          |      &#10004;      |    &#10004;     | 10.0.25346.1001(22H2) |
+| kernel name         |      &#10004;      |    &#10004;     | Windows NT            |
+| kernel version      |      &#10004;      |    &#10004;     | 10.0.25346.1001       |
+| dark/light mode     |      &#10004;      | `Ubuntu 22.04`  | dark                  |
+| desktop environment |    `= Windows`     | `GNOME`/`Unity` | GNOME                 |
 | DE version          | same as os version | `GNOME`/`Unity` | GNOME (3.28.2.0)      |
 
 ### CPU
@@ -74,7 +74,7 @@ Operating System:
 #### GPU
 
 | properties       | Windows  | Linux | commments               |
-| ---------------- | -------- | ----- | ----------------------- |
+| ---------------- | :------: | :---: | ----------------------- |
 | name             | &#10004; |       | NVIDIA GeForce RTX 2080 |
 | vendor           | &#10004; |       | NVIDIA Corporation      |
 | dedicated memory | &#10004; |       | 8390705152 B            |
@@ -83,24 +83,25 @@ Operating System:
 
 #### Display Monitor
 
-| properties   | Windows             | Linux    | commments      |
-| ------------ | ------------------- | -------- | -------------- |
-| name         | &#10004;            | &#10004; | "\\.\DISPLAY1" |
-| primary      | &#10004;            | &#10004; | true / false   |
-| position     | &#10004;            | &#10004; | (-2560, -1440) |
-| resolution   | &#10004;            | &#10004; | 2560 x 1440    |
-| refresh rate | &#10004;            | &#10004; | 59.9 Hz        |
-| BPP          | &#10004;            | &#10004; | 32             |
-| logical DPI  | `>=Windows 10 1607` | &#10004; | 96             |
-| scale factor | &#10004;            |          | 125%           |
-| orientation  | &#10004;            | &#10004; | Landscape      |
+| properties   |       Windows       |    Linux     | commments      |
+| ------------ | :-----------------: | :----------: | -------------- |
+| name         |      &#10004;       |   &#10004;   | "AOC2790"      |
+| id           |      &#10004;       | same as name | "\\.\DISPLAY1" |
+| primary      |      &#10004;       |   &#10004;   | true / false   |
+| position     |      &#10004;       |   &#10004;   | (-2560, -1440) |
+| resolution   |      &#10004;       |   &#10004;   | 2560 x 1440    |
+| refresh rate |      &#10004;       |   &#10004;   | 59.9 Hz        |
+| BPP          |      &#10004;       |   &#10004;   | 32             |
+| logical DPI  | `>=Windows 10 1607` |   &#10004;   | 96             |
+| scale factor |      &#10004;       |              | 125%           |
+| orientation  |      &#10004;       |   &#10004;   | Landscape      |
 
 ##### Virtual Screen
 
 > the desktop containing all displays
 
-| properties | Windows  | Linux    | commments      |
-| ---------- | -------- | -------- | -------------- |
+| properties | Windows  |  Linux   | commments      |
+| ---------- | :------: | :------: | -------------- |
 | position   | &#10004; | &#10004; | (-1920, -1080) |
 | resolution | &#10004; | &#10004; | 4480 x 2520    |
 
@@ -110,10 +111,10 @@ Operating System:
 
 > order: up to down
 
-| properties     | Windows  | Linux    | commments                                |
-| -------------- | -------- | -------- | ---------------------------------------- |
+| properties     | Windows  |  Linux   | commments                                |
+| -------------- | :------: | :------: | ---------------------------------------- |
 | name           | &#10004; | &#10004; | "README.md - probe - Visual Studio Code" |
-| classname      | &#10004; | -        | "Chrome_WidgetWin_1"                     |
+| classname      | &#10004; |    -     | "Chrome_WidgetWin_1"                     |
 | position       | &#10004; | &#10004; | (741, 328)                               |
 | size           | &#10004; | &#10004; | 1568 x 995                               |
 | navtive handle | &#10004; | &#10004; | 132198                                   |
@@ -122,8 +123,8 @@ Operating System:
 
 ### Utils
 
-| functions       | Windows  | Linux    | commments     |
-| --------------- | -------- | -------- | ------------- |
+| functions       | Windows  |  Linux   | commments     |
+| --------------- | :------: | :------: | ------------- |
 | thread_set_name | &#10004; | &#10004; |               |
 | thread_get_name | &#10004; | &#10004; |               |
 | to_utf8         | &#10004; |          | wchar -> utf8 |

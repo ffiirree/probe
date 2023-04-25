@@ -49,7 +49,15 @@ namespace probe::graphics
         };
     }
 
-    display_t virtual_screen() { return { "~VIRTUAL-SCREEN", virtual_screen_geometry(), 60.0, 32 }; }
+    display_t virtual_screen()
+    {
+        return {
+            .name      = "~VIRTUAL-SCREEN",
+            .geometry  = virtual_screen_geometry(),
+            .frequency = 60.0,
+            .bpp       = 32,
+        };
+    }
 
 } // namespace probe::graphics
 

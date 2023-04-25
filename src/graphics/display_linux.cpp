@@ -61,6 +61,7 @@ namespace probe::graphics
             //
             _displays.push_back({
                 XGetAtomName(display, monitors[i].name),
+                XGetAtomName(display, monitors[i].name),
                 geometry_t{ crtc_info->x, crtc_info->y, crtc_info->width, crtc_info->height },
                 calculate_frequency(screen_res, crtc_info->mode),
                 static_cast<uint32_t>(DefaultDepth(display, 0)), // global

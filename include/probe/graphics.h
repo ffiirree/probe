@@ -51,6 +51,7 @@ namespace probe::graphics
     struct display_t
     {
         std::string name;
+        std::string id;
 
         geometry_t geometry;
         double frequency; // Hz

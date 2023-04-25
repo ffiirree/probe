@@ -26,7 +26,7 @@ namespace probe::util
     PROBE_API std::wstring to_utf16(const char *, size_t = 0);
 
     // linux: The thread name is a meaningful C language string, whose length is
-    // restricted to 16 characters, including the terminating null byte ('\0')
+    //        restricted to 16 characters, including the terminating null byte ('\0')
     PROBE_API int thread_set_name(const std::string&);
     PROBE_API std::string thread_get_name();
 } // namespace probe::util
