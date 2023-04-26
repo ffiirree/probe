@@ -29,6 +29,10 @@ namespace probe::util
     //        restricted to 16 characters, including the terminating null byte ('\0')
     PROBE_API int thread_set_name(const std::string&);
     PROBE_API std::string thread_get_name();
+
+    PROBE_API inline double KB(uint64_t v) { return (static_cast<double>(v) / (1024)); }
+    PROBE_API inline double MB(uint64_t v) { return (static_cast<double>(v) / (1024 * 1024)); }
+    PROBE_API inline double GB(uint64_t v) { return (static_cast<double>(v) / (1024 * 1024 * 1024)); }
 } // namespace probe::util
 
 // windows registry

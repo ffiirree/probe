@@ -1,11 +1,14 @@
 #include "probe/system.h"
 
+#include "probe/util.h"
+
 #include <iostream>
 
 int main()
 {
     auto os     = probe::system::os_info();
     auto kernel = probe::system::kernel_info();
+    auto mem    = probe::system::memory();
 
     std::cout << "Operating System:\n"
               << "    Name             : " << os.name << '\n'
@@ -14,7 +17,8 @@ int main()
               << "    Kernel Version   : " << probe::to_string(kernel.version) << '\n'
               << "    Theme            : " << probe::to_string(os.theme) << '\n'
               << "    Desktop ENV      : " << probe::to_string(probe::system::desktop()) << " ("
-              << probe::to_string(probe::system::desktop_version(probe::system::desktop())) << ")\n";
-
+              << probe::to_string(probe::system::desktop_version(probe::system::desktop())) << ")\n"
+              << "    Memory           : " << probe::util::GB(mem.avail) << " / "
+              << probe::util::GB(mem.total) << " GB\n";
     return 0;
 }

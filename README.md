@@ -11,12 +11,15 @@
 ```C++
 #include "probe/system.h"
 
+#include "probe/util.h"
+
 #include <iostream>
 
 int main()
 {
     auto os     = probe::system::os_info();
     auto kernel = probe::system::kernel_info();
+    auto mem    = probe::system::memory();
 
     std::cout << "Operating System:\n"
               << "    Name             : " << os.name << '\n'
@@ -24,8 +27,9 @@ int main()
               << "    Kernel           : " << kernel.name << '\n'
               << "    Kernel Version   : " << probe::to_string(kernel.version) << '\n'
               << "    Theme            : " << probe::to_string(os.theme) << '\n'
-              << "    Desktop ENV      : " << probe::to_string(probe::system::desktop()) << '\n';
-
+              << "    Desktop ENV      : " << probe::to_string(probe::system::desktop()) << '\n'
+              << "    Memory           : " << probe::util::GB(mem.physical_avail) << " / "
+              << probe::util::GB(mem.physical_total) << " GB\n";
     return 0;
 }
 ```
@@ -35,11 +39,12 @@ Output:
 ```yaml
 Operating System:
     Name             : Windows 11 Pro
-    Version          : 10.0.25346.1001(22H2)
+    Version          : 10.0.25346.1001 (22H2)
     Kernel           : Windows NT
     Kernel Version   : 10.0.25346.1001
     Theme            : dark
     Desktop ENV      : Windows
+    Memory           : 15.2921 / 31.9388 GB
 ```
 
 ## Details
@@ -55,6 +60,7 @@ Operating System:
 | dark/light mode     |      &#10004;      | `Ubuntu 22.04`  | dark                  |
 | desktop environment |    `= Windows`     | `GNOME`/`Unity` | GNOME                 |
 | DE version          | same as os version | `GNOME`/`Unity` | GNOME (3.28.2.0)      |
+| memory              |      &#10004;      |                 | 15.29 / 31.94 GB      |
 
 ### CPU
 
@@ -145,7 +151,7 @@ Operating System:
 
 #### Linux
 
-| functions           | commments                                                      |
+| functions / classes | commments                                                      |
 | ------------------- | -------------------------------------------------------------- |
 | exec_sync           | execute a commond and return the standard output               |
 | pipe_open           | execute a commond and redirect the standard output to the pipe |

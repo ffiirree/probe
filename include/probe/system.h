@@ -46,6 +46,14 @@ namespace probe::system
         version_t version;
     };
 
+    struct memory_status_t
+    {
+        uint64_t avail; // bytes
+        uint64_t total; // bytes
+    };
+
+    PROBE_API memory_status_t memory();
+
     PROBE_API theme_t theme();
 
     PROBE_API desktop_t desktop();

@@ -8,6 +8,7 @@
 #include <fstream>
 #include <regex>
 #include <sys/stat.h>
+#include <sys/sysinfo.h>
 #include <sys/utsname.h>
 #include <unordered_map>
 
@@ -15,6 +16,17 @@ static probe::version_t gnome_version();
 
 namespace probe::system
 {
+    memory_status_t memory() 
+    {
+        struct sysinfo info{};
+        sysinfo(&info);
+
+        return {
+            .avail = info.freeram,
+            .total = info.totalram,
+        };
+    }
+
     desktop_t desktop()
     {
         const std::string de = std::getenv("XDG_CURRENT_DESKTOP");

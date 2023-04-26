@@ -1,12 +1,25 @@
 #ifdef _WIN32
 
-#include "Windows.h"
 #include "probe/system.h"
 #include "probe/util.h"
+
+#include <Windows.h>
 
 namespace probe::system
 {
     extern "C" NTSYSAPI NTSTATUS NTAPI RtlGetVersion(_Out_ PRTL_OSVERSIONINFOW lpVersionInformation);
+
+    memory_status_t memory()
+    {
+        MEMORYSTATUSEX statex{ .dwLength = sizeof(MEMORYSTATUSEX) };
+
+        if(!GlobalMemoryStatusEx(&statex)) return {};
+
+        return {
+            .avail = statex.ullAvailPhys,
+            .total = statex.ullTotalPhys,
+        };
+    }
 
     desktop_t desktop() { return desktop_t::Windows; }
 
