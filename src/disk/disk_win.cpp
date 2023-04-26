@@ -64,11 +64,35 @@ namespace probe::disk
                 return device_paths;
             }
 
-            std::cout << geometry.Cylinders.QuadPart << "\n";
+            STORAGE_PROPERTY_QUERY query          = { StorageDeviceProperty, PropertyStandardQuery };
+            STORAGE_DESCRIPTOR_HEADER desc_header = { 0 };
+            if(!::DeviceIoControl(handle, IOCTL_STORAGE_QUERY_PROPERTY, &query,
+                                  sizeof(STORAGE_PROPERTY_QUERY), &desc_header,
+                                  sizeof(STORAGE_DESCRIPTOR_HEADER), &bytes, nullptr)) {
+
+                return device_paths;
+            }
+            // std::cout << desc_header.Size << ", " << desc_header.Version << "\n";
+
+            std::vector<char> buffer(desc_header.Size, {});
+
+            if(!::DeviceIoControl(handle, IOCTL_STORAGE_QUERY_PROPERTY, &query,
+                                  sizeof(STORAGE_PROPERTY_QUERY), buffer.data(), desc_header.Size, &bytes,
+                                  nullptr)) {
+
+                return device_paths;
+            }
+
+            auto descriptor = reinterpret_cast<PSTORAGE_DEVICE_DESCRIPTOR>(buffer.data());
             device_paths.push_back({
-                .name                = "\\\\.\\PhysicalDrive" + std::to_string(number.DeviceNumber),
-                .path                = probe::util::to_utf8(device_interface_detail->DevicePath),
-                .number              = number.DeviceNumber,
+                .name   = "\\\\.\\PhysicalDrive" + std::to_string(number.DeviceNumber),
+                .path   = probe::util::to_utf8(device_interface_detail->DevicePath),
+                .number = number.DeviceNumber,
+                .serial_number =
+                    !descriptor->SerialNumberOffset ? "" : buffer.data() + descriptor->SerialNumberOffset,
+                .vendor_id = !descriptor->VendorIdOffset ? "" : buffer.data() + descriptor->VendorIdOffset,
+                .product_id =
+                    !descriptor->ProductIdOffset ? "" : buffer.data() + descriptor->ProductIdOffset,
                 .cylinders           = static_cast<uint64_t>(geometry.Cylinders.QuadPart),
                 .tracks_per_cylinder = geometry.TracksPerCylinder,
                 .sectors_per_track   = geometry.SectorsPerTrack,

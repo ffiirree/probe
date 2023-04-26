@@ -30,7 +30,9 @@ namespace probe
             std::string name;
             std::string path;
             uint32_t number;
-            // MEDIA_TYPE MediaType;
+            std::string serial_number;
+            std::string vendor_id;
+            std::string product_id;
             uint64_t cylinders;
             uint32_t tracks_per_cylinder;
             uint32_t sectors_per_track;

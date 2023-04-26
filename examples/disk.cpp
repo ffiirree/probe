@@ -13,14 +13,17 @@ int main()
     for(auto& drive : drives) {
         auto volumes = probe::disk::volumes(drive);
 
-        std::cout << "    Number             : " << drive.number << '\n'
-                  << "    Name               : " << drive.name << '\n'
-                  << "    Path               : " << drive.path << '\n'
-                  << "    Cylinders          : " << drive.cylinders << '\n'
-                  << "    Tracks / Cylinders : " << drive.tracks_per_cylinder << '\n'
-                  << "    Sectors / Track    : " << drive.sectors_per_track << '\n'
-                  << "    Bytes / Sector     : " << drive.bytes_per_sector << '\n'
-                  << "    Size               : "
+        std::cout << "    Number              : " << drive.number << '\n'
+                  << "    Name                : " << drive.name << '\n'
+                  << "    Path                : " << drive.path << '\n'
+                  << "    Serial Number       : " << drive.serial_number << '\n'
+                  << "    VendorID            : " << drive.vendor_id << '\n'
+                  << "    ProductID           : " << drive.product_id << '\n'
+                  << "    Cylinders           : " << drive.cylinders << '\n'
+                  << "    Tracks / Cylinders  : " << drive.tracks_per_cylinder << '\n'
+                  << "    Sectors / Track     : " << drive.sectors_per_track << '\n'
+                  << "    Bytes / Sector      : " << drive.bytes_per_sector << '\n'
+                  << "    Size                : "
                   << (drive.cylinders * drive.tracks_per_cylinder * drive.sectors_per_track *
                       drive.bytes_per_sector) /
                          static_cast<double>((1024 * 1024 * 1024))

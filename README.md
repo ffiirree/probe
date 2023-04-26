@@ -133,6 +133,20 @@ Operating System:
 | navtive handle | &#10004; | &#10004; | 132198                                   |
 | visible        | &#10004; | &#10004; | true / false                             |
 
+### Disk
+
+| properties         | Windows  | Linux | commments                                                                                   |
+| ------------------ | :------: | :---: | ------------------------------------------------------------------------------------------- |
+| name               | &#10004; |       | \\\\.\\PhysicalDrive2                                                                       |
+| path               | &#10004; |       | \\\\?\\scsi#disk&ven_phi&prod_h1#6&314c6ca8&0&000000#{53f56307-b6bf-11d0-94f2-00a0c91efb8b} |
+| Serial Number      | &#10004; |       | 98BB9969766F                                                                                |
+| VendorID           | &#10004; |       | Phi                                                                                         |
+| ProductID          | &#10004; |       | Hi                                                                                          |
+| Cylinders          | &#10004; |       | 121601                                                                                      |
+| Tracks / Cylinders | &#10004; |       | 255                                                                                         |
+| Sectors / Track    | &#10004; |       | 63                                                                                          |
+| Bytes / Sector     | &#10004; |       | 512                                                                                         |
+
 ### Utils
 
 | functions       | Windows  |  Linux   | commments     |
