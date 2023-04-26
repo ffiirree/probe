@@ -50,6 +50,7 @@ target_link_libraries(${PROJECT_NAME}
         $<$<PLATFORM_ID:Windows>:Shcore>
         $<$<PLATFORM_ID:Windows>:DXGI>
         $<$<PLATFORM_ID:Windows>:D3D11>
+        $<$<PLATFORM_ID:Windows>:SetupAPI>
         $<$<PLATFORM_ID:Linux>:pthread>
         $<$<PLATFORM_ID:Linux>:X11::Xrandr>
 )
@@ -72,7 +73,7 @@ if(BUILD_SHARED_LIBS)
 endif()
 
 if(PROBE_EXAMPLES)
-    foreach(example cpu;graphics;system;util)
+    foreach(example cpu;graphics;system;disk;util)
         add_executable(probe_${example} examples/${example}.cpp)
         target_link_libraries(probe_${example} PUBLIC probe::probe)
 
@@ -83,4 +84,6 @@ if(PROBE_EXAMPLES)
                 ARCHIVE_OUTPUT_DIRECTORY "lib/$<0:>"
         )
     endforeach()
+
+    # 
 endif()

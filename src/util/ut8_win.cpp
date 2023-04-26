@@ -20,7 +20,7 @@ namespace probe::util
         WideCharToMultiByte(CP_UTF8, 0, wptr, static_cast<int>(wlen), mstr.data(),
                             static_cast<int>(mstr.size()), nullptr, nullptr);
 
-        return std::move(mstr);
+        return mstr;
     }
 
     std::wstring to_utf16(const char *mstr, size_t mlen)
