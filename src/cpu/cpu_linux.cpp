@@ -95,6 +95,21 @@ namespace probe::cpu
         return ret;
     }
 
+    // /sys/devices/system/cpu/cpu<N>/cache/index<M>/<F>
+    std::vector<cache_t> caches()
+    {
+        std::vector<cache_t> ret;
+
+        return ret;
+    }
+
+    std::vector<cache_t> cache(int level, cache_type_t type)
+    {
+        std::vector<cache_t> ret;
+
+        return ret;
+    }
+
     vendor_t vendor() { return vendor_cast(cpuinfo_read_first_of("vendor").value_or("")); }
 
     std::string name() { return cpuinfo_read_first_of("model name").value_or(""); }

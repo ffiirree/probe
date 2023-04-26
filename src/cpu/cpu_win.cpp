@@ -10,6 +10,19 @@
 
 namespace probe::cpu
 {
+    static std::vector<SYSTEM_LOGICAL_PROCESSOR_INFORMATION> processor_info()
+    {
+        std::vector<SYSTEM_LOGICAL_PROCESSOR_INFORMATION> processors;
+
+        DWORD byte_count = 0;
+        GetLogicalProcessorInformation(nullptr, &byte_count);
+
+        processors.resize(byte_count / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION));
+        GetLogicalProcessorInformation(processors.data(), &byte_count);
+
+        return processors;
+    }
+
     architecture_t architecture()
     {
         SYSTEM_INFO system_info;
@@ -45,16 +58,8 @@ namespace probe::cpu
 
     quantities_t quantities()
     {
-        std::vector<SYSTEM_LOGICAL_PROCESSOR_INFORMATION> processors;
-
-        DWORD byte_count = 0;
-        GetLogicalProcessorInformation(nullptr, &byte_count);
-
-        processors.resize(byte_count / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION));
-        GetLogicalProcessorInformation(processors.data(), &byte_count);
-
         quantities_t q = { 0 };
-        for(auto&& info : processors) {
+        for(auto&& info : processor_info()) {
             switch(info.Relationship) {
             case RelationProcessorCore:
                 q.physical++;
@@ -69,6 +74,33 @@ namespace probe::cpu
         }
 
         return q;
+    }
+
+    std::vector<cache_t> caches()
+    {
+        std::vector<cache_t> ret;
+
+        for(const auto& info : processor_info()) {
+            if(info.Relationship == RelationCache) {
+                ret.emplace_back(info.Cache.Level, info.Cache.Associativity, info.Cache.LineSize,
+                                 info.Cache.Size, static_cast<cache_type_t>(info.Cache.Type));
+            }
+        }
+        return ret;
+    }
+
+    std::vector<cache_t> cache(int level, cache_type_t type)
+    {
+        std::vector<cache_t> ret;
+
+        for(const auto& info : processor_info()) {
+            if((info.Relationship == RelationCache) && (info.Cache.Level == level) &&
+               (info.Cache.Type == static_cast<PROCESSOR_CACHE_TYPE>(type))) {
+                ret.emplace_back(info.Cache.Level, info.Cache.Associativity, info.Cache.LineSize,
+                                 info.Cache.Size, static_cast<cache_type_t>(info.Cache.Type));
+            }
+        }
+        return ret;
     }
 
     vendor_t vendor()

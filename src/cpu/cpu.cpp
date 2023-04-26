@@ -3,6 +3,7 @@
 #include "probe/types.h"
 
 #include <bitset>
+#include <regex>
 
 namespace probe::cpu
 {
@@ -17,15 +18,32 @@ namespace probe::cpu
             return endianness_t::little;
     }
 
+    cache_type_t to_cache_type(const std::string& str)
+    {
+        if(std::regex_search(str, std::regex("unified", std::regex_constants::icase)))
+            return cache_type_t::unified;
+        if(std::regex_search(str, std::regex("inst", std::regex_constants::icase)))
+            return cache_type_t::instruction;
+        if(std::regex_search(str, std::regex("data", std::regex_constants::icase)))
+            return cache_type_t::data;
+        if(std::regex_search(str, std::regex("trace", std::regex_constants::icase)))
+            return cache_type_t::trace;
+
+        return static_cast<cache_type_t>(static_cast<uint32_t>(cache_type_t::trace) + 1);
+    }
+
+#define FEATURE_BIT_MASK(X, MASK, SHIFT)                                                                   \
+    static_cast<int32_t>((static_cast<uint64_t>(X) & static_cast<uint64_t>(feature_t::MASK)) >> SHIFT)
     std::tuple<int32_t, int32_t, int32_t, int32_t> unpack(feature_t feature)
     {
-        return {
-            static_cast<uint64_t>(feature) & static_cast<uint64_t>(feature_t::leaf_mask),
-            static_cast<uint64_t>(feature) & static_cast<uint64_t>(feature_t::subleaf_mask),
-            static_cast<uint64_t>(feature) & static_cast<uint64_t>(feature_t::register_mask),
-            static_cast<uint64_t>(feature) & static_cast<uint64_t>(feature_t::bit_mask),
+        return std::tuple{
+            FEATURE_BIT_MASK(feature, leaf_mask, 32),
+            FEATURE_BIT_MASK(feature, subleaf_mask, 24),
+            FEATURE_BIT_MASK(feature, register_mask, 16),
+            FEATURE_BIT_MASK(feature, bit_mask, 0),
         };
     }
+#undef FEATURE_BIT_MASK
 
     bool is_supported(feature_t feature)
     {
@@ -180,6 +198,20 @@ namespace probe
         switch(e) {
         case cpu::endianness_t::little:     return "little";
         case cpu::endianness_t::big:        return "big";
+        default:                            return "unknown";
+        }
+        // clang-format on
+    }
+
+    std::string to_string(cpu::cache_type_t type)
+    {
+        // clang-format off
+        switch(type) {
+        case cpu::cache_type_t::unified:    return "Unified";
+        case cpu::cache_type_t::instruction:return "Instruction";
+        case cpu::cache_type_t::data:       return "Data";
+        case cpu::cache_type_t::trace:      return "Trace";
+
         default:                            return "unknown";
         }
         // clang-format on

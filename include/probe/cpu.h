@@ -52,19 +52,47 @@ namespace probe::cpu
         quantities_t quantities;
     };
 
+    enum class cache_type_t
+    {
+        unified,
+        instruction,
+        data,
+        trace,
+    };
+
+    struct cache_t
+    {
+        int32_t level;
+        int32_t associativity;
+        int32_t line_size;
+        int32_t size;
+        cache_type_t type;
+    };
+
     PROBE_API architecture_t architecture();
 
     PROBE_API endianness_t endianness();
 
     PROBE_API quantities_t quantities();
 
+    PROBE_API std::vector<cache_t> caches();
+
+    PROBE_API std::vector<cache_t> cache(int, cache_type_t);
+
+    // convert string to cache_type_t
+    PROBE_API cache_type_t to_cache_type(const std::string&);
+
     PROBE_API uint64_t frequency();
 
+    // vendor type
     PROBE_API vendor_t vendor();
+
+    // cpu name
     PROBE_API std::string name();
 
     PROBE_API cpu_info_t info();
 
+    // cpuid
     PROBE_API void cpuid(int32_t (&)[4], int32_t, int32_t);
 
     enum class feature_t : uint64_t
@@ -301,6 +329,7 @@ namespace probe
     PROBE_API std::string to_string(cpu::architecture_t);
     PROBE_API std::string to_string(cpu::endianness_t);
     PROBE_API std::string to_string(cpu::feature_t);
+    PROBE_API std::string to_string(cpu::cache_type_t);
 } // namespace probe
 
 #endif //! PROBE_CPU_H
