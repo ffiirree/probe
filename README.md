@@ -28,8 +28,7 @@ int main()
               << "    Kernel Version   : " << probe::to_string(kernel.version) << '\n'
               << "    Theme            : " << probe::to_string(os.theme) << '\n'
               << "    Desktop ENV      : " << probe::to_string(probe::system::desktop()) << '\n'
-              << "    Memory           : " << probe::util::GB(mem.physical_avail) << " / "
-              << probe::util::GB(mem.physical_total) << " GB\n";
+              << "    Memory           : " << probe::util::GB(mem.avail) << " / " << probe::util::GB(mem.total) << " GB\n";
     return 0;
 }
 ```
