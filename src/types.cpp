@@ -45,21 +45,7 @@ namespace probe
         return l.major == r.major && l.minor == r.minor && l.patch == r.patch && l.build == r.build;
     }
 
-    template<> vendor_t vendor_cast(uint32_t id)
-    {
-        switch(id) {
-        case static_cast<uint32_t>(vendor_t::NVIDIA):
-        case static_cast<uint32_t>(vendor_t::Intel):
-        case static_cast<uint32_t>(vendor_t::Microsoft):
-        case static_cast<uint32_t>(vendor_t::Qualcomm):
-        case static_cast<uint32_t>(vendor_t::AMD):
-        case static_cast<uint32_t>(vendor_t::Apple): return static_cast<vendor_t>(id);
-
-        default: return vendor_t::unknown;
-        }
-    }
-
-    template<> std::string vendor_cast(vendor_t vendor)
+    std::string vendor_cast(vendor_t vendor)
     {
         // clang-format off
         switch(vendor) {
@@ -75,7 +61,7 @@ namespace probe
         // clang-format on
     }
 
-    template<> vendor_t vendor_cast(const std::string& name)
+    vendor_t vendor_cast(const std::string& name)
     {
         if(std::regex_search(name, std::regex("NVIDIA", std::regex_constants::icase)))
             return vendor_t::NVIDIA;

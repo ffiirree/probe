@@ -29,7 +29,7 @@ namespace probe::graphics
             adapter->GetDesc(&desc);
 
             cards.emplace_back(gpu_info_t{
-                probe::util::to_utf8(desc.Description), vendor_cast<vendor_t>(desc.VendorId),
+                probe::util::to_utf8(desc.Description), vendor_cast(desc.VendorId),
                 desc.DedicatedVideoMemory, desc.SharedSystemMemory,
                 0 // TODO:
             });

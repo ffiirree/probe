@@ -5,6 +5,7 @@
 
 #include <Windows.h>
 #include <bitset>
+#include <intrin.h>
 #include <vector>
 
 namespace probe::cpu
@@ -70,12 +71,13 @@ namespace probe::cpu
         return q;
     }
 
-    std::string vendor()
+    vendor_t vendor()
     {
-        return probe::util::registry::read<std::string>(HKEY_LOCAL_MACHINE,
-                                                        R"(HARDWARE\DESCRIPTION\System\CentralProcessor\0)",
-                                                        "VendorIdentifier")
-            .value_or("");
+        auto name =
+            probe::util::registry::read<std::string>(
+                HKEY_LOCAL_MACHINE, R"(HARDWARE\DESCRIPTION\System\CentralProcessor\0)", "VendorIdentifier")
+                .value_or("");
+        return vendor_cast(name);
     }
 
     std::string name()
@@ -90,6 +92,22 @@ namespace probe::cpu
     {
         return { name(), vendor(), architecture(), endianness(), frequency(), quantities() };
     }
+
+    // This intrinsic stores the supported features and CPU information returned by the cpuid instruction in
+    // cpuInfo, an array of four 32-bit integers that's filled with the values of the EAX, EBX, ECX, and EDX
+    // registers (in that order). The information returned has a different meaning depending on the value
+    // passed as the function_id parameter. The information returned with various values of function_id is
+    // processor-dependent.
+    //
+    //  When the function_id argument is 0, cpuInfo[0] returns the highest available non-extended
+    //  function_id value supported by the processor. The processor manufacturer is encoded in cpuInfo[1],
+    //  cpuInfo[2], and cpuInfo[3].
+    //
+    //  Some processors support Extended Function CPUID information. When it's supported, function_id values
+    //  from 0x80000000 might be used to return information. To determine the maximum meaningful value
+    //  allowed, set function_id to 0x80000000. The maximum value of function_id supported for extended
+    //  functions will be written to cpuInfo[0].
+    void cpuid(int32_t (&info)[4], int32_t leaf, int32_t subleaf) { __cpuidex(info, leaf, subleaf); }
 } // namespace probe::cpu
 
 #endif // _WIN32

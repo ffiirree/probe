@@ -3,6 +3,7 @@
 #include "probe/cpu.h"
 
 #include <algorithm>
+#include <cpuid.h>
 #include <cstring>
 #include <fstream>
 #include <optional>
@@ -94,13 +95,18 @@ namespace probe::cpu
         return ret;
     }
 
-    std::string vendor() { return cpuinfo_read_first_of("vendor").value_or(""); }
+    vendor_t vendor() { return vendor_cast(cpuinfo_read_first_of("vendor").value_or("")); }
 
     std::string name() { return cpuinfo_read_first_of("model name").value_or(""); }
 
     cpu_info_t info()
     {
         return { name(), vendor(), architecture(), endianness(), frequency(), quantities() };
+    }
+
+    void cpuid(int32_t (&info)[4], int32_t leaf, int32_t subleaf)
+    {
+        __cpuid_count(leaf, subleaf, info[0], info[1], info[2], info[3]);
     }
 } // namespace probe::cpu
 

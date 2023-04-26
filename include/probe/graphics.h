@@ -51,7 +51,7 @@ namespace probe::graphics
     struct display_t
     {
         std::string name;
-        std::string id;
+        std::string id{};
 
 #ifdef _WIN32
         std::string driver; // for registry

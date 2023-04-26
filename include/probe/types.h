@@ -42,18 +42,17 @@ namespace probe
         Apple     = 0x106b,
     };
 
-    template<class O, class I> O vendor_cast(I i) { return static_cast<O>(i); }
+    // cast vendor_t to string
+    PROBE_API std::string vendor_cast(vendor_t);
 
     // cast uint32_t to vendor_t
-    template<> PROBE_API vendor_t vendor_cast(uint32_t);
-
-    // cast vendor_t to string
-    template<> PROBE_API std::string vendor_cast(vendor_t);
+    PROBE_API inline vendor_t vendor_cast(uint32_t id) { return static_cast<vendor_t>(id); };
 
     // gausses what vendor_t the string is
-    template<> PROBE_API vendor_t vendor_cast(const std::string& name);
+    PROBE_API vendor_t vendor_cast(const std::string&);
 
     PROBE_API std::string to_string(version_t);
+    PROBE_API inline std::string to_string(vendor_t id) { return vendor_cast(id); }
 } // namespace probe
 
 // listener interface

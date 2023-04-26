@@ -37,13 +37,15 @@ int main()
                   << "    Logical DPI      : " << display.dpi << " dpi\n"
                   << "    Scale            : " << std::lround(display.scale * 100) << " %\n"
                   << "    Orientation      : " << probe::to_string(display.orientation) << "\n";
-
+#ifdef _WIN32
         probe::graphics::edid_t edid;
         if(!probe::graphics::parse_edid(probe::graphics::edid_of(display.name, display.driver), &edid)) {
             std::cout << "    Phsical HSize    : " << edid.hsize << " cm\n"
                       << "    Phsical VSize    : " << edid.vsize << " cm\n"
-                      << "    Phsical DPI      : " << (display.geometry.width * 2.54) / edid.hsize << " dpi\n";
+                      << "    Phsical DPI      : " << (display.geometry.width * 2.54) / edid.hsize
+                      << " dpi\n";
         }
+#endif
         std::cout << "\n";
     }
 
@@ -52,7 +54,7 @@ int main()
     std::cout << "GPUs: \n";
     for(const auto& gpu : gpus) {
         std::cout << "    Name             : " << gpu.name << '\n'
-                  << "    Vendor           : " << probe::vendor_cast<std::string>(gpu.vendor) << '\n'
+                  << "    Vendor           : " << probe::vendor_cast(gpu.vendor) << '\n'
                   << "    Dedicated Memory : " << gpu.dedicated_memory << " B\n"
                   << "    Shared Memory    : " << gpu.shared_memory << " B\n\n";
     }
