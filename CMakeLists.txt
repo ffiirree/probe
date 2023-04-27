@@ -3,7 +3,8 @@ cmake_minimum_required(VERSION 3.16)
 project(probe VERSION 0.2.4 LANGUAGES C CXX)
 
 # options
-option(PROBE_EXAMPLES "Add probe examples to the build." OFF)
+option(PROBE_EXAMPLES       "Build probe examples."     OFF)
+option(PROBE_BUILD_WITH_QT  "Build probe with Qt."      OFF)
 
 # compiler options
 set(CMAKE_CXX_STANDARD 20)
@@ -14,17 +15,14 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Default build type: Release." FORCE)
 endif()
 
-if(MSVC)
-    message(STATUS "Windows SDK version is ${CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION}")
-
-    add_compile_options(/W3 /utf-8 /DUNICODE /D_UNICODE /DNOMINMAX /Zc:preprocessor  /Zc:__cplusplus)
-else()
-    add_compile_options(-Wall -Wextra -Wpedantic)
+if(PROBE_BUILD_WITH_QT)
+    find_package(Qt5 COMPONENTS Core REQUIRED)
 endif()
 
 # depdencies
 if(UNIX AND NOT APPLE)
     find_package(X11 REQUIRED)
+
     if(NOT X11_Xrandr_FOUND)
         message(FATAL_ERROR "Xrandr is required")
     endif()
@@ -53,12 +51,14 @@ target_link_libraries(${PROJECT_NAME}
         $<$<PLATFORM_ID:Windows>:SetupAPI>
         $<$<PLATFORM_ID:Linux>:pthread>
         $<$<PLATFORM_ID:Linux>:X11::Xrandr>
+        $<$<PLATFORM_ID:Linux>:X11::Xrandr>
+        $<$<BOOL:${PROBE_BUILD_WITH_QT}>:Qt5::Core>
 )
 
 set_target_properties(${PROJECT_NAME}
     PROPERTIES
         VERSION ${PROJECT_VERSION}
-        
+
         PUBLIC_HEADER "${PROBE_HEADERS}"
 
         RUNTIME_OUTPUT_DIRECTORY "bin/$<0:>"
@@ -70,6 +70,16 @@ set_target_properties(${PROJECT_NAME}
 
 if(BUILD_SHARED_LIBS)
     target_compile_definitions(${PROJECT_NAME} PUBLIC PROBE_SHARED PRIVATE PROBE_BUILDING)
+endif()
+
+if(PROBE_BUILD_WITH_QT)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC BUILD_WITH_QT)
+endif()
+
+if(MSVC)
+    target_compile_options(${PROJECT_NAME} PRIVATE /W3 /utf-8 /DUNICODE /D_UNICODE /DNOMINMAX /Zc:preprocessor /Zc:__cplusplus)
+else()
+    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)
 endif()
 
 if(PROBE_EXAMPLES)
@@ -85,5 +95,5 @@ if(PROBE_EXAMPLES)
         )
     endforeach()
 
-    # 
+    #
 endif()

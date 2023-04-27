@@ -9,9 +9,24 @@
 #include <string>
 #include <vector>
 
+#ifdef BUILD_WITH_QT
+#include <QPoint>
+#include <QRect>
+#endif
+
 // displays
 namespace probe::graphics
 {
+    struct point_t
+    {
+        int32_t x;
+        int32_t y;
+
+#ifdef BUILD_WITH_QT
+        PROBE_API operator QPoint() const { return QPoint{ x, y }; }
+#endif
+    };
+
     struct geometry_t
     {
         int32_t x;
@@ -19,14 +34,28 @@ namespace probe::graphics
         uint32_t width;
         uint32_t height;
 
-        [[nodiscard]] bool contains(int32_t, int32_t) const;
-        [[nodiscard]] geometry_t intersected(const geometry_t&) const;
+        [[nodiscard]] PROBE_API bool contains(int32_t, int32_t) const;
+        [[nodiscard]] PROBE_API bool contains(const geometry_t&, bool = false) const;
+        [[nodiscard]] PROBE_API geometry_t intersected(const geometry_t&) const;
 
-        [[nodiscard]] int32_t left() const { return x; }
-        [[nodiscard]] int32_t top() const { return y; }
-        [[nodiscard]] int32_t right() const { return x + static_cast<int32_t>(width) - 1; }
-        [[nodiscard]] int32_t bottom() const { return y + static_cast<int32_t>(height) - 1; }
+        [[nodiscard]] PROBE_API int32_t left() const { return x; }
+        [[nodiscard]] PROBE_API int32_t top() const { return y; }
+        [[nodiscard]] PROBE_API int32_t right() const { return x + static_cast<int32_t>(width) - 1; }
+        [[nodiscard]] PROBE_API int32_t bottom() const { return y + static_cast<int32_t>(height) - 1; }
+
+        [[nodiscard]] PROBE_API point_t centor() const
+        {
+            return { .x = x + static_cast<int>(width / 2), .y = y + static_cast<int>(height / 2) };
+        }
+#ifdef BUILD_WITH_QT
+        PROBE_API operator QRect() const
+        {
+            return QRect{ x, y, static_cast<int>(width), static_cast<int>(height) };
+        }
+#endif
     };
+
+    PROBE_API bool operator==(const geometry_t&, const geometry_t&);
 
     enum class orientation_t
     {

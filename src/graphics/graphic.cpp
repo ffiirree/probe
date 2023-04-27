@@ -9,6 +9,21 @@ namespace probe::graphics
         return (_x >= left() && _x < right()) && (_y >= top() && _y < bottom());
     }
 
+    bool geometry_t::contains(const geometry_t& r, bool proper) const
+    {
+        if(proper) {
+            return left() < r.left() && right() > r.right() && top() < r.top() && bottom() > r.bottom();
+        }
+        else {
+            return left() <= r.left() && right() >= r.right() && top() <= r.top() && bottom() >= r.bottom();
+        }
+    }
+
+    bool operator==(const geometry_t& l, const geometry_t& r)
+    {
+        return l.x == r.x && l.y == r.y && l.width == r.width && l.height == r.height;
+    }
+
     geometry_t geometry_t::intersected(const graphics::geometry_t& otr) const
     {
         int32_t l = std::max(left(), otr.left());
