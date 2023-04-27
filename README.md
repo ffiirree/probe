@@ -135,17 +135,48 @@ Operating System:
 
 ### Disk
 
-| properties         | Windows  | Linux | commments                                                                                   |
-| ------------------ | :------: | :---: | ------------------------------------------------------------------------------------------- |
-| name               | &#10004; |       | \\\\.\\PhysicalDrive2                                                                       |
-| path               | &#10004; |       | \\\\?\\scsi#disk&ven_phi&prod_h1#6&314c6ca8&0&000000#{53f56307-b6bf-11d0-94f2-00a0c91efb8b} |
-| Serial Number      | &#10004; |       | 98BB9969766F                                                                                |
-| VendorID           | &#10004; |       | Phi                                                                                         |
-| ProductID          | &#10004; |       | Hi                                                                                          |
-| Cylinders          | &#10004; |       | 121601                                                                                      |
-| Tracks / Cylinders | &#10004; |       | 255                                                                                         |
-| Sectors / Track    | &#10004; |       | 63                                                                                          |
-| Bytes / Sector     | &#10004; |       | 512                                                                                         |
+> Run as Administrator
+
+| properties       | Windows  | Linux | commments                                                                                   |
+| ---------------- | :------: | :---: | ------------------------------------------------------------------------------------------- |
+| name             | &#10004; |       | \\\\.\\PhysicalDrive2                                                                       |
+| path             | &#10004; |       | \\\\?\\scsi#disk&ven_phi&prod_h1#6&314c6ca8&0&000000#{53f56307-b6bf-11d0-94f2-00a0c91efb8b} |
+| Serial Number    | &#10004; |       | 98BB9969766F                                                                                |
+| GUID/Signature   | &#10004; |       | {C65630B2-E183-4363-9E18-93CE442B9515} (GPT) or 9BD1A50 (MBR)                               |
+| Vendor ID        | &#10004; |       | Samsung                                                                                     |
+| Product ID       | &#10004; |       | Samsung SSD 970 EVO Plus                                                                    |
+| Bus Type         | &#10004; |       | SATA / NVMe / USB ...                                                                       |
+| Removable        | &#10004; |       | true / false                                                                                |
+| Writable         | &#10004; |       | true / false                                                                                |
+| Trim             | &#10004; |       | true / false                                                                                |
+| Cylinders        | &#10004; |       | 121601                                                                                      |
+| Tracks/Cylinders | &#10004; |       | 255                                                                                         |
+| Sectors/Track    | &#10004; |       | 63                                                                                          |
+| Bytes/Sector     | &#10004; |       | 512                                                                                         |
+| Partitions       | &#10004; |       | 6                                                                                           |
+
+#### Partition
+
+| properties      | Windows  | Linux | commments                              |
+| --------------- | :------: | :---: | -------------------------------------- |
+| Name            | &#10004; |       | Microsoft reserved partition           |
+| Partition Style | &#10004; |       | GPT / MBR / RAW                        |
+| Type ID         | &#10004; |       | {E3C9E316-0B5C-4DB8-817D-F92DF00215AE} |
+| GUID            | &#10004; |       | {733189C5-6252-4F42-9577-151494026B2B} |
+| Offset          | &#10004; |       | 17408                                  |
+| Length          | &#10004; |       | 16759808                               |
+
+#### Volume
+
+| properties    | Windows  | Linux | commments                                             |
+| ------------- | :------: | :---: | ----------------------------------------------------- |
+| Label         | &#10004; |       | New Volume                                            |
+| Letter        | &#10004; |       | C:\\                                                  |
+| Filesystem    | &#10004; |       | NTFS                                                  |
+| Serial Number | &#10004; |       | 10194AA9                                              |
+| GUID Path     | &#10004; |       | \\\\?\\Volume{803b42f7-bbee-4d30-ad22-2d0fe90072b6}\\ |
+| Capacity      | &#10004; |       | 1870.54 GB                                            |
+| Free Space    | &#10004; |       | 105.929 GB                                            |
 
 ### Utils
 

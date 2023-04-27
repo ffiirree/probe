@@ -17,19 +17,45 @@ namespace probe
             RAW
         };
 
-#ifdef _WIN32
-        struct volume_t
+        enum class bus_type_t
         {
-            std::string name;
-
-            partition_style_t style;
+            unknown = 0x00,
+            SCSI, // Small Computer System Interface
+            ATAPI,
+            ATA, // Advanced Technology Attachment
+            IEEE1394,
+            SSA,
+            Fibre,
+            USB,
+            RAID,
+            iSCSI,
+            SAS, // Serial Attached SCSI
+            SATA,
+            SD,
+            MMC,
+            Virtual,
+            FileBackedVirtual,
+            Spaces,
+            NVMe,
+            SCM,
+            UFS,
+            MAX,
+            MaxReserved = 0x7F
         };
 
+#ifdef _WIN32
         struct drive_t
         {
             std::string name;
             std::string path;
             uint32_t number;
+            std::string id; // GPT: GUID; MBR: Signature
+            bus_type_t bus;
+            bool removable;
+            bool writable;
+            bool trim;
+            uint32_t partitions;
+            partition_style_t style;
             std::string serial_number;
             std::string vendor_id;
             std::string product_id;
@@ -39,8 +65,32 @@ namespace probe
             uint32_t bytes_per_sector;
         };
 
-        PROBE_API std::vector<drive_t> physical_devices();
-        PROBE_API std::vector<volume_t> volumes(const drive_t&);
+        struct partition_t
+        {
+            std::string name;
+            uint32_t number;
+            partition_style_t style;
+            std::string type_id;
+            std::string guid;
+            uint64_t offset;
+            uint64_t length;
+        };
+
+        struct volume_t
+        {
+            std::string letter; // C:, D:, ...
+            std::string label;  // volume label
+            std::string serial;
+            std::string path;
+            std::string guid_path;  // "\\\\?\\Volume{803b42f7-bbee-4d30-ad22-2d0fe90072b6}\\"
+            std::string filesystem; // NTFS, exFAT, ...
+            uint64_t capacity;
+            uint64_t free;
+        };
+
+        PROBE_API std::vector<drive_t> physical_drives();
+        PROBE_API std::vector<partition_t> partitions(const drive_t&);
+        PROBE_API std::vector<volume_t> volumes();
 #endif
     } // namespace disk
 } // namespace probe
@@ -48,6 +98,7 @@ namespace probe
 namespace probe
 {
     PROBE_API std::string to_string(disk::partition_style_t);
+    PROBE_API std::string to_string(disk::bus_type_t);
 } // namespace probe
 
 #endif //! PROBE_DISK_H
