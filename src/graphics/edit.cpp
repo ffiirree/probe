@@ -14,12 +14,12 @@ namespace probe::graphics
         const char *data = arr.data();
 
         // Checksum. Sum of all 128 bytes should equal 0 (mod 256).
-        if(std::accumulate(data, data + 128, 0) % 256 != 0) return -1;
+        if (std::accumulate(data, data + 128, 0) % 256 != 0) return -1;
 
         // 0-7
         // check header
         const uint8_t header[8]{ 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00 };
-        if(std::memcmp(data, header, 8) != 0) return -1;
+        if (std::memcmp(data, header, 8) != 0) return -1;
 
         // 8-9
         // Manufacturer ID: big-endian 16-bit value made up of three 5-bit letters
@@ -42,7 +42,7 @@ namespace probe::graphics
 
         // 16
         // week ： 1-54
-        if(data[16] <= 54) edid->week = data[16];
+        if (data[16] <= 54) edid->week = data[16];
 
         // 17
         // year + 1990
@@ -53,12 +53,12 @@ namespace probe::graphics
         edid->revision = data[19];
 
         // 21-22
-        if(data[22] != 0x00) edid->hsize = data[21];
-        if(data[21] != 0x00) edid->vsize = data[22];
+        if (data[22] != 0x00) edid->hsize = data[21];
+        if (data[21] != 0x00) edid->vsize = data[22];
 
         // 23
         // gamma:  datavalue = (gamma×100) − 100 = (gamma − 1)×100
-        if(data[23] != char(0xff)) edid->gamma = data[23] / 100.0 + 1.0;
+        if (data[23] != char(0xff)) edid->gamma = data[23] / 100.0 + 1.0;
 
         return 0;
     }

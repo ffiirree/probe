@@ -9,7 +9,7 @@ namespace probe
     {
         std::cout << str << "\n";
         std::smatch matchs;
-        if(std::regex_match(str, matchs, std::regex(verion_regex))) {
+        if (std::regex_match(str, matchs, std::regex(verion_regex))) {
             return {
                 matchs[1].str().empty() ? 0 : static_cast<uint32_t>(std::stoul(matchs[1].str())),
                 matchs[2].str().empty() ? 0 : static_cast<uint32_t>(std::stoul(matchs[2].str())),
@@ -24,18 +24,18 @@ namespace probe
 
     bool operator>=(const version_t& l, const version_t& r)
     {
-        if(numeric_combined(l.major, l.minor) > numeric_combined(r.major, r.minor)) return true;
+        if (numeric_combined(l.major, l.minor) > numeric_combined(r.major, r.minor)) return true;
 
-        if(numeric_combined(l.major, l.minor) < numeric_combined(r.major, r.minor)) return false;
+        if (numeric_combined(l.major, l.minor) < numeric_combined(r.major, r.minor)) return false;
 
         return numeric_combined(l.patch, l.build) >= numeric_combined(r.patch, r.build);
     }
 
     bool operator<=(const version_t& l, const version_t& r)
     {
-        if(numeric_combined(l.major, l.minor) > numeric_combined(r.major, r.minor)) return false;
+        if (numeric_combined(l.major, l.minor) > numeric_combined(r.major, r.minor)) return false;
 
-        if(numeric_combined(l.major, l.minor) < numeric_combined(r.major, r.minor)) return true;
+        if (numeric_combined(l.major, l.minor) < numeric_combined(r.major, r.minor)) return true;
 
         return numeric_combined(l.patch, l.build) <= numeric_combined(r.patch, r.build);
     }
@@ -63,18 +63,23 @@ namespace probe
 
     vendor_t vendor_cast(const std::string& name)
     {
-        if(std::regex_search(name, std::regex("NVIDIA", std::regex_constants::icase)))
+        if (std::regex_search(name, std::regex("NVIDIA", std::regex_constants::icase)))
             return vendor_t::NVIDIA;
-        if(std::regex_search(name, std::regex("Intel", std::regex_constants::icase)))
+
+        if (std::regex_search(name, std::regex("Intel", std::regex_constants::icase)))
             return vendor_t::Intel;
-        if(std::regex_search(name, std::regex("Microsoft", std::regex_constants::icase)))
+
+        if (std::regex_search(name, std::regex("Microsoft", std::regex_constants::icase)))
             return vendor_t::Microsoft;
-        if(std::regex_search(name, std::regex("Qualcomm", std::regex_constants::icase)))
+
+        if (std::regex_search(name, std::regex("Qualcomm", std::regex_constants::icase)))
             return vendor_t::Qualcomm;
-        if(std::regex_search(name, std::regex("AMD", std::regex_constants::icase)) ||
-           std::regex_search(name, std::regex("Advanced Micro Devices", std::regex_constants::icase)))
+
+        if (std::regex_search(name, std::regex("AMD", std::regex_constants::icase)) ||
+            std::regex_search(name, std::regex("Advanced Micro Devices", std::regex_constants::icase)))
             return vendor_t::AMD;
-        if(std::regex_search(name, std::regex("Apple", std::regex_constants::icase)))
+            
+        if (std::regex_search(name, std::regex("Apple", std::regex_constants::icase)))
             return vendor_t::Apple;
 
         return vendor_t::unknown;
@@ -85,7 +90,7 @@ namespace probe
 
         std::string vstr = std::to_string(ver.major) + "." + std::to_string(ver.minor) + "." +
                            std::to_string(ver.patch) + "." + std::to_string(ver.build);
-        if(!ver.codename.empty()) {
+        if (!ver.codename.empty()) {
             vstr += " (" + ver.codename + ")";
         }
         return vstr;

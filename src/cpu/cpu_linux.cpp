@@ -17,10 +17,10 @@ namespace probe::cpu
     {
         std::ifstream cpuinfo("/proc/cpuinfo");
 
-        if(!cpuinfo.is_open() || !cpuinfo) return std::nullopt;
+        if (!cpuinfo.is_open() || !cpuinfo) return std::nullopt;
 
-        for(std::string line; std::getline(cpuinfo, line);) {
-            if(line.find(key) == 0) {
+        for (std::string line; std::getline(cpuinfo, line);) {
+            if (line.find(key) == 0) {
                 const auto nonspace_id = line.find_first_not_of(" \t", line.find_first_of(':') + 1);
                 return line.c_str() + nonspace_id;
             }
@@ -33,11 +33,11 @@ namespace probe::cpu
     {
         std::ifstream cpuinfo("/proc/cpuinfo");
 
-        if(!cpuinfo.is_open() || !cpuinfo) return 0;
+        if (!cpuinfo.is_open() || !cpuinfo) return 0;
 
         uint32_t counter = 0;
-        for(std::string line; std::getline(cpuinfo, line);) {
-            if(line.find(key) == 0) {
+        for (std::string line; std::getline(cpuinfo, line);) {
+            if (line.find(key) == 0) {
                 counter++;
             }
         }
@@ -48,11 +48,11 @@ namespace probe::cpu
     {
         std::ifstream cpuinfo("/proc/cpuinfo");
 
-        if(!cpuinfo.is_open() || !cpuinfo) return 0;
+        if (!cpuinfo.is_open() || !cpuinfo) return 0;
 
         std::unordered_set<std::string> values{};
-        for(std::string line; std::getline(cpuinfo, line);) {
-            if(line.find(key) == 0) {
+        for (std::string line; std::getline(cpuinfo, line);) {
+            if (line.find(key) == 0) {
                 const auto nonspace_id = line.find_first_not_of(" \t", line.find_first_of(':') + 1);
                 values.insert(line.c_str() + nonspace_id);
             }
@@ -63,15 +63,15 @@ namespace probe::cpu
     architecture_t architecture()
     {
         utsname buf{};
-        if(uname(&buf) == -1) return cpu::architecture_t::unknown;
+        if (uname(&buf) == -1) return cpu::architecture_t::unknown;
 
-        if(!strcmp(buf.machine, "x86_64"))
+        if (!strcmp(buf.machine, "x86_64"))
             return cpu::architecture_t::x86_64;
-        else if(strstr(buf.machine, "arm") == buf.machine)
+        else if (strstr(buf.machine, "arm") == buf.machine)
             return cpu::architecture_t::arm;
-        else if(!strcmp(buf.machine, "ia64") || !strcmp(buf.machine, "IA64"))
+        else if (!strcmp(buf.machine, "ia64") || !strcmp(buf.machine, "IA64"))
             return cpu::architecture_t::itanium;
-        else if(!strcmp(buf.machine, "i686"))
+        else if (!strcmp(buf.machine, "i686"))
             return cpu::architecture_t::x86;
         else
             return cpu::architecture_t::unknown;

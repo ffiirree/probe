@@ -22,21 +22,21 @@ namespace probe::disk
         HANDLE handle = ::CreateFile(path, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr,
                                      OPEN_EXISTING, 0, nullptr);
 
-        if(INVALID_HANDLE_VALUE == handle) return drive;
+        if (INVALID_HANDLE_VALUE == handle) return drive;
         defer(::CloseHandle(handle); handle = INVALID_HANDLE_VALUE);
 
         // number
         DWORD bytes{};
-        if(::DeviceIoControl(handle, IOCTL_STORAGE_GET_DEVICE_NUMBER, nullptr, 0, &number,
-                             sizeof(STORAGE_DEVICE_NUMBER), &bytes, nullptr)) {
+        if (::DeviceIoControl(handle, IOCTL_STORAGE_GET_DEVICE_NUMBER, nullptr, 0, &number,
+                              sizeof(STORAGE_DEVICE_NUMBER), &bytes, nullptr)) {
             drive.number = number.DeviceNumber;
             drive.name   = std::format("\\\\.\\PhysicalDrive{}", number.DeviceNumber);
         }
 
         // geometry
         DISK_GEOMETRY geometry{};
-        if(::DeviceIoControl(handle, IOCTL_DISK_GET_DRIVE_GEOMETRY, nullptr, 0, &geometry,
-                             sizeof(DISK_GEOMETRY), &bytes, nullptr)) {
+        if (::DeviceIoControl(handle, IOCTL_DISK_GET_DRIVE_GEOMETRY, nullptr, 0, &geometry,
+                              sizeof(DISK_GEOMETRY), &bytes, nullptr)) {
             drive.cylinders           = static_cast<uint64_t>(geometry.Cylinders.QuadPart);
             drive.tracks_per_cylinder = geometry.TracksPerCylinder;
             drive.sectors_per_track   = geometry.SectorsPerTrack;
@@ -46,26 +46,27 @@ namespace probe::disk
         // Storage Device Property
         STORAGE_PROPERTY_QUERY query          = { StorageDeviceProperty, PropertyStandardQuery };
         STORAGE_DESCRIPTOR_HEADER desc_header = { 0 };
-        if(::DeviceIoControl(handle, IOCTL_STORAGE_QUERY_PROPERTY, &query, sizeof(STORAGE_PROPERTY_QUERY),
-                             &desc_header, sizeof(STORAGE_DESCRIPTOR_HEADER), &bytes, nullptr)) {
+        if (::DeviceIoControl(handle, IOCTL_STORAGE_QUERY_PROPERTY, &query, sizeof(STORAGE_PROPERTY_QUERY),
+                              &desc_header, sizeof(STORAGE_DESCRIPTOR_HEADER), &bytes, nullptr)) {
 
             std::vector<char> buffer(desc_header.Size, {});
 
-            if(::DeviceIoControl(handle, IOCTL_STORAGE_QUERY_PROPERTY, &query,
-                                 sizeof(STORAGE_PROPERTY_QUERY), buffer.data(), desc_header.Size, &bytes,
-                                 nullptr)) {
+            if (::DeviceIoControl(handle, IOCTL_STORAGE_QUERY_PROPERTY, &query,
+                                  sizeof(STORAGE_PROPERTY_QUERY), buffer.data(), desc_header.Size, &bytes,
+                                  nullptr)) {
 
                 auto descriptor = reinterpret_cast<PSTORAGE_DEVICE_DESCRIPTOR>(buffer.data());
 
                 drive.bus       = static_cast<bus_type_t>(descriptor->BusType);
                 drive.removable = !!descriptor->RemovableMedia;
 
-                if(descriptor->SerialNumberOffset)
+                if (descriptor->SerialNumberOffset)
                     drive.serial_number = buffer.data() + descriptor->SerialNumberOffset;
 
-                if(descriptor->VendorIdOffset) drive.vendor_id = buffer.data() + descriptor->VendorIdOffset;
+                if (descriptor->VendorIdOffset)
+                    drive.vendor_id = buffer.data() + descriptor->VendorIdOffset;
 
-                if(descriptor->ProductIdOffset)
+                if (descriptor->ProductIdOffset)
                     drive.product_id = buffer.data() + descriptor->ProductIdOffset;
 
                 std::cout << (int)descriptor->DeviceType << "\n";
@@ -80,18 +81,18 @@ namespace probe::disk
         PDRIVE_LAYOUT_INFORMATION_EX layout = (PDRIVE_LAYOUT_INFORMATION_EX)malloc(
             FIELD_OFFSET(DRIVE_LAYOUT_INFORMATION_EX, PartitionEntry[128]));
         defer(free(layout));
-        if(::DeviceIoControl(handle, IOCTL_DISK_GET_DRIVE_LAYOUT_EX, nullptr, 0, layout,
-                             FIELD_OFFSET(DRIVE_LAYOUT_INFORMATION_EX, PartitionEntry[128]), &bytes,
-                             nullptr)) {
+        if (::DeviceIoControl(handle, IOCTL_DISK_GET_DRIVE_LAYOUT_EX, nullptr, 0, layout,
+                              FIELD_OFFSET(DRIVE_LAYOUT_INFORMATION_EX, PartitionEntry[128]), &bytes,
+                              nullptr)) {
             drive.partitions = layout->PartitionCount;
             drive.style      = static_cast<partition_style_t>(layout->PartitionStyle);
 
             std::string disk_id{};
-            switch(layout->PartitionStyle) {
+            switch (layout->PartitionStyle) {
             case PARTITION_STYLE_MBR: drive.id = std::format("{:X}", layout->Mbr.Signature); break;
             case PARTITION_STYLE_GPT: {
                 WCHAR buffer[256]{};
-                if(StringFromGUID2(layout->Gpt.DiskId, buffer, sizeof(buffer)) > 0) {
+                if (StringFromGUID2(layout->Gpt.DiskId, buffer, sizeof(buffer)) > 0) {
                     drive.id = probe::util::to_utf8(buffer);
                 }
                 break;
@@ -103,9 +104,9 @@ namespace probe::disk
         // trim
         STORAGE_PROPERTY_QUERY trim_query = { StorageDeviceTrimProperty, PropertyStandardQuery };
         DEVICE_TRIM_DESCRIPTOR trim{};
-        if(::DeviceIoControl(handle, IOCTL_STORAGE_QUERY_PROPERTY, &trim_query,
-                             sizeof(STORAGE_PROPERTY_QUERY), &trim, sizeof(DEVICE_TRIM_DESCRIPTOR), &bytes,
-                             nullptr)) {
+        if (::DeviceIoControl(handle, IOCTL_STORAGE_QUERY_PROPERTY, &trim_query,
+                              sizeof(STORAGE_PROPERTY_QUERY), &trim, sizeof(DEVICE_TRIM_DESCRIPTOR), &bytes,
+                              nullptr)) {
             drive.trim = (trim.Version == sizeof(DEVICE_TRIM_DESCRIPTOR)) && (trim.TrimEnabled == 1);
         }
 
@@ -143,18 +144,18 @@ namespace probe::disk
         HDEVINFO device_sets =
             ::SetupDiGetClassDevs(&DiskClassGuid, nullptr, nullptr, DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
 
-        if(INVALID_HANDLE_VALUE == device_sets) return {};
+        if (INVALID_HANDLE_VALUE == device_sets) return {};
         defer(::SetupDiDestroyDeviceInfoList(device_sets));
 
         SP_DEVICE_INTERFACE_DATA idevice{ .cbSize = sizeof(SP_DEVICE_INTERFACE_DATA) };
         PSP_DEVICE_INTERFACE_DETAIL_DATA idevice_detail{};
         DWORD size{};
 
-        for(DWORD idx = 0;
-            ::SetupDiEnumDeviceInterfaces(device_sets, nullptr, &DiskClassGuid, idx, &idevice); ++idx) {
+        for (DWORD idx = 0;
+             ::SetupDiEnumDeviceInterfaces(device_sets, nullptr, &DiskClassGuid, idx, &idevice); ++idx) {
 
             ::SetupDiGetDeviceInterfaceDetail(device_sets, &idevice, nullptr, 0, &size, nullptr);
-            if(!(ERROR_INSUFFICIENT_BUFFER == ::GetLastError())) continue;
+            if (!(ERROR_INSUFFICIENT_BUFFER == ::GetLastError())) continue;
 
             idevice_detail = (PSP_DEVICE_INTERFACE_DETAIL_DATA)malloc(size);
             defer(free(idevice_detail); idevice_detail = nullptr);
@@ -162,8 +163,8 @@ namespace probe::disk
             ::ZeroMemory(idevice_detail, size);
             idevice_detail->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA);
 
-            if(!::SetupDiGetDeviceInterfaceDetail(device_sets, &idevice, idevice_detail, size, nullptr,
-                                                  nullptr)) {
+            if (!::SetupDiGetDeviceInterfaceDetail(device_sets, &idevice, idevice_detail, size, nullptr,
+                                                   nullptr)) {
                 continue;
             }
 
@@ -178,7 +179,7 @@ namespace probe::disk
         HANDLE handle =
             ::CreateFile(probe::util::to_utf16(drive.path).c_str(), GENERIC_READ,
                          FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, 0, nullptr);
-        if(INVALID_HANDLE_VALUE == handle) return {};
+        if (INVALID_HANDLE_VALUE == handle) return {};
         defer(::CloseHandle(handle); handle = INVALID_HANDLE_VALUE);
 
         std::vector<partition_t> ret;
@@ -190,23 +191,23 @@ namespace probe::disk
         defer(free(layout));
 
         DWORD bytes{};
-        if(!::DeviceIoControl(handle, IOCTL_DISK_GET_DRIVE_LAYOUT_EX, nullptr, 0, layout,
-                              FIELD_OFFSET(DRIVE_LAYOUT_INFORMATION_EX, PartitionEntry[6]), &bytes,
-                              nullptr)) {
+        if (!::DeviceIoControl(handle, IOCTL_DISK_GET_DRIVE_LAYOUT_EX, nullptr, 0, layout,
+                               FIELD_OFFSET(DRIVE_LAYOUT_INFORMATION_EX, PartitionEntry[6]), &bytes,
+                               nullptr)) {
             return ret;
         }
 
-        for(DWORD i = 0; i < layout->PartitionCount; ++i) {
-            if(0 == layout->PartitionEntry[i].PartitionNumber) continue;
+        for (DWORD i = 0; i < layout->PartitionCount; ++i) {
+            if (0 == layout->PartitionEntry[i].PartitionNumber) continue;
 
             std::string part_id{};
             std::string type_id{};
             std::string name{};
-            switch(layout->PartitionEntry[i].PartitionStyle) {
+            switch (layout->PartitionEntry[i].PartitionStyle) {
             case PARTITION_STYLE_MBR: {
-                WCHAR buffer[256]{};
-                if(StringFromGUID2(layout->PartitionEntry[i].Mbr.PartitionId, buffer, sizeof(buffer)) > 0) {
-                    part_id = probe::util::to_utf8(buffer);
+                WCHAR str[256]{};
+                if (StringFromGUID2(layout->PartitionEntry[i].Mbr.PartitionId, str, sizeof(str)) > 0) {
+                    part_id = probe::util::to_utf8(str);
                 }
 
                 // type id
@@ -214,20 +215,19 @@ namespace probe::disk
                 break;
             }
             case PARTITION_STYLE_GPT: {
-                WCHAR buffer[256]{};
+                WCHAR str[256]{};
 
                 // partition id
-                if(StringFromGUID2(layout->PartitionEntry[i].Gpt.PartitionId, buffer, sizeof(buffer)) > 0) {
-                    part_id = probe::util::to_utf8(buffer);
+                if (StringFromGUID2(layout->PartitionEntry[i].Gpt.PartitionId, str, sizeof(str)) > 0) {
+                    part_id = probe::util::to_utf8(str);
                 }
 
                 // name
                 name = probe::util::to_utf8(layout->PartitionEntry[i].Gpt.Name);
 
                 // type id
-                if(StringFromGUID2(layout->PartitionEntry[i].Gpt.PartitionType, buffer, sizeof(buffer)) >
-                   0) {
-                    type_id = probe::util::to_utf8(buffer);
+                if (StringFromGUID2(layout->PartitionEntry[i].Gpt.PartitionType, str, sizeof(str)) > 0) {
+                    type_id = probe::util::to_utf8(str);
                 }
                 break;
             }
@@ -256,8 +256,8 @@ namespace probe::disk
 
         auto handle = ::FindFirstVolume(path.data(), 512);
         bool sucess = true;
-        for(; handle != INVALID_HANDLE_VALUE && sucess;
-            sucess = ::FindNextVolume(handle, path.data(), 512)) {
+        for (; handle != INVALID_HANDLE_VALUE && sucess;
+             sucess = ::FindNextVolume(handle, path.data(), 512)) {
 
             // info
             std::array<WCHAR, MAX_PATH> label;

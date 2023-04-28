@@ -8,7 +8,7 @@ namespace probe::util::gsettings
     {
         auto ver = exec_sync({ "gsettings", "--version" });
 
-        if(ver.empty()) return {};
+        if (ver.empty()) return {};
 
         return to_version(ver[0]);
     }

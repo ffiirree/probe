@@ -16,7 +16,7 @@ static probe::version_t gnome_version();
 
 namespace probe::system
 {
-    memory_status_t memory() 
+    memory_status_t memory()
     {
         struct sysinfo info{};
         sysinfo(&info);
@@ -31,11 +31,11 @@ namespace probe::system
     {
         const std::string de = std::getenv("XDG_CURRENT_DESKTOP");
         // GNOME
-        if(std::regex_search(de, std::regex("gnome", std::regex_constants::icase))) {
+        if (std::regex_search(de, std::regex("gnome", std::regex_constants::icase))) {
             return desktop_t::GNOME;
         }
         // Unity
-        if(std::regex_search(de, std::regex("unity", std::regex_constants::icase))) {
+        if (std::regex_search(de, std::regex("unity", std::regex_constants::icase))) {
             return desktop_t::Unity;
         }
         return desktop_t::unknown;
@@ -43,7 +43,7 @@ namespace probe::system
 
     version_t desktop_version(desktop_t de)
     {
-        switch(de) {
+        switch (de) {
         case desktop_t::Unity:
         case desktop_t::GNOME: return gnome_version();
         // TODO:
@@ -53,26 +53,26 @@ namespace probe::system
 
     theme_t theme()
     {
-        if(desktop() == desktop_t::GNOME || desktop() == desktop_t::Unity) {
+        if (desktop() == desktop_t::GNOME || desktop() == desktop_t::Unity) {
 
             auto color_scheme = probe::util::exec_sync(
                 { "gsettings", "get", "org.gnome.desktop.interface", "color-scheme" });
-            if(!color_scheme.empty()) {
-                if(color_scheme[0].find("dark") != std::string::npos) {
+            if (!color_scheme.empty()) {
+                if (color_scheme[0].find("dark") != std::string::npos) {
                     return theme_t::dark;
                 }
-                if(color_scheme[0].find("light") != std::string::npos) {
+                if (color_scheme[0].find("light") != std::string::npos) {
                     return theme_t::light;
                 }
             }
 
             auto gtk_theme =
                 probe::util::exec_sync({ "gsettings", "get", "org.gnome.desktop.interface", "gtk-scheme" });
-            if(!gtk_theme.empty()) {
-                if(gtk_theme[0].find("dark") != std::string::npos) {
+            if (!gtk_theme.empty()) {
+                if (gtk_theme[0].find("dark") != std::string::npos) {
                     return theme_t::dark;
                 }
-                if(gtk_theme[0].find("light") != std::string::npos) {
+                if (gtk_theme[0].find("light") != std::string::npos) {
                     return theme_t::light;
                 }
             }
@@ -87,7 +87,7 @@ namespace probe::system
     version_t kernel_version()
     {
         utsname uts{};
-        if(uname(&uts) == -1) {
+        if (uname(&uts) == -1) {
             return {};
         }
 
@@ -100,12 +100,12 @@ namespace probe::system
     {
         std::unordered_map<std::string, std::string> kvs{};
 
-        for(std::string line; std::getline(fstream, line);) {
+        for (std::string line; std::getline(fstream, line);) {
             auto pos = line.find('=');
-            if(pos != std::string::npos) {
+            if (pos != std::string::npos) {
                 auto value = line.substr(pos + 1);
-                if(std::count(value.begin(), value.end(), '"') == 2) {
-                    if(value[0] == value.back() && value.back() == '"') {
+                if (std::count(value.begin(), value.end(), '"') == 2) {
+                    if (value[0] == value.back() && value.back() == '"') {
                         value = value.substr(1, value.size() - 2);
                     }
                 }
@@ -120,35 +120,35 @@ namespace probe::system
     version_t os_version()
     {
         version_t ver{};
-        if(std::filesystem::exists("/etc/os-release")) {
+        if (std::filesystem::exists("/etc/os-release")) {
             std::ifstream release("/etc/os-release");
-            if(release && release.is_open()) {
+            if (release && release.is_open()) {
                 auto kvs = parse_kv(release);
 
                 // version
-                if(auto version = kvs.find("VERSION"); version != kvs.end()) {
+                if (auto version = kvs.find("VERSION"); version != kvs.end()) {
                     ver = to_version(version->second);
                 }
-                else if(auto version_id = kvs.find("VERSION_ID"); version_id != kvs.end()) {
+                else if (auto version_id = kvs.find("VERSION_ID"); version_id != kvs.end()) {
                     ver = to_version(version_id->second);
                 }
 
                 // codename
-                if(auto codename = kvs.find("VERSION_CODENAME"); codename != kvs.end()) {
+                if (auto codename = kvs.find("VERSION_CODENAME"); codename != kvs.end()) {
                     ver.codename = codename->second;
                 }
             }
         }
-        else if(std::filesystem::exists("/etc/lsb-release")) {
+        else if (std::filesystem::exists("/etc/lsb-release")) {
             std::ifstream release("/etc/os-release");
-            if(release && release.is_open()) {
+            if (release && release.is_open()) {
                 auto kvs = parse_kv(release);
 
-                if(auto version_id = kvs.find("DISTRIB_RELEASE"); version_id != kvs.end()) {
+                if (auto version_id = kvs.find("DISTRIB_RELEASE"); version_id != kvs.end()) {
                     ver = to_version(version_id->second);
                 }
 
-                if(auto codename = kvs.find("DISTRIB_CODENAME"); codename != kvs.end()) {
+                if (auto codename = kvs.find("DISTRIB_CODENAME"); codename != kvs.end()) {
                     ver.codename = codename->second;
                 }
             }
@@ -159,27 +159,27 @@ namespace probe::system
 
     std::string os_name()
     {
-        if(std::filesystem::exists("/etc/os-release")) {
+        if (std::filesystem::exists("/etc/os-release")) {
             std::ifstream release("/etc/os-release");
-            if(release && release.is_open()) {
+            if (release && release.is_open()) {
                 auto kvs = parse_kv(release);
-                if(auto pretty_name = kvs.find("PRETTY_NAME"); pretty_name != kvs.end()) {
+                if (auto pretty_name = kvs.find("PRETTY_NAME"); pretty_name != kvs.end()) {
                     return pretty_name->second;
                 }
-                else if(auto name = kvs.find("NAME"); name != kvs.end()) {
+                else if (auto name = kvs.find("NAME"); name != kvs.end()) {
                     return name->second;
                 }
             }
         }
-        else if(std::filesystem::exists("/etc/lsb-release")) {
+        else if (std::filesystem::exists("/etc/lsb-release")) {
             std::ifstream release("/etc/lsb-release");
-            if(release && release.is_open()) {
+            if (release && release.is_open()) {
                 auto kvs = parse_kv(release);
 
-                if(auto desc = kvs.find("DISTRIB_DESCRIPTION"); desc != kvs.end()) {
+                if (auto desc = kvs.find("DISTRIB_DESCRIPTION"); desc != kvs.end()) {
                     return desc->second;
                 }
-                else if(auto name = kvs.find("DISTRIB_ID"); name != kvs.end()) {
+                else if (auto name = kvs.find("DISTRIB_ID"); name != kvs.end()) {
                     return name->second;
                 }
             }
@@ -199,30 +199,30 @@ static probe::version_t gnome_version()
     probe::version_t version{};
     std::string filename{};
 
-    if(std::filesystem::exists("/usr/share/gnome/gnome-version.xml")) {
+    if (std::filesystem::exists("/usr/share/gnome/gnome-version.xml")) {
         filename = "/usr/share/gnome/gnome-version.xml";
     }
-    else if(std::filesystem::exists("/usr/share/gnome-about/gnome-version.xml")) {
+    else if (std::filesystem::exists("/usr/share/gnome-about/gnome-version.xml")) {
         filename = "/usr/share/gnome-about/gnome-version.xml";
     }
 
-    if(!filename.empty()) {
+    if (!filename.empty()) {
         std::ifstream verfile(filename);
-        if(verfile && verfile.is_open()) {
-            for(std::string line{}; std::getline(verfile, line);) {
+        if (verfile && verfile.is_open()) {
+            for (std::string line{}; std::getline(verfile, line);) {
                 std::smatch matchs;
-                if(std::regex_match(line, matchs, std::regex("[ \t]*<platform>(\\d+)</platform>\\s*"))) {
-                    if(matchs.size() == 2 && !matchs[1].str().empty()) {
+                if (std::regex_match(line, matchs, std::regex("[ \t]*<platform>(\\d+)</platform>\\s*"))) {
+                    if (matchs.size() == 2 && !matchs[1].str().empty()) {
                         version.major = std::stoi(matchs[1].str());
                     }
                 }
-                else if(std::regex_match(line, matchs, std::regex("[ \t]*<minor>(\\d+)</minor>\\s*"))) {
-                    if(matchs.size() == 2 && !matchs[1].str().empty()) {
+                else if (std::regex_match(line, matchs, std::regex("[ \t]*<minor>(\\d+)</minor>\\s*"))) {
+                    if (matchs.size() == 2 && !matchs[1].str().empty()) {
                         version.minor = std::stoi(matchs[1].str());
                     }
                 }
-                else if(std::regex_match(line, matchs, std::regex("[ \t]*<micro>(\\d+)</micro>\\s*"))) {
-                    if(matchs.size() == 2 && !matchs[1].str().empty()) {
+                else if (std::regex_match(line, matchs, std::regex("[ \t]*<micro>(\\d+)</micro>\\s*"))) {
+                    if (matchs.size() == 2 && !matchs[1].str().empty()) {
                         version.patch = std::stoi(matchs[1].str());
                     }
                 }
@@ -231,7 +231,7 @@ static probe::version_t gnome_version()
     }
     else {
         auto ver = probe::util::exec_sync({ "gnome-shell", "--version" });
-        if(!ver.empty()) {
+        if (!ver.empty()) {
             version = probe::to_version(ver[0]);
         }
     }

@@ -10,10 +10,10 @@ namespace probe::graphics
 {
     static double calculate_frequency(XRRScreenResources *res, RRMode mode_id)
     {
-        for(auto k = 0; k < res->nmode; ++k) {
+        for (auto k = 0; k < res->nmode; ++k) {
             auto mode = res->modes[k];
-            if(mode.id == mode_id) {
-                if(mode.hTotal != 0 && mode.vTotal != 0) {
+            if (mode.id == mode_id) {
+                if (mode.hTotal != 0 && mode.vTotal != 0) {
                     return static_cast<double>((1000 * mode.dotClock) / (mode.hTotal * mode.vTotal)) /
                            1000.0;
                 }
@@ -35,7 +35,7 @@ namespace probe::graphics
 
         // display
         auto display = XOpenDisplay(nullptr);
-        if(!display) return {};
+        if (!display) return {};
         defer(XCloseDisplay(display));
 
         // display number
@@ -46,12 +46,12 @@ namespace probe::graphics
         auto screen_res = XRRGetScreenResources(display, XDefaultRootWindow(display));
         defer(XRRFreeScreenResources(screen_res));
 
-        for(auto i = 0; i < display_num; ++i) {
+        for (auto i = 0; i < display_num; ++i) {
             // monitors[i]->noutput == 1
             auto output_info = XRRGetOutputInfo(display, screen_res, monitors[i].outputs[0]);
             defer(XRRFreeOutputInfo(output_info));
 
-            if(output_info->connection == RR_Disconnected || !output_info->crtc) {
+            if (output_info->connection == RR_Disconnected || !output_info->crtc) {
                 continue;
             }
 
@@ -60,8 +60,7 @@ namespace probe::graphics
 
             //
             _displays.push_back({
-                XGetAtomName(display, monitors[i].name),
-                XGetAtomName(display, monitors[i].name),
+                XGetAtomName(display, monitors[i].name), XGetAtomName(display, monitors[i].name),
                 geometry_t{ crtc_info->x, crtc_info->y, crtc_info->width, crtc_info->height },
                 calculate_frequency(screen_res, crtc_info->mode),
                 static_cast<uint32_t>(DefaultDepth(display, 0)), // global
@@ -81,7 +80,7 @@ namespace probe::graphics
         std::deque<window_t> ret;
 
         auto display = XOpenDisplay(nullptr);
-        if(!display) return {};
+        if (!display) return {};
 
         auto root_window = DefaultRootWindow(display);
 
@@ -95,12 +94,12 @@ namespace probe::graphics
         // non-NULL children list when it is no longer needed, use XFree().
         XQueryTree(display, root_window, &root_return, &parent_return, &child_windows, &child_num);
 
-        for(unsigned int i = 0; i < child_num; ++i) {
+        for (unsigned int i = 0; i < child_num; ++i) {
             XWindowAttributes attrs{};
 
             XGetWindowAttributes(display, child_windows[i], &attrs);
 
-            if(visible && (attrs.map_state < 2 || (attrs.width * attrs.height < 4))) {
+            if (visible && (attrs.map_state < 2 || (attrs.width * attrs.height < 4))) {
                 continue;
             }
 

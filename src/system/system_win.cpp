@@ -13,7 +13,7 @@ namespace probe::system
     {
         MEMORYSTATUSEX statex{ .dwLength = sizeof(MEMORYSTATUSEX) };
 
-        if(!GlobalMemoryStatusEx(&statex)) return {};
+        if (!GlobalMemoryStatusEx(&statex)) return {};
 
         return {
             .avail = statex.ullAvailPhys,
@@ -27,11 +27,11 @@ namespace probe::system
 
     theme_t theme()
     {
-        if(os_version() >= probe::WIN_10_1ST) {
-            if(probe::util::registry::read<DWORD>(
-                   HKEY_CURRENT_USER, R"(Software\Microsoft\Windows\CurrentVersion\Themes\Personalize)",
-                   "AppsUseLightTheme")
-                   .value_or(1) == 0) {
+        if (os_version() >= probe::WIN_10_1ST) {
+            if (probe::util::registry::read<DWORD>(
+                    HKEY_CURRENT_USER, R"(Software\Microsoft\Windows\CurrentVersion\Themes\Personalize)",
+                    "AppsUseLightTheme")
+                    .value_or(1) == 0) {
                 return theme_t::dark;
             }
         }
@@ -45,14 +45,14 @@ namespace probe::system
     {
         auto ubr = probe::util::registry::read<DWORD>(
             HKEY_LOCAL_MACHINE, R"(Software\Microsoft\Windows NT\CurrentVersion)", "UBR");
-        if(ubr.has_value()) {
+        if (ubr.has_value()) {
             return ubr.value();
         }
 
         // Fall back to BuildLabEx in the early version of Windows 8.1 and less.
         auto buildlabex = probe::util::registry::read<std::string>(
             HKEY_LOCAL_MACHINE, R"(Software\Microsoft\Windows NT\CurrentVersion)", "BuildLabEx");
-        if(!buildlabex.has_value()) {
+        if (!buildlabex.has_value()) {
             return 0;
         }
 
@@ -113,13 +113,13 @@ namespace probe::system
                 .value_or("Windows");
 
         // Windows 11
-        if(os_version().patch >= 22000 &&
-           probe::util::registry::read<std::string>(
-               HKEY_LOCAL_MACHINE, R"(Software\Microsoft\Windows NT\CurrentVersion)", "InstallationType")
-                   .value_or("") == "Client") {
+        if (os_version().patch >= 22000 &&
+            probe::util::registry::read<std::string>(
+                HKEY_LOCAL_MACHINE, R"(Software\Microsoft\Windows NT\CurrentVersion)", "InstallationType")
+                    .value_or("") == "Client") {
 
             auto pos = name.find("Windows 10");
-            if(pos != std::string::npos) {
+            if (pos != std::string::npos) {
                 name.replace(pos, pos + 10, "Windows 11");
             }
         }

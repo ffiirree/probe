@@ -16,9 +16,9 @@ namespace probe::graphics
         device_info.cb = sizeof(DISPLAY_DEVICE);
 
         int monitor_idx = 0;
-        while(::EnumDisplayDevices(device, monitor_idx, &device_info, 0)) {
+        while (::EnumDisplayDevices(device, monitor_idx, &device_info, 0)) {
             //
-            if(device_info.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP) {
+            if (device_info.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP) {
 
                 // example: L"MONITOR\\AOC2790\\{4d36e96e-e325-11ce-bfc1-08002be10318}\\0001"
                 //          - name:     AOC2790
@@ -99,12 +99,12 @@ namespace probe::graphics
                 auto ret = reinterpret_cast<std::vector<display_t> *>(userdata);
 
                 MONITORINFOEX info = { sizeof(MONITORINFOEX) };
-                if(::GetMonitorInfo(monitor, &info)) {
+                if (::GetMonitorInfo(monitor, &info)) {
 
                     DEVMODE settings = {};
                     settings.dmSize  = sizeof(DEVMODE);
 
-                    if(::EnumDisplaySettings(info.szDevice, ENUM_CURRENT_SETTINGS, &settings)) {
+                    if (::EnumDisplaySettings(info.szDevice, ENUM_CURRENT_SETTINGS, &settings)) {
 
                         const auto [name, driver] = display_name_and_driver_of(info.szDevice);
                         ret->push_back(display_t{
@@ -142,7 +142,7 @@ namespace probe::graphics
         // title
         std::wstring name;
         auto name_len = ::GetWindowTextLength(hwnd);
-        if(name_len > 0) {
+        if (name_len > 0) {
             name.resize(name_len + 1, {});
 
             name_len = ::GetWindowText(hwnd, name.data(), name_len + 1);
@@ -184,11 +184,11 @@ namespace probe::graphics
         std::deque<window_t> ret;
 
         // Z-index: up to down
-        for(auto hwnd = ::GetTopWindow(nullptr); hwnd != nullptr;
-            hwnd      = ::GetNextWindow(hwnd, GW_HWNDNEXT)) {
+        for (auto hwnd = ::GetTopWindow(nullptr); hwnd != nullptr;
+             hwnd      = ::GetNextWindow(hwnd, GW_HWNDNEXT)) {
             auto window = window_info(hwnd);
 
-            if(visible && !window.visible) {
+            if (visible && !window.visible) {
                 continue;
             }
 

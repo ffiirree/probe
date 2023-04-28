@@ -11,7 +11,7 @@ namespace probe::graphics
 
     bool geometry_t::contains(const geometry_t& r, bool proper) const
     {
-        if(proper) {
+        if (proper) {
             return left() < r.left() && right() > r.right() && top() < r.top() && bottom() > r.bottom();
         }
         else {
@@ -32,7 +32,7 @@ namespace probe::graphics
         int32_t r = std::min(right(), otr.right());
         int32_t b = std::min(bottom(), otr.bottom());
 
-        if(r <= l || b <= t) {
+        if (r <= l || b <= t) {
             return {};
         }
 
@@ -44,16 +44,16 @@ namespace probe::graphics
         int32_t l = std::numeric_limits<int32_t>::max(), t = std::numeric_limits<int32_t>::max();
         int32_t r = std::numeric_limits<int32_t>::min(), b = std::numeric_limits<int32_t>::min();
 
-        for(auto& display : displays()) {
-            if(l > display.geometry.x) l = display.geometry.x;
+        for (auto& display : displays()) {
+            if (l > display.geometry.x) l = display.geometry.x;
 
-            if(t > display.geometry.y) t = display.geometry.y;
+            if (t > display.geometry.y) t = display.geometry.y;
 
             int32_t this_r = display.geometry.x + display.geometry.width - 1;
-            if(r < this_r) r = this_r;
+            if (r < this_r) r = this_r;
 
             int32_t this_b = display.geometry.y + display.geometry.height - 1;
-            if(b < this_b) b = this_b;
+            if (b < this_b) b = this_b;
         }
 
         return geometry_t{
@@ -86,12 +86,14 @@ namespace probe
 
     std::string to_string(graphics::orientation_t o)
     {
-        switch(o) {
-        case graphics::orientation_t::rotate_0: return "Landscape";
-        case graphics::orientation_t::rotate_90: return "Portrait";
-        case graphics::orientation_t::rotate_180: return "Landscape (flipped)";
-        case graphics::orientation_t::rotate_270: return "Portrait (flipped)";
+        // clang-format off
+        switch (o) {
+        case graphics::orientation_t::rotate_0:     return "Landscape";
+        case graphics::orientation_t::rotate_90:    return "Portrait";
+        case graphics::orientation_t::rotate_180:   return "Landscape (flipped)";
+        case graphics::orientation_t::rotate_270:   return "Portrait (flipped)";
         default: return "Unknown";
         }
+        // clang-format on
     }
 } // namespace probe

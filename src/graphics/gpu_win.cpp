@@ -12,10 +12,10 @@ namespace probe::graphics
     std::vector<gpu_info_t> info()
     {
         IDXGIFactory *factory = nullptr;
-        if(FAILED(CreateDXGIFactory(__uuidof(IDXGIFactory), (void **)(&factory)))) {
+        if (FAILED(CreateDXGIFactory(__uuidof(IDXGIFactory), (void **)(&factory)))) {
             return {};
         }
-        defer(if(factory != nullptr) {
+        defer(if (factory != nullptr) {
             factory->Release();
             factory = nullptr;
         });
@@ -24,7 +24,7 @@ namespace probe::graphics
 
         UINT idx              = 0;
         IDXGIAdapter *adapter = nullptr;
-        while(factory->EnumAdapters(idx, &adapter) != DXGI_ERROR_NOT_FOUND) {
+        while (factory->EnumAdapters(idx, &adapter) != DXGI_ERROR_NOT_FOUND) {
             DXGI_ADAPTER_DESC desc{};
             adapter->GetDesc(&desc);
 

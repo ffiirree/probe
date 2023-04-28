@@ -12,21 +12,21 @@ namespace probe::cpu
         const uint16_t test = 0xFF00;
         const auto result   = *static_cast<const std::uint8_t *>(static_cast<const void *>(&test));
 
-        if(result == 0xFF)
-            return endianness_t::big;
-        else
-            return endianness_t::little;
+        return (result == 0xFF) ? endianness_t::big : endianness_t::little;
     }
 
     cache_type_t to_cache_type(const std::string& str)
     {
-        if(std::regex_search(str, std::regex("unified", std::regex_constants::icase)))
+        if (std::regex_search(str, std::regex("unified", std::regex_constants::icase)))
             return cache_type_t::unified;
-        if(std::regex_search(str, std::regex("inst", std::regex_constants::icase)))
+
+        if (std::regex_search(str, std::regex("inst", std::regex_constants::icase)))
             return cache_type_t::instruction;
-        if(std::regex_search(str, std::regex("data", std::regex_constants::icase)))
+
+        if (std::regex_search(str, std::regex("data", std::regex_constants::icase)))
             return cache_type_t::data;
-        if(std::regex_search(str, std::regex("trace", std::regex_constants::icase)))
+
+        if (std::regex_search(str, std::regex("trace", std::regex_constants::icase)))
             return cache_type_t::trace;
 
         return static_cast<cache_type_t>(static_cast<uint32_t>(cache_type_t::trace) + 1);
@@ -53,7 +53,7 @@ namespace probe::cpu
 
         auto [leaf, subleaf, reg, bit] = unpack(feature);
 
-        if(info[0] >= leaf) {
+        if (info[0] >= leaf) {
             cpuid(info, leaf, subleaf);
 
             return (info[reg] & (0x01 << bit));
@@ -82,69 +82,69 @@ namespace probe::cpu
 
         vendor_t vendor = vendor_cast(vendor_name);
 
-        if(ids >= 1) {
+        if (ids >= 1) {
             cpuid(info, 1, 0);
 
             std::bitset<32> ecx = info[2];
             std::bitset<32> edx = info[3];
 
-            if(ecx[0]) isets.push_back(feature_t::sse3);
-            if(ecx[1]) isets.push_back(feature_t::pclmulqdq);
-            if(ecx[3]) isets.push_back(feature_t::monitor);
-            if(ecx[9]) isets.push_back(feature_t::ssse3);
-            if(ecx[12]) isets.push_back(feature_t::fma);
-            if(ecx[13]) isets.push_back(feature_t::cx16);
-            if(ecx[19]) isets.push_back(feature_t::sse4_1);
-            if(ecx[20]) isets.push_back(feature_t::sse4_2);
-            if(ecx[22]) isets.push_back(feature_t::movbe);
-            if(ecx[23]) isets.push_back(feature_t::popcnt);
-            if(ecx[25]) isets.push_back(feature_t::aes);
-            if(ecx[26]) isets.push_back(feature_t::xsave);
-            if(ecx[27]) isets.push_back(feature_t::osxsave);
-            if(ecx[28]) isets.push_back(feature_t::avx);
-            if(ecx[29]) isets.push_back(feature_t::f16c);
-            if(ecx[30]) isets.push_back(feature_t::rdrnd);
+            if (ecx[0]) isets.push_back(feature_t::sse3);
+            if (ecx[1]) isets.push_back(feature_t::pclmulqdq);
+            if (ecx[3]) isets.push_back(feature_t::monitor);
+            if (ecx[9]) isets.push_back(feature_t::ssse3);
+            if (ecx[12]) isets.push_back(feature_t::fma);
+            if (ecx[13]) isets.push_back(feature_t::cx16);
+            if (ecx[19]) isets.push_back(feature_t::sse4_1);
+            if (ecx[20]) isets.push_back(feature_t::sse4_2);
+            if (ecx[22]) isets.push_back(feature_t::movbe);
+            if (ecx[23]) isets.push_back(feature_t::popcnt);
+            if (ecx[25]) isets.push_back(feature_t::aes);
+            if (ecx[26]) isets.push_back(feature_t::xsave);
+            if (ecx[27]) isets.push_back(feature_t::osxsave);
+            if (ecx[28]) isets.push_back(feature_t::avx);
+            if (ecx[29]) isets.push_back(feature_t::f16c);
+            if (ecx[30]) isets.push_back(feature_t::rdrnd);
 
-            if(edx[5]) isets.push_back(feature_t::msr);
-            if(edx[8]) isets.push_back(feature_t::cx8);
-            if(edx[11]) isets.push_back(feature_t::sep);
-            if(edx[15]) isets.push_back(feature_t::cmov);
-            if(edx[19]) isets.push_back(feature_t::clfsh);
-            if(edx[23]) isets.push_back(feature_t::mmx);
-            if(edx[24]) isets.push_back(feature_t::fxsr);
-            if(edx[25]) isets.push_back(feature_t::sse);
-            if(edx[26]) isets.push_back(feature_t::sse2);
+            if (edx[5]) isets.push_back(feature_t::msr);
+            if (edx[8]) isets.push_back(feature_t::cx8);
+            if (edx[11]) isets.push_back(feature_t::sep);
+            if (edx[15]) isets.push_back(feature_t::cmov);
+            if (edx[19]) isets.push_back(feature_t::clfsh);
+            if (edx[23]) isets.push_back(feature_t::mmx);
+            if (edx[24]) isets.push_back(feature_t::fxsr);
+            if (edx[25]) isets.push_back(feature_t::sse);
+            if (edx[26]) isets.push_back(feature_t::sse2);
         }
 
-        if(ids >= 7) {
+        if (ids >= 7) {
             cpuid(info, 7, 0);
 
             std::bitset<32> ebx = info[1];
             std::bitset<32> ecx = info[2];
 
-            if(ebx[0]) isets.push_back(feature_t::fsgsbase);
-            if(ebx[3]) isets.push_back(feature_t::bmi1);
-            if(ebx[4] && vendor == vendor_t::Intel) isets.push_back(feature_t::hle);
-            if(ebx[5]) isets.push_back(feature_t::avx2);
-            if(ebx[8]) isets.push_back(feature_t::bmi2);
-            if(ebx[9]) isets.push_back(feature_t::erms);
-            if(ebx[10]) isets.push_back(feature_t::invpcid);
-            if(ebx[11] && vendor == vendor_t::Intel) isets.push_back(feature_t::rtm);
-            if(ebx[16]) isets.push_back(feature_t::avx512_f);
-            if(ebx[17]) isets.push_back(feature_t::avx512_dq);
-            if(ebx[18]) isets.push_back(feature_t::rdseed);
-            if(ebx[19]) isets.push_back(feature_t::adx);
-            if(ebx[21]) isets.push_back(feature_t::avx512_ifma);
-            if(ebx[26]) isets.push_back(feature_t::avx512_pf);
-            if(ebx[27]) isets.push_back(feature_t::avx512_er);
-            if(ebx[28]) isets.push_back(feature_t::avx512_cd);
-            if(ebx[29]) isets.push_back(feature_t::sha);
-            if(ebx[30]) isets.push_back(feature_t::avx512_bw);
-            if(ebx[31]) isets.push_back(feature_t::avx512_vl);
+            if (ebx[0]) isets.push_back(feature_t::fsgsbase);
+            if (ebx[3]) isets.push_back(feature_t::bmi1);
+            if (ebx[4] && vendor == vendor_t::Intel) isets.push_back(feature_t::hle);
+            if (ebx[5]) isets.push_back(feature_t::avx2);
+            if (ebx[8]) isets.push_back(feature_t::bmi2);
+            if (ebx[9]) isets.push_back(feature_t::erms);
+            if (ebx[10]) isets.push_back(feature_t::invpcid);
+            if (ebx[11] && vendor == vendor_t::Intel) isets.push_back(feature_t::rtm);
+            if (ebx[16]) isets.push_back(feature_t::avx512_f);
+            if (ebx[17]) isets.push_back(feature_t::avx512_dq);
+            if (ebx[18]) isets.push_back(feature_t::rdseed);
+            if (ebx[19]) isets.push_back(feature_t::adx);
+            if (ebx[21]) isets.push_back(feature_t::avx512_ifma);
+            if (ebx[26]) isets.push_back(feature_t::avx512_pf);
+            if (ebx[27]) isets.push_back(feature_t::avx512_er);
+            if (ebx[28]) isets.push_back(feature_t::avx512_cd);
+            if (ebx[29]) isets.push_back(feature_t::sha);
+            if (ebx[30]) isets.push_back(feature_t::avx512_bw);
+            if (ebx[31]) isets.push_back(feature_t::avx512_vl);
 
-            if(ecx[0]) isets.push_back(feature_t::prefetchwt1);
-            if(ecx[1]) isets.push_back(feature_t::avx512_vbmi);
-            if(ecx[6]) isets.push_back(feature_t::avx512_vbmi2);
+            if (ecx[0]) isets.push_back(feature_t::prefetchwt1);
+            if (ecx[1]) isets.push_back(feature_t::avx512_vbmi);
+            if (ecx[6]) isets.push_back(feature_t::avx512_vbmi2);
         }
 
         // Calling __cpuid with 0x80000000 as the function_id argument gets the number of the highest valid
@@ -152,23 +152,23 @@ namespace probe::cpu
         cpuid(info, 0x80000000, 0);
         int32_t exids = info[0];
 
-        if(exids >= static_cast<int32_t>(0x80000001)) {
+        if (exids >= static_cast<int32_t>(0x80000001)) {
             cpuid(info, 0x80000001, 0);
 
             std::bitset<32> ecx = info[2];
             std::bitset<32> edx = info[3];
 
-            if(ecx[5] && vendor == vendor_t::Intel) isets.push_back(feature_t::lzcnt); // intel
-            if(ecx[5] && vendor == vendor_t::AMD) isets.push_back(feature_t::abm);     // amd
-            if(ecx[6] && vendor == vendor_t::AMD) isets.push_back(feature_t::sse4a);
-            if(ecx[11] && vendor == vendor_t::AMD) isets.push_back(feature_t::xop);
-            if(ecx[21] && vendor == vendor_t::AMD) isets.push_back(feature_t::tbm);
+            if (ecx[5] && vendor == vendor_t::Intel) isets.push_back(feature_t::lzcnt); // intel
+            if (ecx[5] && vendor == vendor_t::AMD) isets.push_back(feature_t::abm);     // amd
+            if (ecx[6] && vendor == vendor_t::AMD) isets.push_back(feature_t::sse4a);
+            if (ecx[11] && vendor == vendor_t::AMD) isets.push_back(feature_t::xop);
+            if (ecx[21] && vendor == vendor_t::AMD) isets.push_back(feature_t::tbm);
 
-            if(edx[11] && vendor == vendor_t::Intel) isets.push_back(feature_t::syscall);
-            if(edx[22] && vendor == vendor_t::AMD) isets.push_back(feature_t::mmxext);
-            if(edx[27] && vendor == vendor_t::Intel) isets.push_back(feature_t::rdtscp);
-            if(edx[30] && vendor == vendor_t::AMD) isets.push_back(feature_t::amd_3dnowext);
-            if(edx[31] && vendor == vendor_t::AMD) isets.push_back(feature_t::amd_3dnow);
+            if (edx[11] && vendor == vendor_t::Intel) isets.push_back(feature_t::syscall);
+            if (edx[22] && vendor == vendor_t::AMD) isets.push_back(feature_t::mmxext);
+            if (edx[27] && vendor == vendor_t::Intel) isets.push_back(feature_t::rdtscp);
+            if (edx[30] && vendor == vendor_t::AMD) isets.push_back(feature_t::amd_3dnowext);
+            if (edx[31] && vendor == vendor_t::AMD) isets.push_back(feature_t::amd_3dnow);
         }
 
         return isets;

@@ -17,12 +17,12 @@ namespace probe::util
     {
         int pipefd[2]; // "r"+"w"
 
-        if(::pipe(pipefd) < 0) {
+        if (::pipe(pipefd) < 0) {
             return { nullptr, -1 };
         }
 
         auto pid = ::fork();
-        switch(pid) {
+        switch (pid) {
         case -1: return { nullptr, -1 };
 
         case 0: // child process
@@ -52,11 +52,11 @@ namespace probe::util
 
     void pipe_close(std::pair<FILE *, pid_t> pp)
     {
-        if(pp.second > 0) {
+        if (pp.second > 0) {
             ::kill(pp.second, SIGTERM);
         }
 
-        if(pp.first) {
+        if (pp.first) {
             ::fclose(pp.first);
         }
     }
@@ -68,10 +68,10 @@ namespace probe::util
 
         auto pp = pipe_open(cmd);
 
-        if(!pp.first) return ret;
+        if (!pp.first) return ret;
 
-        while(::fgets(buffer, sizeof(buffer), pp.first) != nullptr) {
-            if(buffer[std::strlen(buffer) - 1] == '\n') buffer[std::strlen(buffer) - 1] = '\0';
+        while (::fgets(buffer, sizeof(buffer), pp.first) != nullptr) {
+            if (buffer[std::strlen(buffer) - 1] == '\n') buffer[std::strlen(buffer) - 1] = '\0';
             ret.emplace_back(buffer);
         }
 
@@ -83,12 +83,12 @@ namespace probe::util
                    const std::function<bool(const std::string&)>& callback)
     {
         auto pp = pipe_open(args);
-        if(!pp.first) return;
+        if (!pp.first) return;
 
         char buffer[4096];
-        while(::fgets(buffer, sizeof(buffer), pp.first)) {
-            if(buffer[std::strlen(buffer) - 1] == '\n') buffer[std::strlen(buffer) - 1] = '\0';
-            if(!callback(buffer)) break;
+        while (::fgets(buffer, sizeof(buffer), pp.first)) {
+            if (buffer[std::strlen(buffer) - 1] == '\n') buffer[std::strlen(buffer) - 1] = '\0';
+            if (!callback(buffer)) break;
         }
 
         pipe_close(pp);
@@ -109,7 +109,7 @@ namespace probe::util
             pipe_ = pipe_open(cmd);
 
             char buffer[256]{};
-            while(running_ && ::fgets(buffer, sizeof(buffer), pipe_.first)) {
+            while (running_ && ::fgets(buffer, sizeof(buffer), pipe_.first)) {
                 callback(std::string{ buffer });
             }
 
@@ -124,7 +124,7 @@ namespace probe::util
         running_ = false;
         pipe_close(pipe_);
 
-        if(thread_.joinable()) thread_.join();
+        if (thread_.joinable()) thread_.join();
     }
 } // namespace probe::util
 

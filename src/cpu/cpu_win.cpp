@@ -28,7 +28,7 @@ namespace probe::cpu
         SYSTEM_INFO system_info;
         GetNativeSystemInfo(&system_info);
 
-        switch(system_info.wProcessorArchitecture) {
+        switch (system_info.wProcessorArchitecture) {
         case PROCESSOR_ARCHITECTURE_AMD64: // x64 (AMD or Intel)
             return architecture_t::x64;
 
@@ -59,8 +59,8 @@ namespace probe::cpu
     quantities_t quantities()
     {
         quantities_t q = { 0 };
-        for(auto&& info : processor_info()) {
-            switch(info.Relationship) {
+        for (auto&& info : processor_info()) {
+            switch (info.Relationship) {
             case RelationProcessorCore:
                 q.physical++;
                 q.logical += static_cast<std::uint32_t>(
@@ -80,8 +80,8 @@ namespace probe::cpu
     {
         std::vector<cache_t> ret;
 
-        for(const auto& info : processor_info()) {
-            if(info.Relationship == RelationCache) {
+        for (const auto& info : processor_info()) {
+            if (info.Relationship == RelationCache) {
                 ret.emplace_back(info.Cache.Level, info.Cache.Associativity, info.Cache.LineSize,
                                  info.Cache.Size, static_cast<cache_type_t>(info.Cache.Type));
             }
@@ -93,9 +93,9 @@ namespace probe::cpu
     {
         std::vector<cache_t> ret;
 
-        for(const auto& info : processor_info()) {
-            if((info.Relationship == RelationCache) && (info.Cache.Level == level) &&
-               (info.Cache.Type == static_cast<PROCESSOR_CACHE_TYPE>(type))) {
+        for (const auto& info : processor_info()) {
+            if ((info.Relationship == RelationCache) && (info.Cache.Level == level) &&
+                (info.Cache.Type == static_cast<PROCESSOR_CACHE_TYPE>(type))) {
                 ret.emplace_back(info.Cache.Level, info.Cache.Associativity, info.Cache.LineSize,
                                  info.Cache.Size, static_cast<cache_type_t>(info.Cache.Type));
             }

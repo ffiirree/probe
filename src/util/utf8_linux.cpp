@@ -7,9 +7,9 @@ namespace probe::util
     // TODO:
     std::string to_utf8(const wchar_t *wptr, size_t wlen)
     {
-        if(!wptr) return {};
+        if (!wptr) return {};
 
-        if(wlen == 0) wlen = std::char_traits<wchar_t>::length(wptr);
+        if (wlen == 0) wlen = std::char_traits<wchar_t>::length(wptr);
 
         return {};
     }
