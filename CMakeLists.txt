@@ -15,6 +15,12 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Default build type: Release." FORCE)
 endif()
 
+if(MSVC)
+    add_compile_options(/W4 /utf-8 /DUNICODE /D_UNICODE /DNOMINMAX /Zc:preprocessor  /Zc:__cplusplus)
+else()
+    add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
 if(PROBE_BUILD_WITH_QT)
     find_package(Qt5 COMPONENTS Core REQUIRED)
 endif()
@@ -76,12 +82,6 @@ if(PROBE_BUILD_WITH_QT)
     target_compile_definitions(${PROJECT_NAME} PUBLIC BUILD_WITH_QT)
 endif()
 
-if(MSVC)
-    target_compile_options(${PROJECT_NAME} PRIVATE /W3 /utf-8 /DUNICODE /D_UNICODE /DNOMINMAX /Zc:preprocessor /Zc:__cplusplus)
-else()
-    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)
-endif()
-
 if(PROBE_EXAMPLES)
     foreach(example cpu;graphics;system;disk;util)
         add_executable(probe_${example} examples/${example}.cpp)
@@ -94,6 +94,4 @@ if(PROBE_EXAMPLES)
                 ARCHIVE_OUTPUT_DIRECTORY "lib/$<0:>"
         )
     endforeach()
-
-    #
 endif()

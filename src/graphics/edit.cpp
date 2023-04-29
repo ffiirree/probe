@@ -58,7 +58,7 @@ namespace probe::graphics
 
         // 23
         // gamma:  datavalue = (gamma×100) − 100 = (gamma − 1)×100
-        if (data[23] != char(0xff)) edid->gamma = data[23] / 100.0 + 1.0;
+        if (data[23] != static_cast<char>(0xff)) edid->gamma = data[23] / 100.0 + 1.0;
 
         return 0;
     }
