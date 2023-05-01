@@ -4,19 +4,25 @@
 
 namespace probe::graphics
 {
-    bool geometry_t::contains(int32_t _x, int32_t _y) const
+    bool geometry_t::contains(int32_t _x, int32_t _y, bool proper) const
     {
-        return (_x >= left() && _x < right()) && (_y >= top() && _y < bottom());
+        if (proper)
+            return (_x > left() && _x < right()) && (_y > top() && _y < bottom());
+        else
+            return (_x >= left() && _x <= right()) && (_y >= top() && _y <= bottom());
+    }
+
+    bool geometry_t::contains(const point_t& point, bool proper) const
+    {
+        return contains(point.x, point.y, proper);
     }
 
     bool geometry_t::contains(const geometry_t& r, bool proper) const
     {
-        if (proper) {
+        if (proper)
             return left() < r.left() && right() > r.right() && top() < r.top() && bottom() > r.bottom();
-        }
-        else {
+        else
             return left() <= r.left() && right() >= r.right() && top() <= r.top() && bottom() >= r.bottom();
-        }
     }
 
     bool operator==(const geometry_t& l, const geometry_t& r)

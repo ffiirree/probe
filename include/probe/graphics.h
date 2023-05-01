@@ -34,7 +34,8 @@ namespace probe::graphics
         uint32_t width;
         uint32_t height;
 
-        [[nodiscard]] PROBE_API bool contains(int32_t, int32_t) const;
+        [[nodiscard]] PROBE_API bool contains(int32_t, int32_t, bool = false) const;
+        [[nodiscard]] PROBE_API bool contains(const point_t&, bool = false) const;
         [[nodiscard]] PROBE_API bool contains(const geometry_t&, bool = false) const;
         [[nodiscard]] PROBE_API geometry_t intersected(const geometry_t&) const;
 
