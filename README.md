@@ -37,14 +37,14 @@ int main()
 Output:
 
 ```yaml
-Operating System:
-    Name             : Windows 11 Pro
-    Version          : 10.0.25346.1001 (22H2)
-    Kernel           : Windows NT
-    Kernel Version   : 10.0.25346.1001
-    Theme            : dark
-    Desktop ENV      : Windows
-    Memory           : 15.2921 / 31.9388 GB
+Operating System:                                   |   Operating System:
+    Name             : Windows 11 Pro               |       Name             : Ubuntu 18.04.6 LTS
+    Version          : 10.0.25346.1001 (22H2)       |       Version          : 18.4.6.0 (bionic)
+    Kernel           : Windows NT                   |       Kernel           : Linux
+    Kernel Version   : 10.0.25346.1001              |       Kernel Version   : 5.4.0.148
+    Theme            : dark                         |       Theme            : light
+    Desktop ENV      : Windows                      |       Desktop ENV      : GNOME (3.28.2.0)
+    Memory           : 15.2921 / 31.9388 GB         |       Memory           : 9.82002 / 15.6046 GB
 ```
 
 ## Details
@@ -60,7 +60,7 @@ Operating System:
 | dark/light mode     |      &#10004;      | `Ubuntu 22.04`  | dark                  |
 | desktop environment |    `= Windows`     | `GNOME`/`Unity` | GNOME                 |
 | DE version          | same as os version | `GNOME`/`Unity` | GNOME (3.28.2.0)      |
-| memory              |      &#10004;      |                 | 15.29 / 31.94 GB      |
+| memory              |      &#10004;      |    &#10004;     | 15.29 / 31.94 GB      |
 
 ### CPU
 

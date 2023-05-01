@@ -1,13 +1,11 @@
 #include "probe/types.h"
 
-#include <iostream>
 #include <regex>
 
 namespace probe
 {
     version_t to_version(const std::string& str)
     {
-        std::cout << str << "\n";
         std::smatch matchs;
         if (std::regex_match(str, matchs, std::regex(verion_regex))) {
             return {
@@ -78,7 +76,7 @@ namespace probe
         if (std::regex_search(name, std::regex("AMD", std::regex_constants::icase)) ||
             std::regex_search(name, std::regex("Advanced Micro Devices", std::regex_constants::icase)))
             return vendor_t::AMD;
-            
+
         if (std::regex_search(name, std::regex("Apple", std::regex_constants::icase)))
             return vendor_t::Apple;
 
