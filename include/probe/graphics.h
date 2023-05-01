@@ -6,6 +6,7 @@
 
 #include <cstdint>
 #include <deque>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -99,6 +100,20 @@ namespace probe::graphics
     };
 
     PROBE_API std::vector<display_t> displays();
+
+#ifdef _WIN32
+    // probe the display information with handle mid
+    PROBE_API std::optional<display_t> display_info_of(uint64_t mid);
+
+    // the display that contains this window
+    PROBE_API std::optional<display_t> display_contains(uint64_t wid);
+
+    // the display that contains this point
+    PROBE_API std::optional<display_t> display_contains(const point_t& point);
+
+    // the display that contains this rect
+    PROBE_API std::optional<display_t> display_contains(const geometry_t& rect);
+#endif
 } // namespace probe::graphics
 
 // edid of display monitor
@@ -139,6 +154,7 @@ namespace probe::graphics
         uint64_t handle;
         bool visible;
     };
+    
     PROBE_API std::deque<window_t> windows(bool = true);
 
     PROBE_API display_t virtual_screen();

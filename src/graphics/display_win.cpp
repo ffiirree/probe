@@ -63,6 +63,43 @@ namespace probe::graphics
         return dpi;
     }
 
+    std::optional<display_t> display_info_of(uint64_t mid)
+    {
+        MONITORINFOEX info = { sizeof(MONITORINFOEX) };
+        if (::GetMonitorInfo(reinterpret_cast<HMONITOR>(mid), &info)) {
+
+            DEVMODE settings = {};
+            settings.dmSize  = sizeof(DEVMODE);
+
+            if (::EnumDisplaySettings(info.szDevice, ENUM_CURRENT_SETTINGS, &settings)) {
+
+                const auto [name, driver] = display_name_and_driver_of(info.szDevice);
+                return display_t{
+                    .name   = name,
+                    .id     = probe::util::to_utf8(info.szDevice),
+                    .handle = mid,
+                    .driver = driver,
+                    .geometry =
+                        geometry_t{
+                            settings.dmPosition.x,
+                            settings.dmPosition.y,
+                            settings.dmPelsWidth,
+                            settings.dmPelsHeight,
+                        },
+                    .frequency   = static_cast<double>(settings.dmDisplayFrequency),
+                    .bpp         = settings.dmBitsPerPel,
+                    .dpi         = retrieve_dpi_for_monitor(reinterpret_cast<HMONITOR>(mid)),
+                    .orientation = static_cast<orientation_t>(0x01 << settings.dmDisplayOrientation),
+                    .primary     = (settings.dmPosition.x == 0) && (settings.dmPosition.y == 0),
+                    .scale       = static_cast<float>(settings.dmPelsWidth) /
+                             (info.rcMonitor.right - info.rcMonitor.left),
+                };
+            }
+        }
+
+        return std::nullopt;
+    }
+
     // https://learn.microsoft.com/en-us/windows/win32/gdi/multiple-display-monitors
     //
     // The bounding rectangle of all the monitors is the `virtual screen`.
@@ -105,37 +142,9 @@ namespace probe::graphics
             [](auto monitor, auto, auto, auto userdata) -> BOOL {
                 auto ret = reinterpret_cast<std::vector<display_t> *>(userdata);
 
-                MONITORINFOEX info = { sizeof(MONITORINFOEX) };
-                if (::GetMonitorInfo(monitor, &info)) {
-
-                    DEVMODE settings = {};
-                    settings.dmSize  = sizeof(DEVMODE);
-
-                    if (::EnumDisplaySettings(info.szDevice, ENUM_CURRENT_SETTINGS, &settings)) {
-
-                        const auto [name, driver] = display_name_and_driver_of(info.szDevice);
-                        ret->push_back(display_t{
-                            .name   = name,
-                            .id     = probe::util::to_utf8(info.szDevice),
-                            .handle = reinterpret_cast<uint64_t>(monitor),
-                            .driver = driver,
-                            .geometry =
-                                geometry_t{
-                                    settings.dmPosition.x,
-                                    settings.dmPosition.y,
-                                    settings.dmPelsWidth,
-                                    settings.dmPelsHeight,
-                                },
-                            .frequency = static_cast<double>(settings.dmDisplayFrequency),
-                            .bpp       = settings.dmBitsPerPel,
-                            .dpi       = retrieve_dpi_for_monitor(monitor),
-                            .orientation =
-                                static_cast<orientation_t>(0x01 << settings.dmDisplayOrientation),
-                            .primary = (settings.dmPosition.x == 0) && (settings.dmPosition.y == 0),
-                            .scale   = static_cast<float>(settings.dmPelsWidth) /
-                                     (info.rcMonitor.right - info.rcMonitor.left),
-                        });
-                    }
+                auto display = display_info_of(reinterpret_cast<uint64_t>(monitor));
+                if (display.has_value()) {
+                    ret->push_back(display.value());
                 }
 
                 return TRUE;
@@ -145,7 +154,35 @@ namespace probe::graphics
         return ret;
     }
 
-    static window_t window_info(HWND hwnd)
+    std::optional<display_t> display_contains(uint64_t wid)
+    {
+        HMONITOR hmonitor = ::MonitorFromWindow(reinterpret_cast<HWND>(wid), MONITOR_DEFAULTTONEAREST);
+
+        return display_info_of(reinterpret_cast<uint64_t>(hmonitor));
+    }
+
+    std::optional<display_t> display_contains(const point_t& point)
+    {
+        HMONITOR hmonitor = ::MonitorFromPoint(POINT{ point.x, point.y }, MONITOR_DEFAULTTONEAREST);
+
+        return display_info_of(reinterpret_cast<uint64_t>(hmonitor));
+    }
+
+    std::optional<display_t> display_contains(const geometry_t& __rect)
+    {
+        auto rect = RECT{
+            static_cast<LONG>(__rect.left()),
+            static_cast<LONG>(__rect.top()),
+            static_cast<LONG>(__rect.right()),
+            static_cast<LONG>(__rect.bottom()),
+        };
+
+        HMONITOR hmonitor = ::MonitorFromRect(&rect, MONITOR_DEFAULTTONEAREST);
+
+        return display_info_of(reinterpret_cast<uint64_t>(hmonitor));
+    }
+
+    static window_t window_info_of(HWND hwnd)
     {
         // title
         std::wstring name;
@@ -173,17 +210,18 @@ namespace probe::graphics
 
         return {
             // not including the terminating null character.
-            probe::util::to_utf8(name.c_str(), name_len),
+            .name      = probe::util::to_utf8(name.c_str(), name_len),
             // not including the terminating null character.
-            probe::util::to_utf8(classname.c_str(), cn_len),
-            probe::graphics::geometry_t{
-                rect.left,
-                rect.top,
-                static_cast<uint32_t>(rect.right - rect.left),
-                static_cast<uint32_t>(rect.bottom - rect.top),
-            },
-            reinterpret_cast<uint64_t>(hwnd),
-            visible,
+            .classname = probe::util::to_utf8(classname.c_str(), cn_len),
+            .rect =
+                geometry_t{
+                    rect.left,
+                    rect.top,
+                    static_cast<uint32_t>(rect.right - rect.left),
+                    static_cast<uint32_t>(rect.bottom - rect.top),
+                },
+            .handle  = reinterpret_cast<uint64_t>(hwnd),
+            .visible = visible,
         };
     }
 
@@ -194,7 +232,7 @@ namespace probe::graphics
         // Z-index: up to down
         for (auto hwnd = ::GetTopWindow(nullptr); hwnd != nullptr;
              hwnd      = ::GetNextWindow(hwnd, GW_HWNDNEXT)) {
-            auto window = window_info(hwnd);
+            auto window = window_info_of(hwnd);
 
             // visible
             if (visible && (!window.visible || (!window.rect.width && !window.rect.height))) {
