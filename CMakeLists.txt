@@ -57,7 +57,6 @@ target_link_libraries(${PROJECT_NAME}
         $<$<PLATFORM_ID:Windows>:SetupAPI>
         $<$<PLATFORM_ID:Linux>:pthread>
         $<$<PLATFORM_ID:Linux>:X11::Xrandr>
-        $<$<PLATFORM_ID:Linux>:X11::Xrandr>
         $<$<BOOL:${PROBE_BUILD_WITH_QT}>:Qt5::Core>
 )
 

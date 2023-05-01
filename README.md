@@ -1,4 +1,4 @@
-<h3 align="center">Porbe</h3>
+<h2 align="center">Porbe</h2>
 
 <p align="center">
   Hardware and OS information library for C++
@@ -6,7 +6,7 @@
 
 ## Usage
 
-**Probe** contains several modules, including `system`, `cpu`, `graphics` and so on, it is simple to use like:
+**Probe** contains several modules, including `system`, `cpu`, `graphics`, `disk` and so on, it is simple to use like:
 
 ```C++
 #include "probe/system.h"
@@ -202,3 +202,10 @@ Operating System:
 | pipe_open           | execute a commond and redirect the standard output to the pipe |
 | PipeListener        | listen the pipe of the the executed commond                    |
 | gsettings functions | wrapper to gsettings commond                                   |
+
+### Compilation Requirement
+
+- `C++ 20`
+- `CMake 3.16`
+- `Windows 10 1607`
+- `Linux` : install `libxrandr-dev`
