@@ -6,10 +6,17 @@
 
 #include <ShellScalingApi.h>
 #include <dwmapi.h>
+#include <map>
 #include <regex>
 
 namespace probe::graphics
 {
+    // { classname : name }
+    std::map<std::string, std::string> filter_windows = {
+        { "PseudoConsoleWindow", "" }, // Windows Pseudo Console?
+        { "YNoteShadowWnd", "" },      // Shadow Window of Youdao Dict
+    };
+
     static std::pair<std::string, std::string> display_name_and_driver_of(WCHAR *device)
     {
         DISPLAY_DEVICE device_info{};
@@ -110,6 +117,7 @@ namespace probe::graphics
                         ret->push_back(display_t{
                             .name   = name,
                             .id     = probe::util::to_utf8(info.szDevice),
+                            .handle = reinterpret_cast<uint64_t>(monitor),
                             .driver = driver,
                             .geometry =
                                 geometry_t{
@@ -188,7 +196,14 @@ namespace probe::graphics
              hwnd      = ::GetNextWindow(hwnd, GW_HWNDNEXT)) {
             auto window = window_info(hwnd);
 
-            if (visible && !window.visible) {
+            // visible
+            if (visible && (!window.visible || (!window.rect.width && !window.rect.height))) {
+                continue;
+            }
+
+            // filter
+            if (visible && filter_windows.contains(window.classname) &&
+                filter_windows[window.classname] == window.name) {
                 continue;
             }
 

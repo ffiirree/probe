@@ -81,6 +81,7 @@ namespace probe::graphics
     {
         std::string name;
         std::string id{};
+        uint64_t handle;
 
 #ifdef _WIN32
         std::string driver; // for registry

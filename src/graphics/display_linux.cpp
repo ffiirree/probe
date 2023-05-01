@@ -60,16 +60,19 @@ namespace probe::graphics
 
             //
             _displays.push_back({
-                XGetAtomName(display, monitors[i].name), XGetAtomName(display, monitors[i].name),
-                geometry_t{ crtc_info->x, crtc_info->y, crtc_info->width, crtc_info->height },
-                calculate_frequency(screen_res, crtc_info->mode),
-                static_cast<uint32_t>(DefaultDepth(display, 0)), // global
-                static_cast<uint32_t>((DisplayWidth(display, 0) * 25.4) /
-                                      DisplayWidthMM(display, 0)), // global
-                static_cast<orientation_t>((crtc_info->rotation & 0x000f) |
-                                           static_cast<uint32_t>(!!(crtc_info->rotation & 0x00f0))),
-                !!monitors[i].primary,
-                1.0 // TODO:
+                .name      = XGetAtomName(display, monitors[i].name),
+                .id        = XGetAtomName(display, monitors[i].name),
+                .handle    = reinterpret_cast<uint64_t>(display),
+                .geometry  = geometry_t{ crtc_info->x, crtc_info->y, crtc_info->width, crtc_info->height },
+                .frequency = calculate_frequency(screen_res, crtc_info->mode),
+                .bpp       = static_cast<uint32_t>(DefaultDepth(display, 0)), // global
+                .dpi       = static_cast<uint32_t>((DisplayWidth(display, 0) * 25.4) /
+                                             DisplayWidthMM(display, 0)), // global
+                .orientation =
+                    static_cast<orientation_t>((crtc_info->rotation & 0x000f) |
+                                               static_cast<uint32_t>(!!(crtc_info->rotation & 0x00f0))),
+                .primary = !!monitors[i].primary,
+                .scale   = 1.0 // TODO:
             });
         }
         return _displays;
