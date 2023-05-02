@@ -80,6 +80,8 @@ namespace probe::util
     class PipeListener : public Listener
     {
     public:
+        PROBE_API ~PipeListener() override { stop(); }
+
         PROBE_API int listen(const std::any&, const std::function<void(const std::any&)>&) override;
         PROBE_API void stop() override;
         PROBE_API bool running() override { return running_; }

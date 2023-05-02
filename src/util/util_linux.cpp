@@ -121,10 +121,12 @@ namespace probe::util
 
     void PipeListener::stop()
     {
-        running_ = false;
-        pipe_close(pipe_);
+        auto expected = true;
+        if (running_.compare_exchange_strong(expected, false)) {
+            pipe_close(pipe_);
 
-        if (thread_.joinable()) thread_.join();
+            if (thread_.joinable()) thread_.join();
+        }
     }
 } // namespace probe::util
 

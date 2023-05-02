@@ -103,7 +103,7 @@ namespace probe::cpu
         return ret;
     }
 
-    std::vector<cache_t> cache(int level, cache_type_t type)
+    std::vector<cache_t> cache(int, cache_type_t)
     {
         std::vector<cache_t> ret;
 

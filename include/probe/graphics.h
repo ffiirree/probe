@@ -81,18 +81,18 @@ namespace probe::graphics
 
     struct display_t
     {
-        std::string name;
+        std::string name{};
         std::string id{};
-        uint64_t handle;
+        uint64_t handle{};
 
 #ifdef _WIN32
-        std::string driver; // for registry
+        std::string driver{}; // for registry
 #endif
 
-        geometry_t geometry;
-        double frequency; // Hz
+        geometry_t geometry{};
+        double frequency{}; // Hz
 
-        uint32_t bpp;
+        uint32_t bpp{};
         uint32_t dpi{ 96 }; // logical dot per inch
         orientation_t orientation{ orientation_t::landscape };
         bool primary{ false };
@@ -154,7 +154,7 @@ namespace probe::graphics
         uint64_t handle;
         bool visible;
     };
-    
+
     PROBE_API std::deque<window_t> windows(bool = true);
 
     PROBE_API display_t virtual_screen();
