@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(probe VERSION 0.2.7 LANGUAGES C CXX)
+project(probe VERSION 0.2.8 LANGUAGES C CXX)
 
 # options
 option(PROBE_EXAMPLES       "Build probe examples."     OFF)
@@ -82,7 +82,7 @@ if(PROBE_BUILD_WITH_QT)
 endif()
 
 if(PROBE_EXAMPLES)
-    foreach(example cpu;graphics;system;disk;util)
+    foreach(example cpu;graphics;system;disk;media;util)
         add_executable(probe_${example} examples/${example}.cpp)
         target_link_libraries(probe_${example} PUBLIC probe::probe)
 
