@@ -6,7 +6,7 @@
 
 ## Usage
 
-**Probe** contains several modules, including `system`, `cpu`, `graphics`, `disk`, `media device` and so on, it is simple to use like:
+**Probe** contains several modules, including `system`, `cpu`, `graphics`, `network`, `disk`, `media device` and so on, it is simple to use like:
 
 ```C++
 #include "probe/system.h"
@@ -51,16 +51,18 @@ Operating System:                                   |   Operating System:
 
 ### System
 
-| properties          |      Windows       |      Linux      | commments             |
-| ------------------- | :----------------: | :-------------: | --------------------- |
-| os name             |      &#10004;      |    &#10004;     | Windows 11 Pro        |
-| os version          |      &#10004;      |    &#10004;     | 10.0.25346.1001(22H2) |
-| kernel name         |      &#10004;      |    &#10004;     | Windows NT            |
-| kernel version      |      &#10004;      |    &#10004;     | 10.0.25346.1001       |
-| dark/light mode     |      &#10004;      | `Ubuntu 22.04`  | dark                  |
-| desktop environment |    `= Windows`     | `GNOME`/`Unity` | GNOME                 |
-| DE version          | same as os version | `GNOME`/`Unity` | GNOME (3.28.2.0)      |
-| memory              |      &#10004;      |    &#10004;     | 15.29 / 31.94 GB      |
+| properties          |      Windows       |      Linux      | commments                 |
+| ------------------- | :----------------: | :-------------: | ------------------------- |
+| os name             |      &#10004;      |    &#10004;     | Windows 11 Pro            |
+| os version          |      &#10004;      |    &#10004;     | 10.0.25346.1001(22H2)     |
+| kernel name         |      &#10004;      |    &#10004;     | Windows NT                |
+| kernel version      |      &#10004;      |    &#10004;     | 10.0.25346.1001           |
+| hostname            |      &#10004;      |    &#10004;     | Device Name/Computer Name |
+| username            |      &#10004;      |    &#10004;     | Name of Current User      |
+| dark/light mode     |      &#10004;      | `Ubuntu 22.04`  | dark                      |
+| desktop environment |    `= Windows`     | `GNOME`/`Unity` | GNOME                     |
+| DE version          | same as os version | `GNOME`/`Unity` | GNOME (3.28.2.0)          |
+| memory              |      &#10004;      |    &#10004;     | 15.29 / 31.94 GB          |
 
 ### CPU
 
@@ -188,6 +190,43 @@ Operating System:                                   |   Operating System:
 | description | &#10004; |       | Microphone                                              |
 | type        | &#10004; |       | AudioSource                                             |
 | state       | &#10004; |       | Active                                                  |
+
+### Network
+
+| properties             | Windows  | Linux | commments                               |
+| ---------------------- | :------: | :---: | --------------------------------------- |
+| name                   | &#10004; |       | Intel(R) Ethernet Connection (7) I219-V |
+| vendor                 |          |       |                                         |
+| guid                   | &#10004; |       | {FFE7027E-6386-11EB-95F5-806E6F6E6963}  |
+| interface guid         | &#10004; |       | {653D76BA-C95E-4A46-A3D6-A178841A7AC8}  |
+| description            | &#10004; |       | Ethernet                                |
+| type                   | &#10004; |       | Ethernet / IEEE 802.11 / ...            |
+| physical address (MAC) | &#10004; |       | 00:50:56:C0:00:01                       |
+| DHCP Enabled           | &#10004; |       | true                                    |
+| MTU                    | &#10004; |       | 1500                                    |
+| ipv4_addresses         | &#10004; |       | 192.168.189.1                           |
+| ipv6_addresses         | &#10004; |       | fe80::22bc:b757:c253:a7c8               |
+| dhcpv4_server          | &#10004; |       |                                         |
+| dhcpv6_server          | &#10004; |       |                                         |
+| ipv4_gateways          | &#10004; |       |                                         |
+| ipv6_gateways          | &#10004; |       |                                         |
+| dns_suffix             | &#10004; |       |                                         |
+| ipv4_dns_servers       | &#10004; |       |                                         |
+| ipv6_dns_servers       | &#10004; |       |                                         |
+
+#### Traffic Statistics
+
+| properties       | Windows  | Linux | commments      |
+| ---------------- | :------: | :---: | -------------- |
+| guid             | &#10004; |       | interface guid |
+| ibytes           | &#10004; |       |                |
+| obytes           | &#10004; |       |                |
+| unicast ibytes   | &#10004; |       |                |
+| unicast obytes   | &#10004; |       |                |
+| broadcast ibytes | &#10004; |       |                |
+| broadcast obytes | &#10004; |       |                |
+| multicast ibytes | &#10004; |       |                |
+| multicast obytes | &#10004; |       |                |
 
 ### Utils
 

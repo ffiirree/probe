@@ -15,6 +15,8 @@ int main()
               << "    Version          : " << probe::to_string(os.version) << '\n'
               << "    Kernel           : " << kernel.name << '\n'
               << "    Kernel Version   : " << probe::to_string(kernel.version) << '\n'
+              << "    Host Name        : " << probe::system::hostname() << '\n'
+              << "    User Name        : " << probe::system::username() << '\n'
               << "    Theme            : " << probe::to_string(os.theme) << '\n'
               << "    Desktop ENV      : " << probe::to_string(probe::system::desktop()) << " ("
               << probe::to_string(probe::system::desktop_version(probe::system::desktop())) << ")\n"

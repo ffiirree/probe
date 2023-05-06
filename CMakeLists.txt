@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(probe VERSION 0.2.8 LANGUAGES C CXX)
+project(probe VERSION 0.3.0 LANGUAGES C CXX)
 
 # options
 option(PROBE_EXAMPLES       "Build probe examples."     OFF)
@@ -55,6 +55,8 @@ target_link_libraries(${PROJECT_NAME}
         $<$<PLATFORM_ID:Windows>:DXGI>
         $<$<PLATFORM_ID:Windows>:D3D11>
         $<$<PLATFORM_ID:Windows>:SetupAPI>
+        $<$<PLATFORM_ID:Windows>:Iphlpapi>
+        $<$<PLATFORM_ID:Windows>:Ws2_32>
         $<$<PLATFORM_ID:Linux>:pthread>
         $<$<PLATFORM_ID:Linux>:X11::Xrandr>
         $<$<BOOL:${PROBE_BUILD_WITH_QT}>:Qt5::Core>
@@ -82,7 +84,7 @@ if(PROBE_BUILD_WITH_QT)
 endif()
 
 if(PROBE_EXAMPLES)
-    foreach(example cpu;graphics;system;disk;media;util)
+    foreach(example cpu;graphics;system;disk;media;net;util)
         add_executable(probe_${example} examples/${example}.cpp)
         target_link_libraries(probe_${example} PUBLIC probe::probe)
 

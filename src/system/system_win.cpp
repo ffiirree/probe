@@ -128,6 +128,26 @@ namespace probe::system
     }
 
     os_info_t os_info() { return { os_name(), theme(), os_version() }; }
+
+    std::string hostname()
+    {
+        WCHAR buffer[MAX_COMPUTERNAME_LENGTH + 1]{};
+        DWORD size = sizeof(buffer);
+        if (::GetComputerName(buffer, &size) != 0) {
+            return probe::util::to_utf8(buffer);
+        }
+        return {};
+    }
+
+    std::string username()
+    {
+        WCHAR buffer[256]{};
+        DWORD size = sizeof(buffer);
+        if (::GetUserName(buffer, &size) != 0) {
+            return probe::util::to_utf8(buffer);
+        }
+        return {};
+    }
 } // namespace probe::system
 
 #endif // _WIN32

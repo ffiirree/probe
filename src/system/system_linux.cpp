@@ -189,6 +189,24 @@ namespace probe::system
     }
 
     os_info_t os_info() { return { os_name(), theme(), os_version() }; }
+
+    std::string hostname()
+    {
+        char buffer[256]{};
+        if (::gethostname(buffer, 256) == 0) {
+            return buffer;
+        }
+        return {};
+    }
+
+    std::string username()
+    {
+        char buffer[256]{};
+        if (::getlogin_r(buffer, 256) == 0){
+            return buffer;
+        }
+        return {};
+    }
 } // namespace probe::system
 
 // GNOME 4 : gnome-shell

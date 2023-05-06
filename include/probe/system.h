@@ -67,6 +67,12 @@ namespace probe::system
 
     PROBE_API os_info_t os_info();
     PROBE_API kernel_info_t kernel_info();
+
+    // hostname
+    PROBE_API std::string hostname();
+
+    // current username
+    PROBE_API std::string username();
 } // namespace probe::system
 
 namespace probe
