@@ -90,6 +90,10 @@ namespace probe::network
         std::vector<adapter_t> ret;
 
         for (auto info = infos; info; info = info->Next) {
+            // ignore the software loopback adapter
+            if (info->IfType == IF_TYPE_SOFTWARE_LOOPBACK) continue;
+
+            // Physical Address
             std::string mac{};
             if (info->PhysicalAddressLength != 0) {
                 for (ULONG i = 0; i < info->PhysicalAddressLength; ++i) {

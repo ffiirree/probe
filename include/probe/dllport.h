@@ -12,7 +12,7 @@
 #    endif
 #elif defined(__GNUC__) || defined(__clang__)
 #    if defined(PROBE_SHARED) || defined(PROBE_BUILDING)
-#        define FMT_API __attribute__((visibility("default")))
+#        define PROBE_API __attribute__((visibility("default")))
 #    endif
 #endif
 
