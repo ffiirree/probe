@@ -1,7 +1,7 @@
 #include "probe/network.h"
 
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 #ifdef _WIN32
 #include <Windows.h>
 #endif
@@ -24,6 +24,9 @@ int main()
                   << "    GUID             : " << adapter.guid << '\n'
                   << "    Interface GUID   : " << adapter.interface_guid << '\n'
                   << "    Description      : " << adapter.description << '\n'
+                  << "    Manufacturer     : "
+                  << (adapter.manufacturer.empty() ? "(N/A)" : adapter.manufacturer) << '\n'
+                  << "    Virtual          : " << adapter.is_virtual << '\n'
                   << "    Interface Type   : " << probe::to_string(adapter.type) << '\n'
                   << "    DHCP Enabled     : " << adapter.dhcp_enabled << '\n'
                   << "    Physical Address : " << adapter.physical_address << '\n'
@@ -80,8 +83,8 @@ int main()
 
         auto status = probe::network::status(adapter);
 
-        std::cout << "    I Data           : " << std::setw(12) << status.ibytes << " B\n"
-                  << "    O Data           : " << std::setw(12) << status.obytes << " B\n";
+        std::cout << "    \u21D3 Data           : " << std::setw(12) << status.ibytes << " B\n"
+                  << "    \u21D1 Data           : " << std::setw(12) << status.obytes << " B\n";
 
         std::cout << "\n";
     }

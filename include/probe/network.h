@@ -4,6 +4,7 @@
 #include "probe/dllport.h"
 
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 namespace probe::network
@@ -21,6 +22,26 @@ namespace probe::network
         IEEE1394  = 144
     };
 
+    inline const std::unordered_set<std::string> virtual_physical_addresses{
+        "00:03:FF", // Microsoft Corporation
+        "00:05:69", // VMware Inc.
+        "00:0C:29", // VMware Inc.
+        "00:0F:4B", // Oracle Corporation
+        "00:13:07", // Paravirtual Corporation
+        "00:13:BE", // Virtual Conexions
+        "00:15:5d", // Microsoft Corporation
+        "00:16:3E", // Xensource Inc.
+        "00:1C:42", // Parallels Inc.
+        "00:21:F6", // Oracle Corporation
+        "00:24:0B", // Virtual Computer Inc.
+        "00:50:56", // VMware Inc.
+        "00:A0:B1", // First Virtual Corporation
+        "00:E0:C8", // Virtual Access Ltd
+        "08:00:27", // PCS Systemtechnik GmbH
+        "18:92:2C", // Virtual Instruments
+        "3C:F3:92", // Virtualtek Ltd
+    };
+
     struct adapter_t
     {
         std::string name{};
@@ -28,6 +49,8 @@ namespace probe::network
         std::string guid{}; // Windows: network guid
         std::string interface_guid{};
         std::string description{};
+        std::string manufacturer{};
+        bool is_virtual{}; // guessed by physical address and the description (if contains "virtual")
         if_type_t type{ if_type_t::Other };
         std::string physical_address{};
         bool dhcp_enabled{};

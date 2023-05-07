@@ -9,11 +9,14 @@
 #include <iphlpapi.h>
 #include <ws2ipdef.h>
 #include <WS2tcpip.h>
+#include <SetupAPI.h>
+#include <Devguid.h>
 #include "probe/util.h"
 // clang-format on
 
 #include <format>
-#include <iostream>
+#include <map>
+#include <regex>
 
 namespace probe::network
 {
@@ -69,6 +72,42 @@ namespace probe::network
         return info->HostName;
     }
 
+    static std::string setup_get_property(HDEVINFO sets, SP_DEVINFO_DATA *info, DWORD type)
+    {
+        WCHAR *buffer{};
+        DWORD size{};
+
+        ::SetupDiGetDeviceRegistryProperty(sets, info, type, nullptr, nullptr, 0, &size);
+
+        buffer = reinterpret_cast<WCHAR *>(malloc(size));
+        defer(free(buffer));
+
+        if (!::SetupDiGetDeviceRegistryProperty(sets, info, type, nullptr, reinterpret_cast<LPBYTE>(buffer),
+                                                size, 0))
+            return {};
+
+        return probe::util::to_utf8(buffer);
+    }
+
+    static std::map<std::string, std::string> device_mfg_mapping()
+    {
+        HDEVINFO device_sets = ::SetupDiGetClassDevs(&GUID_DEVCLASS_NET, nullptr, nullptr, DIGCF_PRESENT);
+
+        if (INVALID_HANDLE_VALUE == device_sets) return {};
+        defer(::SetupDiDestroyDeviceInfoList(device_sets));
+
+        SP_DEVINFO_DATA info{ .cbSize = sizeof(SP_DEVINFO_DATA) };
+        std::map<std::string, std::string> pairs{};
+
+        for (DWORD idx = 0; ::SetupDiEnumDeviceInfo(device_sets, idx, &info); ++idx) {
+
+            if (auto desc = setup_get_property(device_sets, &info, SPDRP_DEVICEDESC); !desc.empty()) {
+                pairs[desc] = setup_get_property(device_sets, &info, SPDRP_MFG);
+            }
+        }
+        return pairs;
+    }
+
     // https://learn.microsoft.com/en-us/windows/win32/network-interfaces
     std::vector<adapter_t> adapters()
     {
@@ -87,7 +126,8 @@ namespace probe::network
         }
         defer(free(infos));
 
-        std::vector<adapter_t> ret;
+        std::vector<adapter_t> ret{};
+        auto dmmap = device_mfg_mapping();
 
         for (auto info = infos; info; info = info->Next) {
             // ignore the software loopback adapter
@@ -154,12 +194,20 @@ namespace probe::network
             GUID if_guid{};
             ::ConvertInterfaceLuidToGuid(&info->Luid, &if_guid);
 
+            // Description
+            std::string desc = probe::util::to_utf8(info->Description);
+
             ret.push_back(adapter_t{
-                .name             = probe::util::to_utf8(info->FriendlyName),
-                .id               = info->AdapterName,
-                .guid             = to_string(info->NetworkGuid),
-                .interface_guid   = to_string(if_guid),
-                .description      = probe::util::to_utf8(info->Description),
+                .name           = probe::util::to_utf8(info->FriendlyName),
+                .id             = info->AdapterName,
+                .guid           = to_string(info->NetworkGuid),
+                .interface_guid = to_string(if_guid),
+                .description    = desc,
+                .manufacturer   = dmmap.contains(desc) ? dmmap.at(desc) : "",
+                .is_virtual =
+                    virtual_physical_addresses.contains(mac) ||
+                    std::regex_search(desc, std::regex("virtual", std::regex::icase)) ||
+                    std::regex_search(desc, std::regex("TAP-Windows Adapter V9", std::regex::icase)),
                 .type             = static_cast<if_type_t>(info->IfType),
                 .physical_address = mac,
                 .dhcp_enabled     = !!info->Dhcpv4Enabled,

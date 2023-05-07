@@ -193,26 +193,27 @@ Operating System:                                   |   Operating System:
 
 ### Network
 
-| properties             | Windows  | Linux | commments                               |
-| ---------------------- | :------: | :---: | --------------------------------------- |
-| name                   | &#10004; |       | Intel(R) Ethernet Connection (7) I219-V |
-| vendor                 |          |       |                                         |
-| guid                   | &#10004; |       | {FFE7027E-6386-11EB-95F5-806E6F6E6963}  |
-| interface guid         | &#10004; |       | {653D76BA-C95E-4A46-A3D6-A178841A7AC8}  |
-| description            | &#10004; |       | Ethernet                                |
-| type                   | &#10004; |       | Ethernet / IEEE 802.11 / ...            |
-| physical address (MAC) | &#10004; |       | 00:50:56:C0:00:01                       |
-| DHCP Enabled           | &#10004; |       | true                                    |
-| MTU                    | &#10004; |       | 1500                                    |
-| ipv4_addresses         | &#10004; |       | 192.168.189.1                           |
-| ipv6_addresses         | &#10004; |       | fe80::22bc:b757:c253:a7c8               |
-| dhcpv4_server          | &#10004; |       |                                         |
-| dhcpv6_server          | &#10004; |       |                                         |
-| ipv4_gateways          | &#10004; |       |                                         |
-| ipv6_gateways          | &#10004; |       |                                         |
-| dns_suffix             | &#10004; |       |                                         |
-| ipv4_dns_servers       | &#10004; |       |                                         |
-| ipv6_dns_servers       | &#10004; |       |                                         |
+| properties             | Windows  | Linux | commments                                                         |
+| ---------------------- | :------: | :---: | ----------------------------------------------------------------- |
+| name                   | &#10004; |       | Intel(R) Ethernet Connection (7) I219-V                           |
+| guid                   | &#10004; |       | {FFE7027E-6386-11EB-95F5-806E6F6E6963}                            |
+| interface guid         | &#10004; |       | {653D76BA-C95E-4A46-A3D6-A178841A7AC8}                            |
+| description            | &#10004; |       | Ethernet                                                          |
+| manufacturer           | &#10004; |       | Intel                                                             |
+| virtual                | &#10004; |       | true / false, **guessed** by physical address and the description |
+| type                   | &#10004; |       | Ethernet / IEEE 802.11 / ...                                      |
+| physical address (MAC) | &#10004; |       | 00:50:56:C0:00:01                                                 |
+| DHCP Enabled           | &#10004; |       | true                                                              |
+| MTU                    | &#10004; |       | 1500                                                              |
+| ipv4_addresses         | &#10004; |       | 192.168.189.1                                                     |
+| ipv6_addresses         | &#10004; |       | fe80::22bc:b757:c253:a7c8                                         |
+| dhcpv4_server          | &#10004; |       |                                                                   |
+| dhcpv6_server          | &#10004; |       |                                                                   |
+| ipv4_gateways          | &#10004; |       |                                                                   |
+| ipv6_gateways          | &#10004; |       |                                                                   |
+| dns_suffix             | &#10004; |       |                                                                   |
+| ipv4_dns_servers       | &#10004; |       |                                                                   |
+| ipv6_dns_servers       | &#10004; |       |                                                                   |
 
 #### Traffic Statistics
 
