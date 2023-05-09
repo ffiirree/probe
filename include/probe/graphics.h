@@ -147,12 +147,18 @@ namespace probe::graphics
 {
     struct window_t
     {
-        std::string name; // utf-8
-        std::string classname;
+        std::string name{}; // utf-8
+        std::string classname{};
 
-        geometry_t rect;
-        uint64_t handle;
-        bool visible;
+        geometry_t rect{};
+        uint64_t handle{};
+        bool visible{};
+
+#ifdef _WIN32
+        // process
+        uint64_t pid{};      // process id
+        std::string pname{}; // process name
+#endif
     };
 
     PROBE_API std::deque<window_t> windows(bool = true);

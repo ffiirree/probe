@@ -7,6 +7,7 @@
 #include <ShellScalingApi.h>
 #include <dwmapi.h>
 #include <map>
+#include <psapi.h>
 #include <regex>
 
 namespace probe::graphics
@@ -208,6 +209,25 @@ namespace probe::graphics
             SUCCEEDED(::DwmGetWindowAttribute(hwnd, DWMWA_CLOAKED, &is_cloaked, sizeof(is_cloaked))) &&
             !is_cloaked && !(::GetWindowLong(hwnd, GWL_STYLE) & WS_DISABLED);
 
+        // process
+        DWORD pid = 0;
+        std::string pname{};
+        if (::GetWindowThreadProcessId(hwnd, &pid) != 0) {
+            if (pid != 0 && ::GetCurrentProcessId() != pid) {
+                auto process = ::OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, false, pid);
+                if (process != nullptr) {
+                    wchar_t buffer[MAX_PATH]{};
+                    if (::GetModuleFileNameEx(process, nullptr, buffer, MAX_PATH) != 0) {
+                        auto full_name = probe::util::to_utf8(buffer);
+                        auto pos       = full_name.find_last_of("\\");
+                        if (pos != std::string::npos) {
+                            pname = full_name.substr(pos + 1);
+                        }
+                    }
+                }
+            }
+        }
+
         return {
             // not including the terminating null character.
             .name      = probe::util::to_utf8(name.c_str(), name_len),
@@ -222,6 +242,8 @@ namespace probe::graphics
                 },
             .handle  = reinterpret_cast<uint64_t>(hwnd),
             .visible = visible,
+            .pid     = (pid != 0 && !pname.empty()) ? pid : 0,
+            .pname   = (pid != 0 && !pname.empty()) ? std::move(pname) : std::string{},
         };
     }
 

@@ -134,6 +134,8 @@ Operating System:                                   |   Operating System:
 | size           | &#10004; | &#10004; | 1568 x 995                               |
 | navtive handle | &#10004; | &#10004; | 132198                                   |
 | visible        | &#10004; | &#10004; | true / false                             |
+| process id     | &#10004; |    -     |                                          |
+| process name   | &#10004; |    -     | explorer.exe                             |
 
 ### Disk
 

@@ -67,7 +67,8 @@ int main()
                   << ", visible: " << win.visible << ", rect: " << std::setw(28)
                   << probe::to_string(win.rect)
 #ifdef _WIN32
-                  << ", (class)name: '" << std::setw(48) << win.classname << "' - '" << win.name << "'\n";
+                  << ", pname: " << std::setw(24) << win.pname << ", (class)name: '" << std::setw(48)
+                  << win.classname << "' - '" << win.name << "'\n";
 #elif defined(__linux__)
                   << ", name: '" << win.name << "'\n";
 #endif
