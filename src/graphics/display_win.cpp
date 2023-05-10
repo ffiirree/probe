@@ -215,6 +215,7 @@ namespace probe::graphics
         if (::GetWindowThreadProcessId(hwnd, &pid) != 0) {
             if (pid != 0 && ::GetCurrentProcessId() != pid) {
                 auto process = ::OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, false, pid);
+                defer(::CloseHandle(process));
                 if (process != nullptr) {
                     wchar_t buffer[MAX_PATH]{};
                     if (::GetModuleFileNameEx(process, nullptr, buffer, MAX_PATH) != 0) {

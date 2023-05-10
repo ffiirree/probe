@@ -135,14 +135,19 @@ namespace probe::util
 {
     int thread_set_name(const std::string& name)
     {
-        return pthread_setname_np(pthread_self(), name.substr(0, 15).c_str());
+        return ::pthread_setname_np(::pthread_self(), name.substr(0, 15).c_str());
+    }
+
+    std::string thread_get_name(uint64_t id)
+    {
+        char buffer[128];
+        ::pthread_getname_np(static_cast<pthread_t>(id), buffer, 128);
+        return buffer;
     }
 
     std::string thread_get_name()
     {
-        char buffer[128];
-        pthread_getname_np(pthread_self(), buffer, 128);
-        return buffer;
+        return thread_get_name(static_cast<uint64_t>(::pthread_self()));
     }
 } // namespace probe::util
 

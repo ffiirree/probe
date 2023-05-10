@@ -6,7 +6,7 @@
 
 ## Usage
 
-**Probe** contains several modules, including `system`, `cpu`, `graphics`, `network`, `disk`, `media device` and so on, it is simple to use like:
+**Probe** contains several modules, including `system`, `cpu`, `graphics`, `process`, `network`, `disk`, `media device` and so on, it is simple to use like:
 
 ```C++
 #include "probe/system.h"
@@ -192,6 +192,31 @@ Operating System:                                   |   Operating System:
 | description | &#10004; |       | Microphone                                              |
 | type        | &#10004; |       | AudioSource                                             |
 | state       | &#10004; |       | Active                                                  |
+
+### Process
+
+| properties | Windows  |  Linux   | commments                    |
+| ---------- | :------: | :------: | ---------------------------- |
+| pid        | &#10004; | &#10004; | process id                   |
+| ppid       | &#10004; | &#10004; | pid of parent process        |
+| state      |          | &#10004; | R, S, D, Z, T, t, X          |
+| priority   | &#10004; | &#10004; |                              |
+| name       | &#10004; | &#10004; | Win: "xxx.exe", Linux: "xxx" |
+| path       | &#10004; |          | "C:\path\to\file.exe"        |
+| cmdline    |          | &#10004; |                              |
+| starttime  | &#10004; | &#10004; | unix time, ns                |
+| nb_threads | &#10004; | &#10004; |                              |
+| user       | &#10004; | &#10004; | username                     |
+
+#### Linux
+
+Parse the following files:
+
+- /proc/uptime
+- /proc/[pid]/stat
+- /proc/[pid]/status
+- /proc/[pid]/statm
+- /proc/[pid]/cmdline
 
 ### Network
 

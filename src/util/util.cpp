@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <limits>
+#include <ranges>
 
 namespace probe::util
 {

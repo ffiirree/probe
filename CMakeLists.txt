@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(probe VERSION 0.3.3 LANGUAGES C CXX)
+project(probe VERSION 0.4.0 LANGUAGES C CXX)
 
 # options
 option(PROBE_EXAMPLES       "Build probe examples."     OFF)
@@ -16,7 +16,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 if(MSVC)
-    add_compile_options(/W4 /utf-8 /DUNICODE /D_UNICODE /DNOMINMAX /Zc:preprocessor  /Zc:__cplusplus)
+    add_compile_options(/W4 /utf-8 /DUNICODE /D_UNICODE /DNOMINMAX /Zc:preprocessor /Zc:__cplusplus)
 else()
     add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
@@ -84,7 +84,7 @@ if(PROBE_BUILD_WITH_QT)
 endif()
 
 if(PROBE_EXAMPLES)
-    foreach(example cpu;graphics;system;disk;media;net;util)
+    foreach(example cpu;graphics;system;disk;media;net;process;util)
         add_executable(probe_${example} examples/${example}.cpp)
         target_link_libraries(probe_${example} PUBLIC probe::probe)
 

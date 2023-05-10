@@ -5,6 +5,7 @@
 #include <optional>
 #include <string>
 #include <thread>
+#include <vector>
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -28,6 +29,8 @@ namespace probe::util
     // linux: The thread name is a meaningful C language string, whose length is
     //        restricted to 16 characters, including the terminating null byte ('\0')
     PROBE_API int thread_set_name(const std::string&);
+    PROBE_API std::string thread_get_name(uint64_t);
+    // name of the current thread
     PROBE_API std::string thread_get_name();
 
     PROBE_API inline double KB(uint64_t v) { return (static_cast<double>(v) / (1024)); }
@@ -37,32 +40,36 @@ namespace probe::util
 
 // windows registry
 #ifdef _WIN32
-namespace probe::util::registry
+namespace probe::util
 {
-    template<typename T> std::optional<T> read(HKEY key, const std::string&, const std::string&);
-
-    template<>
-    PROBE_API std::optional<std::string> read<std::string>(HKEY, const std::string&, const std::string&);
-
-    template<> PROBE_API std::optional<DWORD> read<DWORD>(HKEY, const std::string&, const std::string&);
-
-    class RegistryListener : public Listener
+    namespace registry
     {
-    public:
-        PROBE_API ~RegistryListener() override { stop(); }
+        template<typename T> std::optional<T> read(HKEY key, const std::string&, const std::string&);
 
-        PROBE_API int listen(const std::any&, const std::function<void(const std::any&)>&) override;
-        PROBE_API void stop() override;
-        PROBE_API bool running() override { return running_; }
+        template<>
+        PROBE_API std::optional<std::string> read<std::string>(HKEY, const std::string&,
+                                                               const std::string&);
 
-    private:
-        HKEY key_;
-        HANDLE STOP_EVENT{ nullptr };
-        HANDLE NOTIFY_EVENT{ nullptr };
-        std::thread thread_;
-        std::atomic<bool> running_{ false };
-    };
-} // namespace probe::util::registry
+        template<> PROBE_API std::optional<DWORD> read<DWORD>(HKEY, const std::string&, const std::string&);
+
+        class RegistryListener : public Listener
+        {
+        public:
+            PROBE_API ~RegistryListener() override { stop(); }
+
+            PROBE_API int listen(const std::any&, const std::function<void(const std::any&)>&) override;
+            PROBE_API void stop() override;
+            PROBE_API bool running() override { return running_; }
+
+        private:
+            HKEY key_;
+            HANDLE STOP_EVENT{ nullptr };
+            HANDLE NOTIFY_EVENT{ nullptr };
+            std::thread thread_;
+            std::atomic<bool> running_{ false };
+        };
+    } // namespace registry
+} // namespace probe::util
 #endif
 
 // linux

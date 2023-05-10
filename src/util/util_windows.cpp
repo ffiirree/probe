@@ -117,15 +117,20 @@ namespace probe::util
         return 0;
     }
 
-    std::string thread_get_name()
+    std::string thread_get_name(uint64_t id)
     {
         // >= Windows 10, version 1607
         WCHAR *buffer = nullptr;
-        if (SUCCEEDED(::GetThreadDescription(::GetCurrentThread(), &buffer))) {
+        if (SUCCEEDED(::GetThreadDescription(reinterpret_cast<HANDLE>(id), &buffer))) {
             defer(::LocalFree(buffer));
             return to_utf8(buffer);
         }
         return {};
+    }
+
+    std::string thread_get_name()
+    {
+        return thread_get_name(reinterpret_cast<uint64_t>(::GetCurrentThread()));
     }
 } // namespace probe::util
 
