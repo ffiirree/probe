@@ -61,7 +61,7 @@ namespace probe
         case vendor_t::Apple:           return "Apple Inc.";
         case vendor_t::Unknown:         return "Unknown";
         default:
-            for(size_t i = 0; i < sizeof(vendors); ++i) {
+            for(size_t i = 0; i < sizeof(vendors) / sizeof(std::pair<uint32_t, const char *>); ++i) {
                 if (vendors[i].first == static_cast<uint32_t>(vendor)) return vendors[i].second;
             }
             return "Unknown";
@@ -95,8 +95,8 @@ namespace probe
 
     std::string product_name(uint32_t vid, uint32_t pid)
     {
-        auto key = (vid << 16) | pid;
-        for (size_t i = 0; i < sizeof(devices); ++i) {
+        uint32_t key = (vid << 16) | pid;
+        for (size_t i = 0; i < (sizeof(devices) / sizeof(std::pair<uint32_t, const char *>)); ++i) {
             if (devices[i].first == key) return devices[i].second;
         }
         return {};

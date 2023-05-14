@@ -2,6 +2,7 @@
 #define PROBE_DISK_H
 
 #include "probe/dllport.h"
+#include "probe/types.h"
 
 #include <string>
 #include <vector>

@@ -89,7 +89,19 @@ namespace probe::network
         return probe::util::to_utf8(buffer);
     }
 
-    static std::map<std::string, std::string> device_mfg_mapping()
+    struct net_device_info_t
+    {
+        std::string mfg{};
+        std::string driver{};
+        std::string driver_version{};
+        std::string hardware_id{};
+        bus_type_t bus{};
+        std::string bus_info{};
+        uint32_t vendor_id{};
+        std::string product{};
+    };
+
+    static std::map<std::string, net_device_info_t> device_mfg_mapping()
     {
         HDEVINFO device_sets = ::SetupDiGetClassDevs(&GUID_DEVCLASS_NET, nullptr, nullptr, DIGCF_PRESENT);
 
@@ -97,12 +109,49 @@ namespace probe::network
         defer(::SetupDiDestroyDeviceInfoList(device_sets));
 
         SP_DEVINFO_DATA info{ .cbSize = sizeof(SP_DEVINFO_DATA) };
-        std::map<std::string, std::string> pairs{};
+        std::map<std::string, net_device_info_t> pairs{};
 
         for (DWORD idx = 0; ::SetupDiEnumDeviceInfo(device_sets, idx, &info); ++idx) {
 
+            auto v1 = setup_get_property(device_sets, &info, SPDRP_DEVICEDESC);
+            auto v2 = setup_get_property(device_sets, &info, SPDRP_HARDWAREID);
+            auto v3 = setup_get_property(device_sets, &info, SPDRP_LOCATION_INFORMATION);
+            auto v4 = setup_get_property(device_sets, &info, SPDRP_LOCATION_PATHS);
+            auto v5 = setup_get_property(device_sets, &info, SPDRP_PHYSICAL_DEVICE_OBJECT_NAME);
+
             if (auto desc = setup_get_property(device_sets, &info, SPDRP_DEVICEDESC); !desc.empty()) {
-                pairs[desc] = setup_get_property(device_sets, &info, SPDRP_MFG);
+
+                net_device_info_t dev{
+                    .mfg         = setup_get_property(device_sets, &info, SPDRP_MFG),
+                    .driver      = setup_get_property(device_sets, &info, SPDRP_DRIVER),
+                    .hardware_id = setup_get_property(device_sets, &info, SPDRP_HARDWAREID),
+                    .bus_info    = setup_get_property(device_sets, &info, SPDRP_LOCATION_PATHS),
+                };
+
+                dev.driver_version =
+                    probe::util::registry::read<std::string>(
+                        HKEY_LOCAL_MACHINE, R"(SYSTEM\CurrentControlSet\Control\Class\)" + dev.driver,
+                        "DriverVersion")
+                        .value_or("");
+
+                if (dev.hardware_id.starts_with("PCI\\")) {
+                    dev.bus = bus_type_t::PCI;
+                    std::smatch matches;
+                    // "PCI\\VEN_14E4&DEV_43A0&SUBSYS_061914E4&REV_03"
+                    if (std::regex_match(dev.hardware_id, matches,
+                                         std::regex("^PCI\\\\VEN_([\\dA-F]{4})&DEV_([\\dA-F]{4}).*",
+                                                    std::regex_constants::icase))) {
+                        dev.vendor_id = std::stoul(matches[1], nullptr, 16);
+                        auto x = probe::product_name(dev.vendor_id, std::stoul(matches[2], nullptr, 16));
+                        dev.product =
+                            probe::product_name(dev.vendor_id, std::stoul(matches[2], nullptr, 16));
+                    }
+                }
+                else if (dev.hardware_id.starts_with("USB\\")) {
+                    dev.bus = bus_type_t::USB;
+                }
+
+                pairs[desc] = dev;
             }
         }
         return pairs;
@@ -198,12 +247,19 @@ namespace probe::network
             std::string desc = probe::util::to_utf8(info->Description);
 
             ret.push_back(adapter_t{
-                .name           = probe::util::to_utf8(info->FriendlyName),
+                .name = probe::util::to_utf8(info->FriendlyName),
+                .vendor_id =
+                    static_cast<vendor_t>(dmmap.contains(desc) ? dmmap.at(desc).vendor_id : 0x0000),
+                .product        = dmmap.contains(desc) ? dmmap.at(desc).product : "",
                 .id             = info->AdapterName,
                 .guid           = to_string(info->NetworkGuid),
                 .interface_guid = to_string(if_guid),
                 .description    = desc,
-                .manufacturer   = dmmap.contains(desc) ? dmmap.at(desc) : "",
+                .manufacturer   = dmmap.contains(desc) ? dmmap.at(desc).mfg : "",
+                .bus            = dmmap.contains(desc) ? dmmap.at(desc).bus : bus_type_t::Unknown,
+                .bus_info       = dmmap.contains(desc) ? dmmap.at(desc).bus_info : "",
+                .driver         = dmmap.contains(desc) ? dmmap.at(desc).driver : "",
+                .driver_version = dmmap.contains(desc) ? dmmap.at(desc).driver_version : "",
                 .is_virtual =
                     virtual_physical_addresses.contains(mac) ||
                     std::regex_search(desc, std::regex("virtual", std::regex::icase)) ||
