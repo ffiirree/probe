@@ -16,6 +16,7 @@
 #include <net/if.h>
 #include <net/if_arp.h>
 #include <netinet/in.h>
+#include <regex>
 #include <string.h>
 #include <sys/ioctl.h>
 #include <sys/socket.h>
@@ -128,7 +129,8 @@ namespace probe::network
                         if (::strcmp(dname, ret[i].name.c_str()) == 0) {
                             char address[INET6_ADDRSTRLEN]{};
                             ::inet_ntop(AF_INET6, ipv6, address, INET6_ADDRSTRLEN);
-                            ret[i].ipv6_addresses.emplace_back(std::string{address} + "/" + std::to_string(plen));
+                            ret[i].ipv6_addresses.emplace_back(std::string{ address } + "/" +
+                                                               std::to_string(plen));
                         }
                     }
 
@@ -142,8 +144,13 @@ namespace probe::network
             ret[i].bus                      = bus_cast(bus_name);
             ret[i].id                       = device_path;
 
+            if (std::regex_search(device_path.filename().string(),
+                                  std::regex("^\\d\\d\\d\\d:\\d\\d:\\d\\d.\\d$"))) {
+                ret[i].bus_info = device_path.filename();
+            }
+
             // vendor
-            auto vendor_fd = ::fopen((device_path + "/vendor").c_str(), "r");
+            auto vendor_fd = ::fopen((device_path / "vendor").c_str(), "r");
             if (vendor_fd) {
                 uint32_t vendor_id{};
                 if (::fscanf(vendor_fd, "%x", &vendor_id) == 1) {
@@ -152,7 +159,7 @@ namespace probe::network
 
                     // product
                     uint32_t product_id{};
-                    auto product_fd = ::fopen((device_path + "/device").c_str(), "r");
+                    auto product_fd = ::fopen((device_path / "device").c_str(), "r");
                     if (product_fd) {
                         if (::fscanf(product_fd, "%x", &product_id) == 1) {
                             ret[i].product = probe::product_name(vendor_id, product_id);

@@ -26,7 +26,11 @@ int main()
                   << "    Interface GUID   : " << adapter.interface_guid << '\n'
                   << "    Description      : " << adapter.description << '\n'
                   << "    Enabled          : " << adapter.enabled << '\n'
-                  << "    Bus              : " << probe::to_string(adapter.bus) << '\n'
+                  << "    Bus              : " << probe::to_string(adapter.bus);
+        if (!adapter.bus_info.empty()) {
+            std::cout << "@" << adapter.bus_info;
+        }
+        std::cout << '\n'
                   << "    Driver           : " << adapter.driver << '\n'
                   << "    Driver Version   : " << adapter.driver_version << '\n'
                   << "    Manufacturer     : "

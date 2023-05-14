@@ -1,7 +1,6 @@
 #ifdef __linux__
 #include "probe/sysfs.h"
 
-#include <filesystem>
 #include <regex>
 
 namespace probe::sys
@@ -18,16 +17,17 @@ namespace probe::sys
         return ret;
     }
 
-    std::vector<std::tuple<std::string, std::string, std::string>> devices_by_class(const std::string& cls)
+    std::vector<std::tuple<std::string, std::filesystem::path, std::filesystem::path>>
+    devices_by_class(const std::string& cls)
     {
         std::string path = "/sys/class/" + cls;
 
         if (!std::filesystem::exists(path)) return {};
 
-        std::vector<std::tuple<std::string, std::string, std::string>> ret;
+        std::vector<std::tuple<std::string, std::filesystem::path, std::filesystem::path>> ret;
         for (const auto& entry : std::filesystem::directory_iterator(path)) {
             std::string name = entry.path().filename();
-            std::string device_path{}, driver_path{};
+            std::filesystem::path device_path{}, driver_path{};
             if (std::filesystem::exists(entry.path() / "device")) {
                 device_path = std::filesystem::canonical(entry.path() / "device");
             }
@@ -42,7 +42,8 @@ namespace probe::sys
         return ret;
     }
 
-    std::pair<std::string, std::string> device_by_class(const std::string& cls, const std::string& name)
+    std::pair<std::filesystem::path, std::filesystem::path> device_by_class(const std::string& cls,
+                                                                            const std::string& name)
     {
 
         std::filesystem::path dir = "/sys/class/" + cls + "/" + name;
@@ -63,7 +64,7 @@ namespace probe::sys
     std::string guess_bus(const std::string& path)
     {
         std::smatch matchs;
-        if(std::regex_match(path, matchs, std::regex("^/sys/bus/(\\w+)/drivers/[\\w/]+"))) {
+        if (std::regex_match(path, matchs, std::regex("^/sys/bus/(\\w+)/drivers/[\\w/]+"))) {
             if (matchs.size() == 2) {
                 return matchs[1].str();
             }
