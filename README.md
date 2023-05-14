@@ -77,10 +77,10 @@ Operating System:                                   |   Operating System:
 | architecture   | &#10004; | &#10004; | x64                                      |
 | endianness     | &#10004; | &#10004; | little                                   |
 | CPUID/features | &#10004; | &#10004; | check features of CPU by cpuid           |
-| L1 Data cache  | &#10004; |          | 8 x  32 KB                               |
-| L1 Inst. cache | &#10004; |          | 8 x  32 KB                               |
-| L2 cache       | &#10004; |          | 8 x 256 KB                               |
-| L3 cache       | &#10004; |          | 12 MB                                    |
+| L1 Data cache  | &#10004; | &#10004; | 8 x  32 KB                               |
+| L1 Inst. cache | &#10004; | &#10004; | 8 x  32 KB                               |
+| L2 cache       | &#10004; | &#10004; | 8 x 256 KB                               |
+| L3 cache       | &#10004; | &#10004; | 12 MB                                    |
 
 ### Graphics
 

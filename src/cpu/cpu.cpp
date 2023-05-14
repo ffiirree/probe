@@ -17,16 +17,16 @@ namespace probe::cpu
 
     cache_type_t to_cache_type(const std::string& str)
     {
-        if (std::regex_search(str, std::regex("unified", std::regex_constants::icase)))
+        if (std::regex_search(str, std::regex("\\bunified", std::regex_constants::icase)))
             return cache_type_t::unified;
 
-        if (std::regex_search(str, std::regex("inst", std::regex_constants::icase)))
+        if (std::regex_search(str, std::regex("\\binst", std::regex_constants::icase)))
             return cache_type_t::instruction;
 
-        if (std::regex_search(str, std::regex("data", std::regex_constants::icase)))
+        if (std::regex_search(str, std::regex("\\bdata", std::regex_constants::icase)))
             return cache_type_t::data;
 
-        if (std::regex_search(str, std::regex("trace", std::regex_constants::icase)))
+        if (std::regex_search(str, std::regex("\\btrace", std::regex_constants::icase)))
             return cache_type_t::trace;
 
         return static_cast<cache_type_t>(static_cast<uint32_t>(cache_type_t::trace) + 1);

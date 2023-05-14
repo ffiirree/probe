@@ -1,12 +1,16 @@
 #ifdef __linux__
 
 #include "probe/cpu.h"
+#include "probe/defer.h"
+#include "probe/util.h"
 
 #include <algorithm>
 #include <cpuid.h>
 #include <cstring>
+#include <filesystem>
 #include <fstream>
 #include <optional>
+#include <regex>
 #include <string>
 #include <sys/utsname.h>
 #include <unordered_set>
@@ -95,17 +99,108 @@ namespace probe::cpu
         return ret;
     }
 
+    static std::optional<unsigned long> file_read_lu(const std::filesystem::path& path)
+    {
+        auto fd = ::fopen(path.c_str(), "r");
+        unsigned long value;
+
+        if (fd) {
+            defer(::fclose(fd));
+
+            if (1 == ::fscanf(fd, "%lu", &value)) {
+                return value;
+            }
+        }
+        return std::nullopt;
+    }
+
+    static std::string file_read(const std::string& file)
+    {
+        std::ifstream ifs(file);
+
+        if (!ifs) return {};
+
+        std::stringstream buffer;
+        buffer << ifs.rdbuf();
+
+        return buffer.str();
+    }
+
     // /sys/devices/system/cpu/cpu<N>/cache/index<M>/<F>
     std::vector<cache_t> caches()
     {
+        // cpus
+        std::vector<std::filesystem::path> cpus{};
+        for (const auto& entry : std::filesystem::directory_iterator("/sys/devices/system/cpu")) {
+            auto dirname = entry.path().filename().string();
+            if (std::regex_search(dirname, std::regex("\\bcpu[\\d]+"))) cpus.emplace_back(entry);
+        }
+
+        std::map<std::string, cache_t> caches;
+
+        for (size_t i = 0; i < cpus.size(); ++i) {
+            for (size_t idx = 0; idx < 8; ++idx) {
+
+                std::string subdir = "cache/index" + std::to_string(idx);
+
+                if (std::filesystem::exists(cpus[i] / subdir)) {
+                    auto level = file_read_lu(cpus[i] / subdir / "level");
+                    if (!level.has_value()) continue;
+
+                    auto size_str = file_read(cpus[i] / subdir / "size");
+                    if (size_str.empty()) continue;
+                    auto size = std::stoul(size_str);
+                    auto upos = size_str.find_first_not_of("0123456789 ");
+                    if (upos != std::string::npos) {
+                        if (size_str[upos] == 'K') size *= 1024;
+                        if (size_str[upos] == 'M') size *= 1024 * 1024;
+                        if (size_str[upos] == 'G') size *= 1024 * 1024 * 1024;
+                    }
+
+                    auto line_size = file_read_lu(cpus[i] / subdir / "coherency_line_size");
+                    if (!line_size.has_value()) continue;
+
+                    auto associativity = file_read_lu(cpus[i] / subdir / "ways_of_associativity");
+                    if (!associativity.has_value()) continue;
+
+                    auto id = file_read_lu(cpus[i] / subdir / "id");
+                    if (!id.has_value()) continue;
+
+                    // type
+                    auto type_str = probe::util::trim(file_read(cpus[i] / subdir / "type"));
+                    if (type_str.empty()) continue;
+                    auto type = to_cache_type(type_str);
+
+                    caches[type_str + std::to_string(((level.value() << 8) | id.value()))] = cache_t{
+                        .level         = static_cast<int32_t>(level.value()),
+                        .associativity = static_cast<int32_t>(associativity.value()),
+                        .line_size     = line_size.value(),
+                        .size          = size,
+                        .type          = type,
+                    };
+                }
+            }
+        }
+
         std::vector<cache_t> ret;
+
+        for (const auto& [k, v] : caches) {
+            ret.emplace_back(std::move(v));
+        }
 
         return ret;
     }
 
-    std::vector<cache_t> cache(int, cache_type_t)
+    std::vector<cache_t> cache(int l, cache_type_t t)
     {
+        auto all = caches();
         std::vector<cache_t> ret;
+
+        for (const auto& c : all) {
+            if (c.level == l && c.type == t) {
+                ret.emplace_back(c);
+            }
+        }
 
         return ret;
     }

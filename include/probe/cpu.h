@@ -64,8 +64,8 @@ namespace probe::cpu
     {
         int32_t level;
         int32_t associativity;
-        int32_t line_size;
-        int32_t size;
+        uint64_t line_size;
+        uint64_t size;
         cache_type_t type;
     };
 
