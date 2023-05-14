@@ -1,4 +1,5 @@
 #include "probe/network.h"
+#include "probe/util.h"
 
 #include <iomanip>
 #include <iostream>
@@ -12,7 +13,6 @@ int main()
     SetConsoleOutputCP(CP_UTF8);
     setvbuf(stdout, nullptr, _IOFBF, 1000);
 #endif
-
     auto adapters = probe::network::adapters();
 
     std::cout << "Host Name            : " << probe::network::hostname() << "\n\n";
@@ -20,27 +20,33 @@ int main()
     std::cout << "Network Adapters: \n";
     for (const auto& adapter : adapters) {
         std::cout << "  " << adapter.name << "\n"
+                  << "    Product          : " << adapter.product << '\n'
                   << "    ID               : " << adapter.id << '\n'
                   << "    GUID             : " << adapter.guid << '\n'
                   << "    Interface GUID   : " << adapter.interface_guid << '\n'
                   << "    Description      : " << adapter.description << '\n'
+                  << "    Enabled          : " << adapter.enabled << '\n'
+                  << "    Bus              : " << probe::to_string(adapter.bus) << '\n'
+                  << "    Driver           : " << adapter.driver << '\n'
+                  << "    Driver Version   : " << adapter.driver_version << '\n'
                   << "    Manufacturer     : "
                   << (adapter.manufacturer.empty() ? "(N/A)" : adapter.manufacturer) << '\n'
                   << "    Virtual          : " << adapter.is_virtual << '\n'
                   << "    Interface Type   : " << probe::to_string(adapter.type) << '\n'
                   << "    DHCP Enabled     : " << adapter.dhcp_enabled << '\n'
+                  << "    MTU              : " << adapter.mtu << '\n'
                   << "    Physical Address : " << adapter.physical_address << '\n'
                   << "    IPv4 Address     : ";
         for (size_t i = 0; i < adapter.ipv4_addresses.size(); ++i) {
-            std::cout << adapter.ipv4_addresses[i] << '\n';
-            if (i != adapter.ipv4_addresses.size() - 1) std::cout << "                       ";
+            std::cout << adapter.ipv4_addresses[i];
+            if (i != adapter.ipv4_addresses.size() - 1) std::cout << "\n                       ";
         }
-        std::cout << "    IPv6 Address     : ";
+        std::cout << "\n    IPv6 Address     : ";
         for (size_t i = 0; i < adapter.ipv6_addresses.size(); ++i) {
-            std::cout << adapter.ipv6_addresses[i] << '\n';
-            if (i != adapter.ipv6_addresses.size() - 1) std::cout << "                       ";
+            std::cout << adapter.ipv6_addresses[i];
+            if (i != adapter.ipv6_addresses.size() - 1) std::cout << "\n                       ";
         }
-
+        std::cout << '\n';
         if (!adapter.dhcpv4_server.empty()) {
             std::cout << "    DHCPv4 Server    : " << adapter.dhcpv4_server << '\n';
         }

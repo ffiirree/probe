@@ -2,6 +2,7 @@
 #define PROBE_NETWORK_H
 
 #include "probe/dllport.h"
+#include "probe/types.h"
 
 #include <string>
 #include <unordered_set>
@@ -11,18 +12,35 @@ namespace probe::network
 {
     enum class if_type_t
     {
-        Other     = 1,
+#ifdef _WIN32
         Ethernet  = 6,
         TokenRing = 9,
+        FDDI      = 15,
         PPP       = 23,
         Loopback  = 24,
+        SLIP      = 28,
         ATM       = 37,
         IEEE80211 = 71,
         TUNNEL    = 131,
-        IEEE1394  = 144
+        TUNNEL6   = TUNNEL,
+        IEEE1394  = 144,
+#elif __linux__
+        Ethernet  = 1,
+        TokenRing = 4,
+        FDDI      = 774,
+        PPP       = 512,
+        Loopback  = 772,
+        SLIP      = 256,
+        ATM       = 19,
+        IEEE80211 = 801,
+        TUNNEL    = 768,
+        TUNNEL6   = 769,
+        IEEE1394  = 24,
+#endif
     };
 
     inline const std::unordered_set<std::string> virtual_physical_addresses{
+        "00:00:00",
         "00:03:FF", // Microsoft Corporation
         "00:05:69", // VMware Inc.
         "00:0C:29", // VMware Inc.
@@ -38,21 +56,38 @@ namespace probe::network
         "00:A0:B1", // First Virtual Corporation
         "00:E0:C8", // Virtual Access Ltd
         "08:00:27", // PCS Systemtechnik GmbH
+        "0A:00:27",
         "18:92:2C", // Virtual Instruments
         "3C:F3:92", // Virtualtek Ltd
+    };
+
+    enum scope_t
+    {
+        Global = 0x00,
+        loopback = 0x10,
+        link = 0x20,
+        site = 0x40,
+        compat = 0x80,
     };
 
     struct adapter_t
     {
         std::string name{};
-        std::string id{};   // Windows: adapter name
-        std::string guid{}; // Windows: network guid
-        std::string interface_guid{};
+        vendor_t vendor_id{};         // PCI: vendor id
+        std::string product{};        // PCI: product name
+        std::string id{};             // Windows: adapter name, linux: device path
+        std::string guid{};           // Windows: network guid
+        std::string interface_guid{}; // Windows: interface guid
         std::string description{};
-        std::string manufacturer{};
+        std::string manufacturer{};   // Windows:
+        bool enabled{};
+        bus_type_t bus{};
+        std::string bus_info{};
+        std::string driver{};
+        std::string driver_version{};
         bool is_virtual{}; // guessed by physical address and the description (if contains "virtual")
-        if_type_t type{ if_type_t::Other };
-        std::string physical_address{};
+        if_type_t type{};
+        std::string physical_address{}; // MAC
         bool dhcp_enabled{};
         uint64_t mtu{};
         std::vector<std::string> ipv4_addresses{};

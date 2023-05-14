@@ -17,32 +17,6 @@ namespace probe
             RAW
         };
 
-        enum class bus_type_t
-        {
-            unknown = 0x00,
-            SCSI, // Small Computer System Interface
-            ATAPI,
-            ATA, // Advanced Technology Attachment
-            IEEE1394,
-            SSA,
-            Fibre,
-            USB,
-            RAID,
-            iSCSI,
-            SAS, // Serial Attached SCSI
-            SATA,
-            SD,
-            MMC,
-            Virtual,
-            FileBackedVirtual,
-            Spaces,
-            NVMe,
-            SCM,
-            UFS,
-            MAX,
-            MaxReserved = 0x7F
-        };
-
 #ifdef _WIN32
         struct drive_t
         {
@@ -98,7 +72,6 @@ namespace probe
 namespace probe
 {
     PROBE_API std::string to_string(disk::partition_style_t);
-    PROBE_API std::string to_string(disk::bus_type_t);
 } // namespace probe
 
 #endif //! PROBE_DISK_H

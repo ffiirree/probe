@@ -18,7 +18,7 @@ endif()
 if(MSVC)
     add_compile_options(/W4 /utf-8 /DUNICODE /D_UNICODE /DNOMINMAX /Zc:preprocessor /Zc:__cplusplus)
 else()
-    add_compile_options(-Wall -Wextra -Wpedantic)
+    add_compile_options(-Wall -Wextra -Wpedantic -Wno-trigraphs)
 endif()
 
 if(PROBE_BUILD_WITH_QT)

@@ -1,0 +1,3 @@
+[submodule "tools/pciids"]
+	path = tools/pciids
+	url = https://github.com/pciutils/pciids.git

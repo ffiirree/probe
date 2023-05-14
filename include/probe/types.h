@@ -33,7 +33,7 @@ namespace probe
 
     enum class vendor_t
     {
-        unknown   = 0x0000,
+        Unknown   = 0x0000,
         NVIDIA    = 0x10de,
         Intel     = 0x8086,
         Microsoft = 0x1414,
@@ -51,8 +51,70 @@ namespace probe
     // gausses what vendor_t the string is
     PROBE_API vendor_t vendor_cast(const std::string&);
 
+    PROBE_API std::string product_name(uint32_t, uint32_t);
+
+    enum class bus_type_t
+    {
+        // Windows: STORAGE_BUS_TYPE
+        Unknown = 0x00,
+        SCSI, // Small Computer System Interface
+        ATAPI,
+        ATA,  // Advanced Technology Attachment
+        IEEE1394,
+        SSA,
+        Fibre,
+        USB,
+        RAID,
+        iSCSI,
+        SAS, // Serial Attached SCSI
+        SATA,
+        SDIO,
+        MMC,
+        Virtual,
+        FileBackedVirtual,
+        Spaces,
+        NVMe,
+        SCM,
+        UFS,
+        MAX,
+        // other bus type
+        AC97, // An audio codec standard developed by Intel Architecture Labs in 1997.
+        ACPI, // Advanced Configuration and Power Interface
+        Auxiliary,
+        CPU,
+        GPIO,
+        HDAudio,
+        HID,
+        I2C,
+        ISA, // Industry Standard Architecture
+        PCI,
+        PCIe,
+        SPI,
+        CAN,
+        EISA,
+        MDIO,
+        IDE,
+        Virtio,
+        NVMEM,
+        PnP,
+        VME,
+        Xen,
+        CEC,
+        MaxReserved = 0x7F
+    };
+
+    PROBE_API bus_type_t bus_cast(const std::string&);
+
+    PROBE_API std::string bus_cast(bus_type_t);
+} // namespace probe
+
+namespace probe
+{
     PROBE_API std::string to_string(version_t);
+    
     PROBE_API inline std::string to_string(vendor_t id) { return vendor_cast(id); }
+
+    PROBE_API inline std::string to_string(bus_type_t t) { return bus_cast(t); }
 } // namespace probe
 
 // listener interface

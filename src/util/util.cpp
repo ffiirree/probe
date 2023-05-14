@@ -22,4 +22,15 @@ namespace probe::util
     }
 
     std::wstring to_utf16(const std::string& mstr) { return to_utf16(mstr.c_str(), mstr.size()); }
+
+    std::string trim(const std::string& str)
+    {
+        auto lpos = str.find_first_not_of(whitespace);
+        auto rpos = str.find_last_not_of(whitespace);
+        if (rpos != std::string::npos && rpos != std::string::npos && rpos >= lpos) {
+            return str.substr(lpos, rpos - lpos + 1);
+        }
+        // empty or all spaces
+        return {};
+    }
 } // namespace probe::util

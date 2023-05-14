@@ -1,5 +1,6 @@
 #ifdef __linux__
 
+#include "probe/defer.h"
 #include "probe/process.h"
 #include "probe/time.h"
 
@@ -30,10 +31,11 @@ namespace probe::process
         auto uptime_fd = ::fopen("/proc/uptime", "r");
         double uptime{};
         if (uptime_fd) {
-            ::fscanf(uptime_fd, "%lf", &uptime);
-            auto upsystime = probe::time::system_time() - static_cast<uint64_t>(uptime * 1000'000'000);
-            ::fclose(uptime_fd);
-            return upsystime;
+            defer(::fclose(uptime_fd));
+
+            if (::fscanf(uptime_fd, "%lf", &uptime) == 1) {
+                return probe::time::system_time() - static_cast<uint64_t>(uptime * 1000'000'000);
+            }
         }
         return 0;
     }
@@ -48,34 +50,37 @@ namespace probe::process
         char buffer[512]{};
 
         if (stat_fd) {
-            // https://man7.org/linux/man-pages/man5/proc.5.html
-            ::fscanf(stat_fd,
-                     "%d %s "                   // pid, comm
-                     "%c %d "                   // state, ppid
-                     "%d %d %d %d "             // pgrp, session, tty_nr, tpgid
-                     "%u %lu %lu %lu %lu "      // flags, minflt, cminflt, majflt, cmajflt
-                     "%lu %lu %ld %ld "         // utime, stime, cutime, cstime
-                     "%ld %ld "                 // priority, nice
-                     "%ld "                     // num_threads
-                     "%*s "                     // itrealvalue, not maintained
-                     "%llu "                    // starttime
-                     "%lu "                     // vsize
-                     "%ld "                     // rss
-                     "%lu %lu %lu %lu %lu %lu " // rsslim, startcode, endcode, startstack, kstkesp, kstkeip
-                     "%*s %*s %*s %*s "         // signal, blocked, sigign, sigcatch, use /proc/[pid]/status
-                     "%lu %*s %*s "             // wchan, (nswap, cnswap: not maintained)
-                     "%d %d "                   // exit_signal, processor
-                     "%u %u "                   // rt_priority, policy (sched)
-                     "%llu %lu %ld"             // blkio_ticks, guest_time, cguest_time
-                     ,
-                     &s.pid, buffer, &s.state, &s.ppid, &s.pgrp, &s.session, &s.tty_nr, &s.tpgid, &s.flags,
-                     &s.minflt, &s.cminflt, &s.majflt, &s.cmajflt, &s.utime, &s.stime, &s.cutime, &s.cstime,
-                     &s.priority, &s.nice, &s.nb_threads, &s.starttime, &s.vsize, &s.rss, &s.rsslim,
-                     &s.startcode, &s.endcode, &s.startstack, &s.kstkesp, &s.kstkeip, &s.wchan,
-                     &s.exit_signal, &s.processor, &s.rt_priority, &s.policy, &s.blkio_ticks, &s.guest_time,
-                     &s.cguest_time);
+            defer(::fclose(stat_fd));
 
-            ::fclose(stat_fd);
+            // https://man7.org/linux/man-pages/man5/proc.5.html
+            if (::fscanf(
+                    stat_fd,
+                    "%d %s "                   // pid, comm
+                    "%c %d "                   // state, ppid
+                    "%d %d %d %d "             // pgrp, session, tty_nr, tpgid
+                    "%u %lu %lu %lu %lu "      // flags, minflt, cminflt, majflt, cmajflt
+                    "%lu %lu %ld %ld "         // utime, stime, cutime, cstime
+                    "%ld %ld "                 // priority, nice
+                    "%ld "                     // num_threads
+                    "%*s "                     // itrealvalue, not maintained
+                    "%llu "                    // starttime
+                    "%lu "                     // vsize
+                    "%ld "                     // rss
+                    "%lu %lu %lu %lu %lu %lu " // rsslim, startcode, endcode, startstack, kstkesp, kstkeip
+                    "%*s %*s %*s %*s "         // signal, blocked, sigign, sigcatch, use /proc/[pid]/status
+                    "%lu %*s %*s "             // wchan, (nswap, cnswap: not maintained)
+                    "%d %d "                   // exit_signal, processor
+                    "%u %u "                   // rt_priority, policy (sched)
+                    "%llu %lu %ld"             // blkio_ticks, guest_time, cguest_time
+                    ,
+                    &s.pid, buffer, &s.state, &s.ppid, &s.pgrp, &s.session, &s.tty_nr, &s.tpgid, &s.flags,
+                    &s.minflt, &s.cminflt, &s.majflt, &s.cmajflt, &s.utime, &s.stime, &s.cutime, &s.cstime,
+                    &s.priority, &s.nice, &s.nb_threads, &s.starttime, &s.vsize, &s.rss, &s.rsslim,
+                    &s.startcode, &s.endcode, &s.startstack, &s.kstkesp, &s.kstkeip, &s.wchan,
+                    &s.exit_signal, &s.processor, &s.rt_priority, &s.policy, &s.blkio_ticks, &s.guest_time,
+                    &s.cguest_time) == 0) {
+                return {};
+            }
         }
 
         std::string comm = buffer;
@@ -96,9 +101,12 @@ namespace probe::process
         pio_t io{};
 
         if (io_fd) {
-            ::fscanf(io_fd, "%lu %lu %lu %lu %lu %lu %lu", &io.rchar, &io.wchar, &io.syscr, &io.syscw,
-                     &io.read_bytes, &io.write_bytes, &io.cancelled_write_bytes);
-            ::fclose(io_fd);
+            defer(::fclose(io_fd));
+
+            if (::fscanf(io_fd, "%lu %lu %lu %lu %lu %lu %lu", &io.rchar, &io.wchar, &io.syscr, &io.syscw,
+                         &io.read_bytes, &io.write_bytes, &io.cancelled_write_bytes) == 0) {
+                return {};
+            }
         }
         return io;
     }
@@ -125,8 +133,12 @@ namespace probe::process
         pstatm_t m{};
 
         if (statm_fd) {
-            ::fscanf(statm_fd, "%lu %lu %lu %lu %lu", &m.size, &m.resident, &m.shared, &m.text, &m.data);
-            ::fclose(statm_fd);
+            defer(::fclose(statm_fd));
+
+            if (::fscanf(statm_fd, "%lu %lu %lu %lu %lu", &m.size, &m.resident, &m.shared, &m.text,
+                         &m.data) == 0) {
+                return {};
+            }
         }
         return m;
     }
