@@ -84,7 +84,7 @@ if(PROBE_BUILD_WITH_QT)
 endif()
 
 if(PROBE_EXAMPLES)
-    foreach(example cpu;graphics;system;disk;media;net;process;util)
+    foreach(example cpu;graphics;system;disk;media;net;process;power;util)
         add_executable(probe_${example} examples/${example}.cpp)
         target_link_libraries(probe_${example} PUBLIC probe::probe)
 

@@ -10,7 +10,7 @@ int main()
     auto drives = probe::disk::physical_drives();
 
     std::cout << "Disk Drives: \n";
-    for(auto& drive : drives) {
+    for (auto& drive : drives) {
         auto partitions = probe::disk::partitions(drive);
 
         std::cout << "  " << (drive.name.empty() ? "(N/A)" : drive.name.substr(4)) << "\n"
@@ -37,7 +37,7 @@ int main()
                   << "    Style               : " << probe::to_string(drive.style) << '\n'
                   << "    Partitions          : " << drive.partitions << '\n';
 
-        for(const auto& part : partitions) {
+        for (const auto& part : partitions) {
             std::cout << "      Parition " << part.number << '\n'
                       << "        Name            : " << part.name << '\n'
                       << "        Style           : " << probe::to_string(part.style) << '\n'
@@ -52,7 +52,7 @@ int main()
     auto volumes = probe::disk::volumes();
 
     std::cout << "Volumes: \n";
-    for(const auto& volume : volumes) {
+    for (const auto& volume : volumes) {
         std::cout << "  " << (volume.letter.empty() ? "(N/A)" : volume.letter) << '\n'
                   << "    Label               : " << (volume.label.empty() ? "(N/A)" : volume.label) << '\n'
                   << "    Filesystem          : " << volume.filesystem << '\n'
