@@ -1,14 +1,14 @@
 #ifdef _WIN32
 
-#include "probe/defer.h"
-#include "probe/process.h"
-#include "probe/time.h"
-#include "probe/util.h"
-
 // clang-format off
 #include <Windows.h>
 #include <TlHelp32.h>
 #include <Psapi.h>
+#include "probe/defer.h"
+#include "probe/process.h"
+#include "probe/thread.h"
+#include "probe/time.h"
+#include "probe/util.h"
 // clang-format on
 
 namespace probe::process
@@ -41,7 +41,7 @@ namespace probe::process
                 // times
                 FILETIME ct{}, et{}, kt{}, ut{};
                 if (::GetProcessTimes(phandle, &ct, &et, &kt, &ut) != 0) {
-                    time = probe::time::to_time(ct);
+                    time = probe::time::from_filetime(ct);
                 }
 
                 // user
@@ -104,7 +104,7 @@ namespace probe::process
             if (pid == entry.th32OwnerProcessID) {
                 ret.emplace_back(thread_t{
                     .tid  = entry.th32ThreadID,
-                    .name = probe::util::thread_get_name(entry.th32ThreadID),
+                    .name = probe::thread::name(entry.th32ThreadID),
                 });
             }
         } while (::Thread32Next(snap, &entry));

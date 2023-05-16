@@ -19,7 +19,7 @@ static std::string running_time(uint64_t st)
     auto m        = static_cast<int>((duration / 60) % 60);
     auto h        = static_cast<int>((duration / 3600) % 24);
     char buffer[16]{};
-    std::sprintf(buffer, "%02d:%02d:%02d", h, m, s);
+    std::snprintf(buffer, sizeof(buffer), "%02d:%02d:%02d", h, m, s);
     return buffer;
 }
 

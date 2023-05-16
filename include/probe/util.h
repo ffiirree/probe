@@ -30,13 +30,6 @@ namespace probe::util
     inline constexpr auto whitespace = " \f\n\r\t\v";
     PROBE_API std::string trim(const std::string&);
 
-    // linux: The thread name is a meaningful C language string, whose length is
-    //        restricted to 16 characters, including the terminating null byte ('\0')
-    PROBE_API int thread_set_name(const std::string&);
-    PROBE_API std::string thread_get_name(uint64_t);
-    // name of the current thread
-    PROBE_API std::string thread_get_name();
-
     PROBE_API inline double KB(uint64_t v) { return (static_cast<double>(v) / (1024)); }
     PROBE_API inline double MB(uint64_t v) { return (static_cast<double>(v) / (1024 * 1024)); }
     PROBE_API inline double GB(uint64_t v) { return (static_cast<double>(v) / (1024 * 1024 * 1024)); }

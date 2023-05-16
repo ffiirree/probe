@@ -1,10 +1,10 @@
 #ifdef _WIN32
 
 #include "probe/defer.h"
+#include "probe/thread.h"
 #include "probe/util.h"
 
 #include <Windows.h>
-#include <processthreadsapi.h>
 
 namespace probe::util::registry
 {
@@ -64,7 +64,7 @@ namespace probe::util::registry
 
         running_ = true;
         thread_  = std::thread([=]() {
-            thread_set_name("listen-" + subkey);
+            probe::thread::set_name("listen-" + subkey);
 
             const HANDLE events[] = { STOP_EVENT, NOTIFY_EVENT };
 
@@ -105,33 +105,5 @@ namespace probe::util::registry
         }
     }
 } // namespace probe::util::registry
-
-namespace probe::util
-{
-    int thread_set_name(const std::string& name)
-    {
-        // >= Windows 10, version 1607
-        if (FAILED(::SetThreadDescription(::GetCurrentThread(), to_utf16(name).c_str()))) {
-            return -1;
-        }
-        return 0;
-    }
-
-    std::string thread_get_name(uint64_t id)
-    {
-        // >= Windows 10, version 1607
-        WCHAR *buffer = nullptr;
-        if (SUCCEEDED(::GetThreadDescription(reinterpret_cast<HANDLE>(id), &buffer))) {
-            defer(::LocalFree(buffer));
-            return to_utf8(buffer);
-        }
-        return {};
-    }
-
-    std::string thread_get_name()
-    {
-        return thread_get_name(reinterpret_cast<uint64_t>(::GetCurrentThread()));
-    }
-} // namespace probe::util
 
 #endif // _WIN32

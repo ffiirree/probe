@@ -1,15 +1,10 @@
 #ifdef __linux__
 
+#include "probe/thread.h"
 #include "probe/util.h"
 
-#include <chrono>
 #include <cstring>
-#include <pthread.h>
 #include <signal.h>
-#include <stdio.h>
-#include <unistd.h>
-
-using namespace std::chrono_literals;
 
 namespace probe::util
 {
@@ -104,7 +99,7 @@ namespace probe::util
 
         running_ = true;
         thread_  = std::thread([=, this]() {
-            thread_set_name(std::string{ "listen-" } + cmd[0]);
+            probe::thread::set_name(std::string{ "listen-" } + cmd[0]);
 
             pipe_ = pipe_open(cmd);
 
@@ -127,27 +122,6 @@ namespace probe::util
 
             if (thread_.joinable()) thread_.join();
         }
-    }
-} // namespace probe::util
-
-// thread
-namespace probe::util
-{
-    int thread_set_name(const std::string& name)
-    {
-        return ::pthread_setname_np(::pthread_self(), name.substr(0, 15).c_str());
-    }
-
-    std::string thread_get_name(uint64_t id)
-    {
-        char buffer[128];
-        ::pthread_getname_np(static_cast<pthread_t>(id), buffer, 128);
-        return buffer;
-    }
-
-    std::string thread_get_name()
-    {
-        return thread_get_name(static_cast<uint64_t>(::pthread_self()));
     }
 } // namespace probe::util
 

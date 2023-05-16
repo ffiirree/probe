@@ -3,13 +3,19 @@
 
 #include "probe/dllport.h"
 
-// hardware information
-namespace probe
+#include <cstdint>
+
+namespace probe::memory
 {
-    namespace memory
+    struct memory_status_t
     {
-        PROBE_API int slots();
-    } // namespace memory
-} // namespace probe
+        uint64_t avail; // bytes
+        uint64_t total; // bytes
+    };
+
+    PROBE_API memory_status_t status();
+
+    PROBE_API int slots();
+} // namespace probe::memory
 
 #endif //! PROBE_MEMORY_H

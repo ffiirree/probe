@@ -4,7 +4,6 @@
 #include "probe/dllport.h"
 #include "probe/types.h"
 
-#include <cstdint>
 #include <optional>
 #include <string>
 
@@ -45,14 +44,6 @@ namespace probe::system
         std::string name;
         version_t version;
     };
-
-    struct memory_status_t
-    {
-        uint64_t avail; // bytes
-        uint64_t total; // bytes
-    };
-
-    PROBE_API memory_status_t memory();
 
     PROBE_API theme_t theme();
 

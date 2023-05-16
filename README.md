@@ -11,6 +11,7 @@
 ```C++
 #include "probe/system.h"
 
+#include "probe/memory.h"
 #include "probe/util.h"
 
 #include <iostream>
@@ -19,7 +20,7 @@ int main()
 {
     auto os     = probe::system::os_info();
     auto kernel = probe::system::kernel_info();
-    auto mem    = probe::system::memory();
+    auto mem    = probe::memory::status();
 
     std::cout << "Operating System:\n"
               << "    Name             : " << os.name << '\n'

@@ -1,6 +1,8 @@
 #include "probe/util.h"
 
 #include "probe/system.h"
+#include "probe/thread.h"
+#include "probe/time.h"
 
 #include <iostream>
 
@@ -9,11 +11,11 @@ int main()
 #ifdef _WIN32
 
     // example for registry::read
-    if(probe::system::os_version() >= probe::WIN_10_1ST) {
-        if(probe::util::registry::read<DWORD>(
-               HKEY_CURRENT_USER, R"(Software\Microsoft\Windows\CurrentVersion\Themes\Personalize)",
-               "AppsUseLightTheme")
-               .value_or(1) == 0) {
+    if (probe::system::os_version() >= probe::WIN_10_1ST) {
+        if (probe::util::registry::read<DWORD>(
+                HKEY_CURRENT_USER, R"(Software\Microsoft\Windows\CurrentVersion\Themes\Personalize)",
+                "AppsUseLightTheme")
+                .value_or(1) == 0) {
             std::cout << "current mode: dark\n";
         }
         else {
@@ -26,10 +28,9 @@ int main()
     listener.listen(
         std::pair<HKEY, std::string>{ HKEY_CURRENT_USER,
                                       R"(Software\Microsoft\Windows\CurrentVersion\Themes\Personalize)" },
-        [](auto) { std::cout << " -- [" << probe::util::thread_get_name() << "] mode changed\n"; });
+        [](auto) { std::cout << " -- [" << probe::thread::name() << "] mode changed\n"; });
 
     std::cout << "\nlistening the dark/light mode change event..\n";
-    for(; listener.running();) {}
 
 #elif defined(__linux__)
 
@@ -43,14 +44,15 @@ int main()
     listener.listen(
         std::vector<const char *>{ "gsettings", "monitor", "org.gnome.desktop.interface", "gtk-theme" },
         [=](const std::any& theme) {
-            std::cout << "-- [" << probe::util::thread_get_name() << "] "
-                      << std::any_cast<std::string>(theme);
+            std::cout << "-- [" << probe::thread::name() << "] " << std::any_cast<std::string>(theme);
         });
 
     std::cout << "\nlistening the theme change event..\n";
-
-    for(; listener.running();) {}
-
 #endif
+
+    for (; listener.running();) {
+        probe::time::msleep(100);
+    }
+
     return 0;
 }
