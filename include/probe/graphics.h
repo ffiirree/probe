@@ -2,6 +2,7 @@
 #define PROBE_GRAPHICS_H
 
 #include "probe/dllport.h"
+#include "probe/enum.h"
 #include "probe/types.h"
 
 #include <cstdint>
@@ -145,6 +146,15 @@ namespace probe::graphics
 // windows
 namespace probe::graphics
 {
+    enum class window_filter_t
+    {
+        visible    = 0x01,
+        capturable = 0x04, // Windows Graphics Capture
+        children   = 0x08,
+
+        ENABLE_BITMASK_OPERATORS()
+    };
+
     struct window_t
     {
         std::string name{}; // utf-8
@@ -153,6 +163,7 @@ namespace probe::graphics
         geometry_t rect{};
         uint64_t handle{};
         bool visible{};
+        uint64_t parent{}; // handle of parent window
 
 #ifdef _WIN32
         // process
@@ -161,7 +172,7 @@ namespace probe::graphics
 #endif
     };
 
-    PROBE_API std::deque<window_t> windows(bool = true);
+    PROBE_API std::deque<window_t> windows(window_filter_t = window_filter_t::visible);
 
     PROBE_API display_t virtual_screen();
 

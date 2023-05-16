@@ -112,13 +112,6 @@ namespace probe::network
         std::map<std::string, net_device_info_t> pairs{};
 
         for (DWORD idx = 0; ::SetupDiEnumDeviceInfo(device_sets, idx, &info); ++idx) {
-
-            auto v1 = setup_get_property(device_sets, &info, SPDRP_DEVICEDESC);
-            auto v2 = setup_get_property(device_sets, &info, SPDRP_HARDWAREID);
-            auto v3 = setup_get_property(device_sets, &info, SPDRP_LOCATION_INFORMATION);
-            auto v4 = setup_get_property(device_sets, &info, SPDRP_LOCATION_PATHS);
-            auto v5 = setup_get_property(device_sets, &info, SPDRP_PHYSICAL_DEVICE_OBJECT_NAME);
-
             if (auto desc = setup_get_property(device_sets, &info, SPDRP_DEVICEDESC); !desc.empty()) {
 
                 net_device_info_t dev{

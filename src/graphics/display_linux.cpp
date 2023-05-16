@@ -74,7 +74,7 @@ namespace probe::graphics
                 .handle    = reinterpret_cast<uint64_t>(display),
                 .geometry  = geometry_t{ crtc_info->x, crtc_info->y, crtc_info->width, crtc_info->height },
                 .frequency = calculate_frequency(screen_res, crtc_info->mode),
-                .bpp       = static_cast<uint32_t>(DefaultDepth(display, 0)), // global
+                .bpp       = static_cast<uint32_t>(DefaultDepth(display, 0)),   // global
                 .dpi       = static_cast<uint32_t>((DisplayWidth(display, 0) * 25.4) /
                                              DisplayWidthMM(display, 0)), // global
                 .orientation =
@@ -93,7 +93,7 @@ namespace probe::graphics
     // least one window for each application program. Child windows may in turn have their own children. In
     // this way, an application program can create an arbitrarily deep tree on each screen. X provides
     // graphics, text, and raster operations for windows.
-    std::deque<window_t> windows(bool visible)
+    std::deque<window_t> windows(window_filter_t flags)
     {
         std::deque<window_t> ret;
 
@@ -117,7 +117,8 @@ namespace probe::graphics
 
             ::XGetWindowAttributes(display, child_windows[i], &attrs);
 
-            if (visible && (attrs.map_state < 2 || (attrs.width * attrs.height < 4))) {
+            if (any(flags & window_filter_t::visible) &&
+                (attrs.map_state < 2 || (attrs.width * attrs.height < 4))) {
                 continue;
             }
 

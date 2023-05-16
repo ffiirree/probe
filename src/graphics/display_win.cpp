@@ -12,10 +12,29 @@
 
 namespace probe::graphics
 {
-    // { classname : name }
-    std::map<std::string, std::string> filter_windows = {
-        { "PseudoConsoleWindow", "" }, // Windows Pseudo Console?
-        { "YNoteShadowWnd", "" },      // Shadow Window of Youdao Dict
+    // { classname|name - process }
+    std::map<std::string, std::string> blacklist = {
+        { "PseudoConsoleWindow|", ".*" },          // Windows Pseudo Console?
+        { "YNoteShadowWnd|", "\\bYoudaoDict\\b" }, // Shadow Window of Youdao Dict
+        { "popupshadow|", "\\bWeChat\\b" },        // Shadow Window of  WeChat
+        { "QMShadowWndClass|", "\\bQQMusic\\b" },  // Shadow Window of QQMusic
+        // children
+        { "Windows.UI.Composition.DesktopWindowContentBridge|DesktopWindowXamlSource", ".*" },
+        { "DRAG_BAR_WINDOW_CLASS|", ".*" },              // windows terminal
+        { "TITLE_BAR_SCAFFOLDING_WINDOW_CLASS|", ".*" }, // explorer.exe
+        { "Intermediate D3D Window|", ".*" },
+        { "AVL_AVView|AVTopbarResizeView", "\\bAcrobat\\b" },
+        { "ScrollBar|", "\\bAcrobat\\b" },
+    };
+
+    //  { classname:name - process }
+    std::map<std::string, std::string> uncapturable_windows = {
+        { "Shell_TrayWnd|", ".*" },                                                   // taskbar
+        { "WorkerW|", ".*" },                                                         //
+        { "Progman:Program Manager|", ".*" },                                         //
+        { "TopLevelWindowForOverflowXamlIsland|System tray overflow window.", ".*" }, // System Tray
+        { "YdGenericListWnd|YdGenericListWnd", ".*" }, // System Tray Menu of YoudaoDict
+        { "Qt5153QWindowToolSaveBits|Microsoft OneDrive", "\\bOneDrive\\b" }
     };
 
     static std::pair<std::string, std::string> display_name_and_driver_of(WCHAR *device)
@@ -183,7 +202,7 @@ namespace probe::graphics
         return display_info_of(reinterpret_cast<uint64_t>(hmonitor));
     }
 
-    static window_t window_info_of(HWND hwnd)
+    static std::pair<std::string, std::string> window_name_of(HWND hwnd)
     {
         // title
         std::wstring name;
@@ -198,17 +217,43 @@ namespace probe::graphics
         std::wstring classname(256, {});
         auto cn_len = ::GetClassName(hwnd, classname.data(), 256);
 
-        // rect
-        RECT rect;
-        ::DwmGetWindowAttribute(hwnd, DWMWA_EXTENDED_FRAME_BOUNDS, &rect, sizeof(RECT));
+        auto u8name = probe::util::trim(probe::util::to_utf8(name.c_str(), name_len));
+        return {
+            u8name.substr(0, u8name.find_first_of("\n\r")),
+            probe::util::to_utf8(classname.c_str(), cn_len),
+        };
+    }
 
-        // visible
+    static bool IsWindowCloaked(HWND hwnd)
+    {
         BOOL is_cloaked = false;
-        bool visible =
-            ::IsWindowVisible(hwnd) &&
-            SUCCEEDED(::DwmGetWindowAttribute(hwnd, DWMWA_CLOAKED, &is_cloaked, sizeof(is_cloaked))) &&
-            !is_cloaked && !(::GetWindowLong(hwnd, GWL_STYLE) & WS_DISABLED);
 
+        if (SUCCEEDED(::DwmGetWindowAttribute(hwnd, DWMWA_CLOAKED, &is_cloaked, sizeof(is_cloaked)))) {
+            return is_cloaked;
+        }
+
+        return false;
+    }
+
+    static bool IsWindowBlocked(const window_t& win)
+    {
+        auto key = win.classname + "|" + win.name;
+
+        return blacklist.contains(key) &&
+               std::regex_search(win.pname, std::regex(blacklist[key], std::regex_constants::icase));
+    }
+
+    static bool IsWindowCapturable(const window_t& win)
+    {
+        auto key = win.classname + "|" + win.name;
+
+        return !(uncapturable_windows.contains(key) &&
+                 std::regex_search(win.pname,
+                                   std::regex(uncapturable_windows[key], std::regex_constants::icase)));
+    }
+
+    static auto process_of(HWND hwnd)
+    {
         // process
         DWORD pid = 0;
         std::string pname{};
@@ -229,11 +274,26 @@ namespace probe::graphics
             }
         }
 
+        return std::pair{ pid, pname };
+    }
+
+    static window_t window_info_of(HWND hwnd)
+    {
+        auto [name, classname] = window_name_of(hwnd);
+
+        // rect
+        RECT rect{};
+        ::DwmGetWindowAttribute(hwnd, DWMWA_EXTENDED_FRAME_BOUNDS, &rect, sizeof(RECT));
+
+        // visible
+        bool visible = ::IsWindowVisible(hwnd) && !IsWindowCloaked(hwnd);
+
+        // process
+        auto [pid, pname] = process_of(hwnd);
+
         return {
-            // not including the terminating null character.
-            .name      = probe::util::to_utf8(name.c_str(), name_len),
-            // not including the terminating null character.
-            .classname = probe::util::to_utf8(classname.c_str(), cn_len),
+            .name      = name,
+            .classname = classname,
             .rect =
                 geometry_t{
                     rect.left,
@@ -243,13 +303,66 @@ namespace probe::graphics
                 },
             .handle  = reinterpret_cast<uint64_t>(hwnd),
             .visible = visible,
-            .pid     = (pid != 0 && !pname.empty()) ? pid : 0,
-            .pname   = (pid != 0 && !pname.empty()) ? std::move(pname) : std::string{},
+            .pid     = pid,
+            .pname   = pname,
         };
     }
 
-    std::deque<window_t> windows(bool visible)
+    static std::vector<window_t> children_of(HWND hwnd)
     {
+        std::pair<std::vector<window_t>, HWND> bundle{ {}, hwnd };
+
+        ::EnumChildWindows(
+            reinterpret_cast<HWND>(hwnd),
+            [](HWND chwnd, LPARAM userdata) -> BOOL {
+                // invisible
+                if (!::IsWindowVisible(chwnd) || IsWindowCloaked(chwnd)) return TRUE;
+
+                auto bundle = reinterpret_cast<std::pair<std::vector<window_t>, HWND> *>(userdata);
+
+                // classname - name
+                auto [name, cname] = window_name_of(chwnd);
+
+                //
+                RECT rect{};
+                ::GetWindowRect(chwnd, &rect);
+
+                // process
+                auto [pid, pname] = process_of(chwnd);
+
+                auto subwin = window_t{
+                    .name      = name,
+                    .classname = cname,
+                    .rect =
+                        geometry_t{
+                            rect.left,
+                            rect.top,
+                            static_cast<uint32_t>(rect.right - rect.left),
+                            static_cast<uint32_t>(rect.bottom - rect.top),
+                        },
+                    .handle  = reinterpret_cast<uint64_t>(chwnd),
+                    .visible = true,
+                    .parent  = reinterpret_cast<uint64_t>(bundle->second),
+                    .pid     = pid,
+                    .pname   = pname,
+                };
+
+                // ignored
+                if (subwin.rect.width * subwin.rect.height < 16 || IsWindowBlocked(subwin)) return TRUE;
+
+                bundle->first.emplace_back(subwin);
+
+                return TRUE;
+            },
+            reinterpret_cast<LPARAM>(&bundle));
+
+        return bundle.first;
+    }
+
+    std::deque<window_t> windows(window_filter_t flags)
+    {
+        auto desktop_geo = virtual_screen_geometry();
+
         std::deque<window_t> ret;
 
         // Z-index: up to down
@@ -257,15 +370,44 @@ namespace probe::graphics
              hwnd      = ::GetNextWindow(hwnd, GW_HWNDNEXT)) {
             auto window = window_info_of(hwnd);
 
-            // visible
-            if (visible && (!window.visible || (!window.rect.width && !window.rect.height))) {
-                continue;
+            // invisible
+            if (any(flags & window_filter_t::visible)) {
+                // invisible
+                if (!window.visible) continue;
+
+                // out of sight
+                auto winrect = desktop_geo.intersected(window.rect);
+                if (winrect.width * winrect.height < 16) continue;
+
+                // ignored
+                if (IsWindowBlocked(window)) continue;
             }
 
-            // filter
-            if (visible && filter_windows.contains(window.classname) &&
-                filter_windows[window.classname] == window.name) {
-                continue;
+            // wgc capturable
+            if (any(flags & window_filter_t::capturable)) {
+                // not children
+                if (::GetAncestor(hwnd, GA_ROOT) != hwnd) continue;
+
+                //
+                if (!IsWindowCapturable(window)) continue;
+            }
+
+            // children
+            if (any(flags & window_filter_t::children)) {
+                auto children = children_of(hwnd);
+                geometry_t last_rect{};
+                std::for_each(children.rbegin(), children.rend(), [&](const auto& subwind) {
+                    // ignore the children which completely cover their parent
+                    if (!subwind.rect.contains(window.rect)) {
+                        // keep the last one of children with same rect
+                        if (last_rect != geometry_t{} && subwind.rect == last_rect) {
+                            ret.pop_back();
+                        }
+
+                        last_rect = subwind.rect;
+                        ret.emplace_back(subwind);
+                    }
+                });
             }
 
             ret.emplace_back(window);
