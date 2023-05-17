@@ -1,11 +1,14 @@
 #ifdef __linux__
 
+#ifndef PROBE_SYSFS_H
+#define PROBE_SYSFS_H
+
 #include "probe/dllport.h"
 
+#include <filesystem>
 #include <string>
 #include <utility>
 #include <vector>
-#include <filesystem>
 
 // https://elixir.bootlin.com/linux/v4.6/source/Documentation/sysfs-rules.txt
 //
@@ -32,5 +35,7 @@ namespace probe::sys
     PROBE_API std::string guess_bus(const std::string& path);
 
 } // namespace probe::sys
+
+#endif //! PROBE_SYSFS_H
 
 #endif

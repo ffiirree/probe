@@ -1,5 +1,5 @@
-#ifndef PROBE_BATTERY_H
-#define PROBE_BATTERY_H
+#ifndef PROBE_TIME_H
+#define PROBE_TIME_H
 
 #include "probe/dllport.h"
 
@@ -94,4 +94,4 @@ namespace probe::time
     };
 } // namespace probe::time
 
-#endif //! PROBE_BATTERY_H
+#endif //! PROBE_TIME_H

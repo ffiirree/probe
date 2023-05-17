@@ -4,7 +4,7 @@
 
 namespace probe::power
 {
-    std::vector<supply_t> status() { return {}; }
+    std::vector<supply_t> supplies() { return {}; }
 } // namespace probe::power
 
 #endif

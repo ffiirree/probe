@@ -17,13 +17,27 @@ int main()
     setvbuf(stdout, nullptr, _IOFBF, 1000);
 #endif
 
-    auto supplies = probe::power::status();
+    auto supplies = probe::power::supplies();
 
     std::cout << "Power Supply:\n";
     for (const auto& supply : supplies) {
-        std::cout << "    Name             : " << supply.name << '\n'
-                  << "    Type             : " << probe::to_string(supply.type) << '\n'
-                  << "    Status           : " << probe::to_string(supply.status) << "\n\n";
+        std::cout << "  " << supply.name << '\n'
+                  << "    Type                  : " << probe::to_string(supply.type) << '\n'
+                  << "    Status                : " << probe::to_string(supply.status) << '\n';
+
+        switch (supply.type) {
+        case probe::power::supply_type_t::Mains: break;
+        case probe::power::supply_type_t::Battery:
+            std::cout << "    Serial Number         : " << supply.serial << '\n'
+                      << "    Manufacturer          : " << supply.manufacturer << '\n'
+                      << "    Chemistry             : " << supply.chemistry << '\n'
+                      << "    Designed Capacity     : " << supply.capacity << '\n'
+                      << "    Full Charged Capacity : " << supply.full_charged_capacity << '\n'
+                      << "    Cycle Count           : " << supply.cycle << '\n';
+            break;
+        }
+
+        std::cout << "\n";
     }
 
     return 0;
