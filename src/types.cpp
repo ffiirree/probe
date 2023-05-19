@@ -7,9 +7,6 @@
 
 namespace probe
 {
-    static const std::pair<uint32_t, const char *> vendors[]{ PCIIDS_VENDORS };
-    static const std::pair<uint32_t, const char *> devices[]{ PCIIDS_DEVICES };
-
     version_t to_version(const std::string& str)
     {
         std::smatch matchs;
@@ -52,43 +49,22 @@ namespace probe
     std::string vendor_cast(vendor_t vendor)
     {
         // clang-format off
-        switch(vendor) {
-        case vendor_t::NVIDIA:          return "NVIDIA Corporation";
-        case vendor_t::Intel:           return "Intel Corporation";
-        case vendor_t::Microsoft:       return "Microsoft Corporation";
-        case vendor_t::Qualcomm:        return "Qualcomm Technologies";
-        case vendor_t::AMD:             return "Advanced Micro Devices, Inc.";
-        case vendor_t::Apple:           return "Apple Inc.";
-        case vendor_t::Unknown:         return "Unknown";
-        default:
-            for(size_t i = 0; i < sizeof(vendors) / sizeof(std::pair<uint32_t, const char *>); ++i) {
-                if (vendors[i].first == static_cast<uint32_t>(vendor)) return vendors[i].second;
-            }
-            return "Unknown";
+        switch (static_cast<uint32_t>(vendor)) {
+#define V(ID, STR) case ID: return STR;
+        PCIIDS_VENDORS
+#undef V
+        default: return "Unknown";
         }
         // clang-format on
     }
 
     vendor_t vendor_cast(const std::string& name)
     {
-        if (std::regex_search(name, std::regex("\\bNVIDIA\\b", std::regex_constants::icase)))
-            return vendor_t::NVIDIA;
-
-        if (std::regex_search(name, std::regex("\\bIntel\\b", std::regex_constants::icase)))
-            return vendor_t::Intel;
-
-        if (std::regex_search(name, std::regex("\\bMicrosoft\\b", std::regex_constants::icase)))
-            return vendor_t::Microsoft;
-
-        if (std::regex_search(name, std::regex("\\bQualcomm\\b", std::regex_constants::icase)))
-            return vendor_t::Qualcomm;
-
-        if (std::regex_search(name, std::regex("\\bAMD\\b", std::regex_constants::icase)) ||
-            std::regex_search(name, std::regex("Advanced Micro Devices", std::regex_constants::icase)))
-            return vendor_t::AMD;
-
-        if (std::regex_search(name, std::regex("\\bApple\\b", std::regex_constants::icase)))
-            return vendor_t::Apple;
+#define V(ID, STR)                                                                                         \
+    if (std::regex_match(STR, std::regex(name, std::regex_constants::icase)))                              \
+        return static_cast<vendor_t>(ID);
+        PCIIDS_VENDORS
+#undef V
 
         return vendor_t::Unknown;
     }
@@ -96,15 +72,18 @@ namespace probe
     std::string product_name(uint32_t vid, uint32_t pid)
     {
         uint32_t key = (vid << 16) | pid;
-        for (size_t i = 0; i < (sizeof(devices) / sizeof(std::pair<uint32_t, const char *>)); ++i) {
-            if (devices[i].first == key) return devices[i].second;
+        // clang-format off
+        switch (key) {
+#define P(ID, STR) case ID: return STR;
+            PCIIDS_DEVICES
+#undef P
+        default: return {};
         }
-        return {};
+        // clang-format on
     }
 
     std::string to_string(version_t ver)
     {
-
         std::string vstr = std::to_string(ver.major) + "." + std::to_string(ver.minor) + "." +
                            std::to_string(ver.patch) + "." + std::to_string(ver.build);
         if (!ver.codename.empty()) {

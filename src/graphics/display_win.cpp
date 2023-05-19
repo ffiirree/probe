@@ -2,6 +2,7 @@
 
 #include "probe/defer.h"
 #include "probe/graphics.h"
+#include "probe/process.h"
 #include "probe/util.h"
 
 #include <ShellScalingApi.h>
@@ -14,6 +15,7 @@ namespace probe::graphics
 {
     // { classname|name - process }
     std::map<std::string, std::string> blacklist = {
+        { "WorkerW|", ".*" },                      //
         { "PseudoConsoleWindow|", ".*" },          // Windows Pseudo Console?
         { "YNoteShadowWnd|", "\\bYoudaoDict\\b" }, // Shadow Window of Youdao Dict
         { "popupshadow|", "\\bWeChat\\b" },        // Shadow Window of  WeChat
@@ -30,8 +32,7 @@ namespace probe::graphics
     //  { classname:name - process }
     std::map<std::string, std::string> uncapturable_windows = {
         { "Shell_TrayWnd|", ".*" },                                                   // taskbar
-        { "WorkerW|", ".*" },                                                         //
-        { "Progman:Program Manager|", ".*" },                                         //
+        { "Progman|Program Manager", ".*" },                                          //
         { "TopLevelWindowForOverflowXamlIsland|System tray overflow window.", ".*" }, // System Tray
         { "YdGenericListWnd|YdGenericListWnd", ".*" }, // System Tray Menu of YoudaoDict
         { "Qt5153QWindowToolSaveBits|Microsoft OneDrive", "\\bOneDrive\\b" }
@@ -259,18 +260,7 @@ namespace probe::graphics
         std::string pname{};
         if (::GetWindowThreadProcessId(hwnd, &pid) != 0) {
             if (pid != 0 && ::GetCurrentProcessId() != pid) {
-                auto process = ::OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, false, pid);
-                defer(::CloseHandle(process));
-                if (process != nullptr) {
-                    wchar_t buffer[MAX_PATH]{};
-                    if (::GetModuleFileNameEx(process, nullptr, buffer, MAX_PATH) != 0) {
-                        auto full_name = probe::util::to_utf8(buffer);
-                        auto pos       = full_name.find_last_of("\\");
-                        if (pos != std::string::npos) {
-                            pname = full_name.substr(pos + 1);
-                        }
-                    }
-                }
+                pname = probe::process::name(pid);
             }
         }
 
@@ -294,15 +284,15 @@ namespace probe::graphics
         return {
             .name      = name,
             .classname = classname,
-            .rect =
+            .geometry =
                 geometry_t{
                     rect.left,
                     rect.top,
                     static_cast<uint32_t>(rect.right - rect.left),
                     static_cast<uint32_t>(rect.bottom - rect.top),
                 },
-            .handle  = reinterpret_cast<uint64_t>(hwnd),
             .visible = visible,
+            .handle  = reinterpret_cast<uint64_t>(hwnd),
             .pid     = pid,
             .pname   = pname,
         };
@@ -333,22 +323,23 @@ namespace probe::graphics
                 auto subwin = window_t{
                     .name      = name,
                     .classname = cname,
-                    .rect =
+                    .geometry =
                         geometry_t{
                             rect.left,
                             rect.top,
                             static_cast<uint32_t>(rect.right - rect.left),
                             static_cast<uint32_t>(rect.bottom - rect.top),
                         },
-                    .handle  = reinterpret_cast<uint64_t>(chwnd),
                     .visible = true,
+                    .handle  = reinterpret_cast<uint64_t>(chwnd),
                     .parent  = reinterpret_cast<uint64_t>(bundle->second),
                     .pid     = pid,
                     .pname   = pname,
                 };
 
                 // ignored
-                if (subwin.rect.width * subwin.rect.height < 16 || IsWindowBlocked(subwin)) return TRUE;
+                if (subwin.geometry.width * subwin.geometry.height < 16 || IsWindowBlocked(subwin))
+                    return TRUE;
 
                 bundle->first.emplace_back(subwin);
 
@@ -366,6 +357,7 @@ namespace probe::graphics
         std::deque<window_t> ret;
 
         // Z-index: up to down
+        // only including the windows in current virtual desktop (WIN + TAB: virtual desktops)
         for (auto hwnd = ::GetTopWindow(nullptr); hwnd != nullptr;
              hwnd      = ::GetNextWindow(hwnd, GW_HWNDNEXT)) {
             auto window = window_info_of(hwnd);
@@ -376,7 +368,7 @@ namespace probe::graphics
                 if (!window.visible) continue;
 
                 // out of sight
-                auto winrect = desktop_geo.intersected(window.rect);
+                auto winrect = desktop_geo.intersected(window.geometry);
                 if (winrect.width * winrect.height < 16) continue;
 
                 // ignored
@@ -398,13 +390,13 @@ namespace probe::graphics
                 geometry_t last_rect{};
                 std::for_each(children.rbegin(), children.rend(), [&](const auto& subwind) {
                     // ignore the children which completely cover their parent
-                    if (!subwind.rect.contains(window.rect)) {
+                    if (!subwind.geometry.contains(window.geometry)) {
                         // keep the last one of children with same rect
-                        if (last_rect != geometry_t{} && subwind.rect == last_rect) {
+                        if (last_rect != geometry_t{} && subwind.geometry == last_rect) {
                             ret.pop_back();
                         }
 
-                        last_rect = subwind.rect;
+                        last_rect = subwind.geometry;
                         ret.emplace_back(subwind);
                     }
                 });
@@ -414,6 +406,29 @@ namespace probe::graphics
         }
 
         return ret;
+    }
+
+    std::optional<window_t> active_window()
+    {
+        auto hwnd = ::GetForegroundWindow();
+        if (hwnd) {
+            return window_info_of(hwnd);
+        }
+        return std::nullopt;
+    }
+
+    window_t virtual_screen()
+    {
+        auto handle = ::GetDesktopWindow();
+
+        auto [_, cname] = window_name_of(handle);
+
+        return window_t{
+            .name      = "~VIRTUAL-SCREEN",
+            .classname = cname,
+            .geometry  = virtual_screen_geometry(),
+            .handle    = reinterpret_cast<uint64_t>(handle),
+        };
     }
 } // namespace probe::graphics
 

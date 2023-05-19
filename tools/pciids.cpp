@@ -151,7 +151,6 @@ int main(int argc, char *argv[])
         }
     }
 
-
     // generate the "pciids.h" header
     std::ofstream pcih("pciids.h");
     if (!pcih) {
@@ -169,14 +168,14 @@ int main(int argc, char *argv[])
     // vendors
     pcih << "#define PCIIDS_VENDORS \\\n";
     for (const auto& [k, v] : vendors) {
-        pcih << "{0x" << k << "," << std::quoted(v) << "},\\\n";
+        pcih << "V(0x" << k << "," << std::quoted(v) << ")\\\n";
     }
     pcih << "\n";
 
     // devices
     pcih << "#define PCIIDS_DEVICES \\\n";
     for (const auto& [k, v] : devices) {
-        pcih << "{0x" << k << "," << std::quoted(v) << "},\\\n";
+        pcih << "P(0x" << k << "," << std::quoted(v) << ")\\\n";
     }
     pcih << "\n";
 
@@ -184,7 +183,7 @@ int main(int argc, char *argv[])
     pcih << "#define PCIIDS_SUBSYSTEMS \\\n";
 #ifdef PARSE_SUBSYSTEMS
     for (const auto& [k, v] : subsystems) {
-        pcih << "{0x" << k << ", " << std::quoted(v) << "},\\\n";
+        pcih << "S(0x" << k << ", " << std::quoted(v) << ")\\\n";
     }
 #endif
 

@@ -79,6 +79,8 @@ namespace probe::process
         return ret;
     }
 
+    std::string name(uint64_t pid) { return parse_comm(pid); }
+
     std::vector<thread_t> threads(uint64_t) { return {}; }
 
     uint64_t memory(uint64_t pid)

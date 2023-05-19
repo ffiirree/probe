@@ -2,8 +2,13 @@
 
 #include <limits>
 
-namespace probe::graphics
+namespace probe
 {
+    bool geometry_t::operator==(const geometry_t& r) const
+    {
+        return x == r.x && y == r.y && width == r.width && height == r.height;
+    }
+
     bool geometry_t::contains(int32_t _x, int32_t _y, bool proper) const
     {
         if (proper)
@@ -25,12 +30,29 @@ namespace probe::graphics
             return left() <= r.left() && right() >= r.right() && top() <= r.top() && bottom() >= r.bottom();
     }
 
-    bool operator==(const geometry_t& l, const geometry_t& r)
+    void geometry_t::translate(const point_t& offset)
     {
-        return l.x == r.x && l.y == r.y && l.width == r.width && l.height == r.height;
+        x += offset.x;
+        y += offset.y;
     }
 
-    geometry_t geometry_t::intersected(const graphics::geometry_t& otr) const
+    void geometry_t::translate(int32_t dx, int32_t dy)
+    {
+        x += dx;
+        y += dy;
+    }
+
+    geometry_t geometry_t::translated(const point_t& offset) const
+    {
+        return { x + offset.x, y + offset.y, width, height };
+    }
+
+    geometry_t geometry_t::translated(int32_t dx, int32_t dy) const
+    {
+        return { x + dx, y + dy, width, height };
+    }
+
+    geometry_t geometry_t::intersected(const geometry_t& otr) const
     {
         int32_t l = std::max(left(), otr.left());
         int32_t t = std::max(top(), otr.top());
@@ -45,6 +67,25 @@ namespace probe::graphics
         return { l, t, static_cast<uint32_t>(r - l + 1), static_cast<uint32_t>(b - t + 1) };
     }
 
+    geometry_t geometry_t::united(const geometry_t& otr) const
+    {
+        int32_t l = std::min(left(), otr.left());
+        int32_t t = std::min(top(), otr.top());
+
+        int32_t r = std::max(right(), otr.right());
+        int32_t b = std::max(bottom(), otr.bottom());
+
+        if (r <= l || b <= t) {
+            return {};
+        }
+
+        return { l, t, static_cast<uint32_t>(r - l + 1), static_cast<uint32_t>(b - t + 1) };
+    }
+
+} // namespace probe
+
+namespace probe::graphics
+{
     geometry_t virtual_screen_geometry()
     {
         int32_t l = std::numeric_limits<int32_t>::max(), t = std::numeric_limits<int32_t>::max();
@@ -69,22 +110,11 @@ namespace probe::graphics
             static_cast<uint32_t>(b - t + 1),
         };
     }
-
-    display_t virtual_screen()
-    {
-        return {
-            .name      = "~VIRTUAL-SCREEN",
-            .geometry  = virtual_screen_geometry(),
-            .frequency = 60.0,
-            .bpp       = 32,
-        };
-    }
-
 } // namespace probe::graphics
 
 namespace probe
 {
-    std::string to_string(graphics::geometry_t g)
+    std::string to_string(geometry_t g)
     {
         return "<<" + std::to_string(g.x) + ", " + std::to_string(g.y) + ">, " + std::to_string(g.width) +
                "x" + std::to_string(g.height) + ">";

@@ -48,7 +48,11 @@ namespace probe::process
         std::string name{};
     };
 
+    // probe all process
     PROBE_API std::vector<process_t> processes();
+
+    // get name by pid
+    PROBE_API std::string name(uint64_t);
 
     PROBE_API std::vector<thread_t> threads(uint64_t);
 
@@ -245,6 +249,11 @@ namespace probe::process
     // /proc/[pid]/cmdline
     PROBE_API std::string parse_cmdline(uint64_t);
     PROBE_API std::string parse_cmdline(const std::string&);
+
+    // /proc/[pid]/comm
+    //  - This file exposes the process's comm value—that is, the command name associated with the process.
+    PROBE_API std::string parse_comm(uint64_t);
+    PROBE_API std::string parse_comm(const std::string&);
 #endif
 } // namespace probe::process
 

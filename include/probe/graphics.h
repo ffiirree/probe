@@ -16,8 +16,7 @@
 #include <QRect>
 #endif
 
-// displays
-namespace probe::graphics
+namespace probe
 {
     struct point_t
     {
@@ -25,41 +24,56 @@ namespace probe::graphics
         int32_t y;
 
 #ifdef BUILD_WITH_QT
-        PROBE_API operator QPoint() const { return QPoint{ x, y }; }
+        operator QPoint() const { return QPoint{ x, y }; }
 #endif
     };
 
-    struct geometry_t
+    struct PROBE_API geometry_t
     {
         int32_t x;
         int32_t y;
         uint32_t width;
         uint32_t height;
 
-        [[nodiscard]] PROBE_API bool contains(int32_t, int32_t, bool = false) const;
-        [[nodiscard]] PROBE_API bool contains(const point_t&, bool = false) const;
-        [[nodiscard]] PROBE_API bool contains(const geometry_t&, bool = false) const;
-        [[nodiscard]] PROBE_API geometry_t intersected(const geometry_t&) const;
+        bool operator==(const geometry_t&) const;
+        bool operator!=(const geometry_t& r) const { return !(*this == r); }
 
-        [[nodiscard]] PROBE_API int32_t left() const { return x; }
-        [[nodiscard]] PROBE_API int32_t top() const { return y; }
-        [[nodiscard]] PROBE_API int32_t right() const { return x + static_cast<int32_t>(width) - 1; }
-        [[nodiscard]] PROBE_API int32_t bottom() const { return y + static_cast<int32_t>(height) - 1; }
+        [[nodiscard]] bool contains(int32_t, int32_t, bool = false) const;
+        [[nodiscard]] bool contains(const point_t&, bool = false) const;
+        [[nodiscard]] bool contains(const geometry_t&, bool = false) const;
 
-        [[nodiscard]] PROBE_API point_t centor() const
+        [[nodiscard]] geometry_t intersected(const geometry_t&) const;
+        [[nodiscard]] geometry_t united(const geometry_t&) const;
+
+        void translate(const point_t&);
+        void translate(int32_t dx, int32_t dy);
+
+        [[nodiscard]] geometry_t translated(const point_t&) const;
+        [[nodiscard]] geometry_t translated(int32_t dx, int32_t dy) const;
+
+        [[nodiscard]] int32_t left() const { return x; }
+        [[nodiscard]] int32_t top() const { return y; }
+
+        // the region includes both the left and right pixels.
+        [[nodiscard]] int32_t right() const { return x + static_cast<int32_t>(width) - 1; }
+        [[nodiscard]] int32_t bottom() const { return y + static_cast<int32_t>(height) - 1; }
+
+        [[nodiscard]] point_t centor() const
         {
             return { .x = x + static_cast<int>(width / 2), .y = y + static_cast<int>(height / 2) };
         }
+
+        [[nodiscard]] bool valid() const { return width > 0 && height > 0; };
+
 #ifdef BUILD_WITH_QT
-        PROBE_API operator QRect() const
-        {
-            return QRect{ x, y, static_cast<int>(width), static_cast<int>(height) };
-        }
+        operator QRect() const { return QRect{ x, y, static_cast<int>(width), static_cast<int>(height) }; }
 #endif
     };
+} // namespace probe
 
-    PROBE_API bool operator==(const geometry_t&, const geometry_t&);
-
+// displays
+namespace probe::graphics
+{
     enum class orientation_t
     {
         landscape = 0x01,
@@ -112,6 +126,18 @@ namespace probe::graphics
     // the display that contains this point
     PROBE_API std::optional<display_t> display_contains(const point_t& point);
 
+    PROBE_API inline std::optional<display_t> display_contains(int32_t x, int32_t y)
+    {
+        return display_contains(point_t{ x, y });
+    }
+
+#ifdef BUILD_WITH_QT
+    PROBE_API inline std::optional<display_t> display_contains(const QPoint& point)
+    {
+        return display_contains(point.x(), point.y());
+    }
+#endif
+
     // the display that contains this rect
     PROBE_API std::optional<display_t> display_contains(const geometry_t& rect);
 #endif
@@ -157,24 +183,26 @@ namespace probe::graphics
 
     struct window_t
     {
-        std::string name{}; // utf-8
-        std::string classname{};
+        std::string name{};      // utf-8
+        std::string classname{}; // utf-8
 
-        geometry_t rect{};
-        uint64_t handle{};
-        bool visible{};
-        uint64_t parent{}; // handle of parent window
+        geometry_t geometry{};   // absolute coordinate
+        bool visible{};          //
 
-#ifdef _WIN32
-        // process
-        uint64_t pid{};      // process id
-        std::string pname{}; // process name
-#endif
+        uint64_t handle{};       // window id, Linux: Window, Windows: HWND
+        uint64_t parent{};       // handle of parent window
+
+        uint64_t pid{};          // process id
+        std::string pname{};     // process name
+
+        uint64_t desktop{};      // index of the desktop, not used on Windows
     };
 
     PROBE_API std::deque<window_t> windows(window_filter_t = window_filter_t::visible);
 
-    PROBE_API display_t virtual_screen();
+    PROBE_API std::optional<window_t> active_window();
+
+    PROBE_API window_t virtual_screen();
 
     PROBE_API geometry_t virtual_screen_geometry();
 } // namespace probe::graphics
@@ -198,7 +226,7 @@ namespace probe::graphics
 
 namespace probe
 {
-    PROBE_API std::string to_string(graphics::geometry_t);
+    PROBE_API std::string to_string(geometry_t);
     PROBE_API std::string to_string(graphics::orientation_t);
 } // namespace probe
 

@@ -2,11 +2,16 @@
 
 #include "probe/defer.h"
 #include "probe/graphics.h"
+#include "probe/process.h"
 
 #include <X11/Xatom.h>
 #include <X11/Xlib.h>
 #include <X11/extensions/Xrandr.h>
+#include <cstring>
 
+// TODO:
+//   X11: Xlib or XCB
+//   Wayland
 namespace probe::graphics
 {
     static double calculate_frequency(XRRScreenResources *res, RRMode mode_id)
@@ -70,7 +75,7 @@ namespace probe::graphics
             //
             _displays.push_back({
                 .name      = XGetAtomName(display, monitors[i].name),
-                .id        = XGetAtomName(display, monitors[i].name),
+                .id        = "DISPLAY:" + std::to_string(i),
                 .handle    = reinterpret_cast<uint64_t>(display),
                 .geometry  = geometry_t{ crtc_info->x, crtc_info->y, crtc_info->width, crtc_info->height },
                 .frequency = calculate_frequency(screen_res, crtc_info->mode),
@@ -86,6 +91,142 @@ namespace probe::graphics
         }
         return _displays;
     }
+
+    template<typename T>
+    static std::vector<T> xget_property(Display *display, Window win, Atom type, const char *name)
+    {
+        auto xa_name = ::XInternAtom(display, name, False);
+
+        Atom real_type{};
+        int format{};
+        unsigned long nb_items{};
+        unsigned long bytes{};
+        T *data{};
+        if (::XGetWindowProperty(display, win, xa_name, 0, ~0L, False, type, &real_type, &format, &nb_items,
+                                 &bytes, reinterpret_cast<unsigned char **>(&data)) != Success) {
+            return {};
+        }
+
+        if (type != real_type) return {};
+
+        std::vector<T> buffer;
+        for (size_t i = 0; i < nb_items; ++i) {
+            buffer.push_back(data[i]);
+        }
+
+        return buffer;
+    }
+
+    // name, classname
+    static std::pair<std::string, std::string> xget_window_name(Display *display, Window window)
+    {
+        // title
+        std::string title{};
+        char *name = nullptr;
+        if (::XFetchName(display, window, &name) > 0 && name != nullptr) {
+            title = name;
+            ::XFree(name);
+        }
+        else {
+            XTextProperty wmname{};
+            if (::XGetWMName(display, window, &wmname) != 0 && wmname.value && wmname.format == 8) {
+                char **list = nullptr;
+                int num     = 0;
+                // COMPOUND_TEXT, STRING, UTF8_STRING or the encoding of the current locale is
+                // guaranteed
+                if (::Xutf8TextPropertyToTextList(display, &wmname, &list, &num) >= 0 && num > 0 && *list) {
+                    title = *list;
+                    ::XFreeStringList(list);
+                }
+            }
+            ::XFree(wmname.value);
+        }
+
+        // class name
+        XClassHint hint{};
+        ::XGetClassHint(display, window, &hint);
+
+        return { title, hint.res_name ? hint.res_name : "" };
+    }
+
+    // process
+    static std::pair<uint64_t, std::string> xget_window_process(Display *display, Window window)
+    {
+        auto buffer = xget_property<unsigned long>(display, window, XA_CARDINAL, "_NET_WM_PID");
+        auto pid    = buffer.empty() ? 0 : buffer[0];
+        return { pid, probe::process::name(pid) };
+    }
+
+    // geometry
+    static geometry_t xget_window_geometry(Display *display, Window window)
+    {
+        unsigned int border, depth;
+        Window root;
+        geometry_t g{};
+
+        XGetGeometry(display, window, &root, &g.x, &g.y, &g.width, &g.height, &border, &depth);
+        XTranslateCoordinates(display, window, DefaultRootWindow(display), 0, 0, &g.x, &g.y, &root);
+
+        return g;
+    }
+
+    static Window xget_window_parent(Display *display, Window window)
+    {
+        Window root, parent;
+        Window *children    = nullptr;
+        unsigned int number = 0;
+        std::vector<window_t> ret;
+
+        ::XQueryTree(display, window, &root, &parent, &children, &number);
+        defer(::XFree(children));
+
+        return (DefaultRootWindow(display) == parent) ? 0 : parent;
+    }
+
+    static window_t xget_window_info(Display *display, Window window)
+    {
+        auto [name, cname] = xget_window_name(display, window);
+        auto [pid, pname]  = xget_window_process(display, window);
+
+        XWindowAttributes attrs{};
+        ::XGetWindowAttributes(display, window, &attrs);
+
+        auto desktop = xget_property<unsigned long>(display, window, XA_CARDINAL, "_NET_WM_DESKTOP");
+
+        return {
+            .name      = name,
+            .classname = cname,
+            .geometry  = xget_window_geometry(display, window),
+            .visible   = attrs.map_state >= IsViewable && !attrs.override_redirect,
+            .handle    = static_cast<uint64_t>(window),
+            .parent    = xget_window_parent(display, window),
+            .pid       = pid,
+            .pname     = pname,
+            .desktop   = desktop.empty() ? 0 : desktop[0],
+        };
+    }
+
+    static std::vector<window_t> xget_window_children(Display *display, Window window)
+    {
+        Window root, parent;
+        Window *children    = nullptr;
+        unsigned int number = 0;
+        std::vector<window_t> ret;
+
+        ::XQueryTree(display, window, &root, &parent, &children, &number);
+
+        for (unsigned int i = 0; i < number; ++i) {
+            auto child = xget_window_info(display, children[i]);
+            if (child.geometry.width * child.geometry.height >= 16) {
+                ret.emplace_back(child);
+            }
+        }
+
+        ::XFree(children);
+
+        return ret;
+    }
+
     //
     // All the windows in an X server are arranged in strict hierarchies. At the top of each hierarchy is a
     // root window, which covers each of the display screens. Each root window is partially or completely
@@ -99,72 +240,89 @@ namespace probe::graphics
 
         auto display = ::XOpenDisplay(nullptr);
         if (!display) return {};
-
-        auto root_window = DefaultRootWindow(display);
+        defer(::XCloseDisplay(display));
 
         Window root_return, parent_return;
-        Window *child_windows  = nullptr;
-        unsigned int child_num = 0;
+        Window *top_windows = nullptr;
+        unsigned int number = 0;
         // The XQueryTree() function returns the root ID, the parent window ID, a pointer to the list of
         // children windows (NULL when there are no children), and the number of children in the list for
         // the specified window. The children are listed in current stacking order, from bottommost (first)
         // to topmost (last). XQueryTree() returns zero if it fails and nonzero if it succeeds. To free a
         // non-NULL children list when it is no longer needed, use XFree().
-        ::XQueryTree(display, root_window, &root_return, &parent_return, &child_windows, &child_num);
+        //
+        // Top windows
+        ::XQueryTree(display, DefaultRootWindow(display), &root_return, &parent_return, &top_windows,
+                     &number);
+        defer(::XFree(top_windows));
 
-        for (unsigned int i = 0; i < child_num; ++i) {
-            XWindowAttributes attrs{};
+        // current virtual desktop
+        auto buffer      = xget_property<unsigned long>(display, DefaultRootWindow(display), XA_CARDINAL,
+                                                   "_NET_CURRENT_DESKTOP");
+        auto desktop_idx = buffer.empty() ? 0 : buffer[0];
 
-            ::XGetWindowAttributes(display, child_windows[i], &attrs);
+        for (unsigned int i = 0; i < number; ++i) {
+            auto window = xget_window_info(display, top_windows[i]);
 
             if (any(flags & window_filter_t::visible) &&
-                (attrs.map_state < 2 || (attrs.width * attrs.height < 4))) {
+                (!window.visible || (window.geometry.width * window.geometry.height < 16))) {
                 continue;
             }
 
-            // title
-            std::string title{};
-            char *name = nullptr;
-            if (::XFetchName(display, child_windows[i], &name) > 0 && name != nullptr) {
-                title = name;
-                ::XFree(name);
-            }
-            else {
-                XTextProperty wmname{};
-                if (::XGetWMName(display, child_windows[i], &wmname) != 0 && wmname.value &&
-                    wmname.format == 8) {
-                    char **list = nullptr;
-                    int num     = 0;
-                    // COMPOUND_TEXT, STRING, UTF8_STRING or the encoding of the current locale is
-                    // guaranteed
-                    if (::Xutf8TextPropertyToTextList(display, &wmname, &list, &num) >= 0 && num > 0 &&
-                        *list) {
-                        title = *list;
-                        ::XFreeStringList(list);
-                    }
-                }
-                ::XFree(wmname.value);
-            }
+            if (window.desktop != desktop_idx) continue;
 
-            ret.push_front({
-                .name      = title,
-                .classname = {},
-                .rect =
-                    geometry_t{
-                        attrs.x,
-                        attrs.y,
-                        static_cast<uint32_t>(attrs.width),
-                        static_cast<uint32_t>(attrs.height),
-                    },
-                .handle  = static_cast<uint64_t>(child_windows[i]),
-                .visible = attrs.map_state >= 2,
+            ret.emplace_front(window);
+
+            // children windows
+            auto children = xget_window_children(display, top_windows[i]); // top->bottom
+            geometry_t last_geometry{};
+            std::for_each(children.rbegin(), children.rend(), [&](const auto& subwind) {
+                // ignore the children which completely cover their parent
+                if (!subwind.geometry.contains(window.geometry)) {
+                    // keep the last one of children with same rect
+                    if (last_geometry != geometry_t{} && subwind.geometry == last_geometry) {
+                        ret.pop_back();
+                    }
+
+                    last_geometry = subwind.geometry;
+                    ret.emplace_front(subwind);
+                }
             });
         }
 
-        ::XFree(child_windows);
-        ::XCloseDisplay(display);
-
         return ret;
+    }
+
+    std::optional<window_t> active_window()
+    {
+        auto display = ::XOpenDisplay(nullptr);
+        if (!display) return {};
+        defer(::XCloseDisplay(display));
+
+        auto buffer =
+            xget_property<Window>(display, DefaultRootWindow(display), XA_WINDOW, "_NET_ACTIVE_WINDOW");
+        if (buffer.empty()) return std::nullopt;
+
+        return xget_window_info(display, buffer[0]);
+    }
+
+    window_t virtual_screen()
+    {
+        Window handle{};
+
+        auto display = ::XOpenDisplay(nullptr);
+        if (display) {
+            handle = DefaultRootWindow(display);
+            ::XCloseDisplay(display);
+        }
+
+        return window_t{
+            .name      = "~VIRTUAL-SCREEN",
+            .classname = "",
+            .geometry  = virtual_screen_geometry(),
+            .visible   = true,
+            .handle    = reinterpret_cast<uint64_t>(handle),
+        };
     }
 } // namespace probe::graphics
 

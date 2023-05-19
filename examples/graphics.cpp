@@ -65,14 +65,9 @@ int main()
     for (const auto& win : windows) {
         std::cout << "    handle: " << std::setw(8) << std::hex << std::uppercase << win.handle
                   << ", visible: " << win.visible << ", rect: " << std::setw(28)
-                  << probe::to_string(win.rect)
-#ifdef _WIN32
-                  << ", parent: " << std::setw(8) << std::hex << std::uppercase << win.parent
-                  << ", process: " << std::setw(24) << win.pname << ", (class)name: '" << std::setw(48)
-                  << win.classname << "' - '" << win.name << "'\n";
-#elif defined(__linux__)
-                  << ", name: '" << win.name << "'\n";
-#endif
+                  << probe::to_string(win.geometry) << ", parent: " << std::setw(8) << std::hex
+                  << std::uppercase << win.parent << ", process: " << std::setw(24) << win.pname
+                  << ", (class)name: '" << std::setw(48) << win.classname << "' - '" << win.name << "'\n";
     }
     return 0;
 }

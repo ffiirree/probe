@@ -3,6 +3,7 @@
 #include "probe/defer.h"
 #include "probe/process.h"
 #include "probe/time.h"
+#include "probe/util.h"
 
 #include <fstream>
 #include <map>
@@ -257,6 +258,13 @@ namespace probe::process
     // /proc/[pid]/cmdline
     std::string parse_cmdline(uint64_t pid) { return parse_cmdline(std::to_string(pid)); }
     std::string parse_cmdline(const std::string& pid) { return file_read("/proc/" + pid + "/cmdline"); }
+
+    // /proc/[pid]/comm
+    std::string parse_comm(uint64_t pid) { return parse_comm(std::to_string(pid)); }
+    std::string parse_comm(const std::string& pid)
+    {
+        return probe::util::trim(file_read("/proc/" + pid + "/comm"));
+    }
 } // namespace probe::process
 
 #endif

@@ -34,12 +34,14 @@ namespace probe
     enum class vendor_t
     {
         Unknown   = 0x0000,
+        // just some commonly used vendor names
         NVIDIA    = 0x10de,
         Intel     = 0x8086,
         Microsoft = 0x1414,
         Qualcomm  = 0x17cb,
         AMD       = 0x1002,
         Apple     = 0x106b,
+        // ... in pciids
     };
 
     // cast vendor_t to string
@@ -111,7 +113,7 @@ namespace probe
 namespace probe
 {
     PROBE_API std::string to_string(version_t);
-    
+
     PROBE_API inline std::string to_string(vendor_t id) { return vendor_cast(id); }
 
     PROBE_API inline std::string to_string(bus_type_t t) { return bus_cast(t); }

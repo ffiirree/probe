@@ -35,6 +35,7 @@ int main()
                       << "    Full Charged Capacity : " << supply.full_charged_capacity << '\n'
                       << "    Cycle Count           : " << supply.cycle << '\n';
             break;
+        default: break;
         }
 
         std::cout << "\n";
