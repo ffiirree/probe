@@ -58,7 +58,7 @@ namespace probe::util
 
     std::vector<std::string> exec_sync(const std::vector<const char *>& cmd)
     {
-        char buffer[4096];
+        char buffer[4'096];
         std::vector<std::string> ret{};
 
         auto pp = pipe_open(cmd);
@@ -80,7 +80,7 @@ namespace probe::util
         auto pp = pipe_open(args);
         if (!pp.first) return;
 
-        char buffer[4096];
+        char buffer[4'096];
         while (::fgets(buffer, sizeof(buffer), pp.first)) {
             if (buffer[std::strlen(buffer) - 1] == '\n') buffer[std::strlen(buffer) - 1] = '\0';
             if (!callback(buffer)) break;

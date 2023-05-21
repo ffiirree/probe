@@ -51,7 +51,7 @@ int main()
 #endif
 
     for (; listener.running();) {
-        probe::time::msleep(100);
+        std::this_thread::sleep_for(100ms);
     }
 
     return 0;

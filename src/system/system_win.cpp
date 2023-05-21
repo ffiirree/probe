@@ -101,7 +101,7 @@ namespace probe::system
                 .value_or("Windows");
 
         // Windows 11
-        if (os_version().patch >= 22000 &&
+        if (os_version().patch >= 22'000 &&
             probe::util::registry::read<std::string>(
                 HKEY_LOCAL_MACHINE, R"(Software\Microsoft\Windows NT\CurrentVersion)", "InstallationType")
                     .value_or("") == "Client") {

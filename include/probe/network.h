@@ -63,11 +63,11 @@ namespace probe::network
 
     enum scope_t
     {
-        Global = 0x00,
+        global   = 0x00,
         loopback = 0x10,
-        link = 0x20,
-        site = 0x40,
-        compat = 0x80,
+        link     = 0x20,
+        site     = 0x40,
+        compat   = 0x80,
     };
 
     struct adapter_t

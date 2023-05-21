@@ -35,7 +35,7 @@ namespace probe::process
             defer(::fclose(uptime_fd));
 
             if (::fscanf(uptime_fd, "%lf", &uptime) == 1) {
-                return probe::time::system_time() - static_cast<uint64_t>(uptime * 1000'000'000);
+                return probe::time::system_time() - static_cast<uint64_t>(uptime * 1'000'000'000);
             }
         }
         return 0;
@@ -96,6 +96,7 @@ namespace probe::process
 
     // /proc/[pid]/io
     pio_t parse_io(uint64_t pid) { return parse_io(std::to_string(pid)); }
+
     pio_t parse_io(const std::string& pid)
     {
         auto io_fd = ::fopen(("/proc/" + pid + "/io").c_str(), "r");
@@ -128,6 +129,7 @@ namespace probe::process
 
     // /proc/[pid]/statm
     pstatm_t parse_statm(uint64_t pid) { return parse_statm(std::to_string(pid)); }
+
     pstatm_t parse_statm(const std::string& pid)
     {
         auto statm_fd = ::fopen(("/proc/" + pid + "/statm").c_str(), "r");
@@ -146,6 +148,7 @@ namespace probe::process
 
     // /proc/[pid]/status
     pstatus_t parse_status(uint64_t pid) { return parse_status(std::to_string(pid)); }
+
     pstatus_t parse_status(const std::string& pid)
     {
         std::ifstream status_fd("/proc/" + pid + "/status");
@@ -253,14 +256,17 @@ namespace probe::process
 
     // /proc/[pid]/environ
     std::string parse_environ(uint64_t pid) { return parse_environ(std::to_string(pid)); }
+
     std::string parse_environ(const std::string& pid) { return file_read("/proc/" + pid + "/environ"); }
 
     // /proc/[pid]/cmdline
     std::string parse_cmdline(uint64_t pid) { return parse_cmdline(std::to_string(pid)); }
+
     std::string parse_cmdline(const std::string& pid) { return file_read("/proc/" + pid + "/cmdline"); }
 
     // /proc/[pid]/comm
     std::string parse_comm(uint64_t pid) { return parse_comm(std::to_string(pid)); }
+
     std::string parse_comm(const std::string& pid)
     {
         return probe::util::trim(file_read("/proc/" + pid + "/comm"));

@@ -30,9 +30,11 @@ namespace probe::util
     inline constexpr auto whitespace = " \f\n\r\t\v";
     PROBE_API std::string trim(const std::string&);
 
-    PROBE_API inline double KB(uint64_t v) { return (static_cast<double>(v) / (1024)); }
-    PROBE_API inline double MB(uint64_t v) { return (static_cast<double>(v) / (1024 * 1024)); }
-    PROBE_API inline double GB(uint64_t v) { return (static_cast<double>(v) / (1024 * 1024 * 1024)); }
+    PROBE_API inline double KB(uint64_t v) { return (static_cast<double>(v) / (1'024)); }
+
+    PROBE_API inline double MB(uint64_t v) { return (static_cast<double>(v) / (1'024 * 1'024)); }
+
+    PROBE_API inline double GB(uint64_t v) { return (static_cast<double>(v) / (1'024 * 1'024 * 1'024)); }
 } // namespace probe::util
 
 // windows registry
@@ -56,6 +58,7 @@ namespace probe::util
 
             PROBE_API int listen(const std::any&, const std::function<void(const std::any&)>&) override;
             PROBE_API void stop() override;
+
             PROBE_API bool running() override { return running_; }
 
         private:
@@ -88,6 +91,7 @@ namespace probe::util
 
         PROBE_API int listen(const std::any&, const std::function<void(const std::any&)>&) override;
         PROBE_API void stop() override;
+
         PROBE_API bool running() override { return running_; }
 
     private:

@@ -16,7 +16,7 @@ int main()
     SetConsoleOutputCP(CP_UTF8);
 
     // Enable buffering to prevent VS from chopping up UTF-8 byte sequences
-    setvbuf(stdout, nullptr, _IOFBF, 1000);
+    setvbuf(stdout, nullptr, _IOFBF, 1'000);
 #endif
 
     auto displays = probe::graphics::displays();

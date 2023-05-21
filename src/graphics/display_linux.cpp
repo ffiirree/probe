@@ -4,10 +4,10 @@
 #include "probe/graphics.h"
 #include "probe/process.h"
 
+#include <cstring>
+#include <X11/extensions/Xrandr.h>
 #include <X11/Xatom.h>
 #include <X11/Xlib.h>
-#include <X11/extensions/Xrandr.h>
-#include <cstring>
 
 // TODO:
 //   X11: Xlib or XCB
@@ -20,7 +20,7 @@ namespace probe::graphics
             auto mode = res->modes[k];
             if (mode.id == mode_id) {
                 if (mode.hTotal != 0 && mode.vTotal != 0) {
-                    return static_cast<double>((1000 * mode.dotClock) / (mode.hTotal * mode.vTotal)) /
+                    return static_cast<double>((1'000 * mode.dotClock) / (mode.hTotal * mode.vTotal)) /
                            1000.0;
                 }
                 break;

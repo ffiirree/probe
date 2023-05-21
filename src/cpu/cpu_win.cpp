@@ -3,10 +3,10 @@
 #include "probe/cpu.h"
 #include "probe/util.h"
 
-#include <Windows.h>
 #include <bitset>
 #include <intrin.h>
 #include <vector>
+#include <Windows.h>
 
 namespace probe::cpu
 {
@@ -14,11 +14,11 @@ namespace probe::cpu
     {
         std::vector<SYSTEM_LOGICAL_PROCESSOR_INFORMATION> processors;
 
-        DWORD byte_count = 0;
-        GetLogicalProcessorInformation(nullptr, &byte_count);
+        DWORD byte_count{};
+        ::GetLogicalProcessorInformation(nullptr, &byte_count);
 
         processors.resize(byte_count / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION));
-        GetLogicalProcessorInformation(processors.data(), &byte_count);
+        ::GetLogicalProcessorInformation(processors.data(), &byte_count);
 
         return processors;
     }
@@ -26,19 +26,19 @@ namespace probe::cpu
     architecture_t architecture()
     {
         SYSTEM_INFO system_info;
-        GetNativeSystemInfo(&system_info);
+        ::GetNativeSystemInfo(&system_info);
 
         switch (system_info.wProcessorArchitecture) {
         case PROCESSOR_ARCHITECTURE_AMD64: // x64 (AMD or Intel)
             return architecture_t::x64;
 
-        case PROCESSOR_ARCHITECTURE_ARM: // ARM
+        case PROCESSOR_ARCHITECTURE_ARM:   // ARM
             return architecture_t::arm;
 
         case PROCESSOR_ARCHITECTURE_ARM64: // ARM64
             return architecture_t::arm64;
 
-        case PROCESSOR_ARCHITECTURE_IA64: // Intel Itanium-based
+        case PROCESSOR_ARCHITECTURE_IA64:  // Intel Itanium-based
             return architecture_t::ia64;
 
         case PROCESSOR_ARCHITECTURE_INTEL: // x86

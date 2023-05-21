@@ -32,7 +32,7 @@ int main()
                   << "    Total Size          : "
                   << (drive.cylinders * drive.tracks_per_cylinder * drive.sectors_per_track *
                       drive.bytes_per_sector) /
-                         static_cast<double>((1024 * 1024 * 1024))
+                         static_cast<double>((1'024 * 1'024 * 1'024))
                   << " GB\n"
                   << "    Style               : " << probe::to_string(drive.style) << '\n'
                   << "    Partitions          : " << drive.partitions << '\n';

@@ -11,7 +11,7 @@ int main()
 {
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
-    setvbuf(stdout, nullptr, _IOFBF, 1000);
+    setvbuf(stdout, nullptr, _IOFBF, 1'000);
 #endif
     auto adapters = probe::network::adapters();
 

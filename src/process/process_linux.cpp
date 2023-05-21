@@ -70,7 +70,7 @@ namespace probe::process
                 .priority   = stat.priority,
                 .name       = stat.comm,
                 .cmdline    = parse_cmdline(pids),
-                .starttime  = (stat.starttime / sysconf(_SC_CLK_TCK)) * 1000'000'000 + sysuptime,
+                .starttime  = (stat.starttime / sysconf(_SC_CLK_TCK)) * 1'000'000'000 + sysuptime,
                 .nb_threads = static_cast<uint64_t>(stat.nb_threads),
                 .user       = pws->pw_name,
             });

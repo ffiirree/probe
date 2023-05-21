@@ -4,10 +4,10 @@
 #include "probe/power.h"
 #include "probe/util.h"
 
+#include <devguid.h>
 #include <Poclass.h>
 #include <SetupAPI.h>
 #include <Windows.h>
-#include <devguid.h>
 
 namespace probe::power
 {

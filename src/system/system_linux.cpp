@@ -12,6 +12,7 @@
 #include <unordered_map>
 
 static probe::version_t gnome_version();
+static probe::version_t cinnamon_version();
 
 namespace probe::system
 {
@@ -26,6 +27,10 @@ namespace probe::system
         if (std::regex_search(de, std::regex("unity", std::regex_constants::icase))) {
             return desktop_t::Unity;
         }
+        // Cinnamon
+        if (std::regex_search(de, std::regex("\\bcinnamon\\b", std::regex_constants::icase))) {
+            return desktop_t::Cinnamon;
+        }
         return desktop_t::unknown;
     }
 
@@ -34,6 +39,7 @@ namespace probe::system
         switch (de) {
         case desktop_t::Unity:
         case desktop_t::GNOME: return gnome_version();
+        case desktop_t::Cinnamon: return cinnamon_version();
         // TODO:
         default: return {};
         }
@@ -127,8 +133,9 @@ namespace probe::system
                 }
             }
         }
-        else if (std::filesystem::exists("/etc/lsb-release")) {
-            std::ifstream release("/etc/os-release");
+
+        if (ver == version_t{} && std::filesystem::exists("/etc/lsb-release")) {
+            std::ifstream release("/etc/lsb-release");
             if (release && release.is_open()) {
                 auto kvs = parse_kv(release);
 
@@ -243,6 +250,15 @@ static probe::version_t gnome_version()
     }
 
     return version;
+}
+
+static probe::version_t cinnamon_version()
+{
+    auto ver = probe::util::exec_sync({ "cinnamon", "--version" });
+    if (!ver.empty()) {
+        return probe::to_version(ver[0]);
+    }
+    return {};
 }
 
 #endif // __linux__

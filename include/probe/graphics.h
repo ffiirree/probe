@@ -36,6 +36,7 @@ namespace probe
         uint32_t height;
 
         bool operator==(const geometry_t&) const;
+
         bool operator!=(const geometry_t& r) const { return !(*this == r); }
 
         [[nodiscard]] bool contains(int32_t, int32_t, bool = false) const;
@@ -52,10 +53,12 @@ namespace probe
         [[nodiscard]] geometry_t translated(int32_t dx, int32_t dy) const;
 
         [[nodiscard]] int32_t left() const { return x; }
+
         [[nodiscard]] int32_t top() const { return y; }
 
         // the region includes both the left and right pixels.
         [[nodiscard]] int32_t right() const { return x + static_cast<int32_t>(width) - 1; }
+
         [[nodiscard]] int32_t bottom() const { return y + static_cast<int32_t>(height) - 1; }
 
         [[nodiscard]] point_t centor() const

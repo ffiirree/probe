@@ -19,7 +19,7 @@ enum level_t
     LEVEL_2 = 0x0002,
 };
 
-static inline bool isvalid(const std::string& str)
+inline static bool isvalid(const std::string& str)
 {
     return str.size() >= 6 && str[0] != '#' &&
            ((str[0] >= '0' && str[0] <= '9') || (str[0] >= 'a' && str[0] <= 'f') || (str[0] == '\t') ||

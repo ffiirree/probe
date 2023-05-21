@@ -46,7 +46,7 @@ namespace probe::graphics
 
         // 17
         // year + 1990
-        edid->year = data[17] + 1990;
+        edid->year = data[17] + 1'990;
 
         // 18-19
         edid->version  = data[18];

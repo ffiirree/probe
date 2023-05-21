@@ -34,6 +34,7 @@ namespace probe::cpu
 
 #define FEATURE_BIT_MASK(X, MASK, SHIFT)                                                                   \
     static_cast<int32_t>((static_cast<uint64_t>(X) & static_cast<uint64_t>(feature_t::MASK)) >> SHIFT)
+
     std::tuple<int32_t, int32_t, int32_t, int32_t> unpack(feature_t feature)
     {
         return std::tuple{
@@ -43,6 +44,7 @@ namespace probe::cpu
             FEATURE_BIT_MASK(feature, bit_mask, 0),
         };
     }
+
 #undef FEATURE_BIT_MASK
 
     bool is_supported(feature_t feature)
@@ -149,11 +151,11 @@ namespace probe::cpu
 
         // Calling __cpuid with 0x80000000 as the function_id argument gets the number of the highest valid
         // extended ID.
-        cpuid(info, 0x80000000, 0);
+        cpuid(info, 0x8000'0000, 0);
         int32_t exids = info[0];
 
-        if (exids >= static_cast<int32_t>(0x80000001)) {
-            cpuid(info, 0x80000001, 0);
+        if (exids >= static_cast<int32_t>(0x8000'0001)) {
+            cpuid(info, 0x8000'0001, 0);
 
             std::bitset<32> ecx = info[2];
             std::bitset<32> edx = info[3];

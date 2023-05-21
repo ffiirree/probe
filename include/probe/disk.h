@@ -53,8 +53,8 @@ namespace probe
 
         struct volume_t
         {
-            std::string letter; // C:, D:, ...
-            std::string label;  // volume label
+            std::string letter;     // C:, D:, ...
+            std::string label;      // volume label
             std::string serial;
             std::string path;
             std::string guid_path;  // "\\\\?\\Volume{803b42f7-bbee-4d30-ad22-2d0fe90072b6}\\"

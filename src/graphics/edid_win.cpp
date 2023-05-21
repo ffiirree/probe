@@ -40,7 +40,7 @@ namespace probe::graphics
                         } // check "Driver" == driver
                         ::RegCloseKey(subkey);
                     }
-                } // RegOpenKeyEx : subkey
+                }         // RegOpenKeyEx : subkey
             }
             ::RegCloseKey(key);
         }

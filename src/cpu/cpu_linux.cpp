@@ -152,9 +152,9 @@ namespace probe::cpu
                     auto size = std::stoul(size_str);
                     auto upos = size_str.find_first_not_of("0123456789 ");
                     if (upos != std::string::npos) {
-                        if (size_str[upos] == 'K') size *= 1024;
-                        if (size_str[upos] == 'M') size *= 1024 * 1024;
-                        if (size_str[upos] == 'G') size *= 1024 * 1024 * 1024;
+                        if (size_str[upos] == 'K') size *= 1'024;
+                        if (size_str[upos] == 'M') size *= 1'024 * 1'024;
+                        if (size_str[upos] == 'G') size *= 1'024 * 1'024 * 1'024;
                     }
 
                     auto line_size = file_read_lu(cpus[i] / subdir / "coherency_line_size");

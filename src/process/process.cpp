@@ -16,6 +16,7 @@ namespace probe
         default: return "Unknown";
         }
     }
+
     char to_char(process::pstate_t state)
     {
         switch (state) {

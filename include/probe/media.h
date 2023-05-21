@@ -58,6 +58,6 @@ namespace probe
 {
     PROBE_API std::string to_string(media::device_type_t);
     PROBE_API std::string to_string(media::device_state_t);
-}
+} // namespace probe
 
 #endif //! PROBE_MEDIA_H

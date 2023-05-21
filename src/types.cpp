@@ -60,6 +60,9 @@ namespace probe
 
     vendor_t vendor_cast(const std::string& name)
     {
+        if (std::regex_search(name, std::regex("\\bGenuineIntel\\b", std::regex_constants::icase)))
+            return vendor_t::Intel;
+
 #define V(ID, STR)                                                                                         \
     if (std::regex_match(STR, std::regex(name, std::regex_constants::icase)))                              \
         return static_cast<vendor_t>(ID);
@@ -84,8 +87,10 @@ namespace probe
 
     std::string to_string(version_t ver)
     {
-        std::string vstr = std::to_string(ver.major) + "." + std::to_string(ver.minor) + "." +
-                           std::to_string(ver.patch) + "." + std::to_string(ver.build);
+        std::string vstr =
+            std::to_string(ver.major) + '.' + std::to_string(ver.minor) + '.' + std::to_string(ver.patch);
+        if (ver.build) vstr += '-' + std::to_string(ver.build);
+
         if (!ver.codename.empty()) {
             vstr += " (" + ver.codename + ")";
         }

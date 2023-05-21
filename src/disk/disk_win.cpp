@@ -4,12 +4,12 @@
 #include "probe/disk.h"
 #include "probe/util.h"
 
-#include <SetupAPI.h>
-#include <Windows.h>
 #include <array>
 #include <bitset>
 #include <format>
 #include <iostream>
+#include <SetupAPI.h>
+#include <Windows.h>
 
 namespace probe::disk
 {

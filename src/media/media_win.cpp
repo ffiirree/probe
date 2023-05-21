@@ -5,11 +5,11 @@
 #include "probe/util.h"
 
 #include <Audioclient.h>
-#include <Windows.h>
 #include <functiondiscoverykeys.h>
 #include <mmdeviceapi.h>
 #include <optional>
 #include <propsys.h>
+#include <Windows.h>
 #include <winrt/base.h>
 
 #define RETURN_NONE_IF_FAILED(HR)                                                                          \

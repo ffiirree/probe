@@ -5,11 +5,11 @@
 #include "probe/process.h"
 #include "probe/util.h"
 
-#include <ShellScalingApi.h>
 #include <dwmapi.h>
 #include <map>
 #include <psapi.h>
 #include <regex>
+#include <ShellScalingApi.h>
 
 namespace probe::graphics
 {

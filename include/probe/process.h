@@ -141,13 +141,13 @@ namespace probe::process
         unsigned long umask; // Process umask, expressed in octal with a leading zero;
 #endif
         pstate_t state;
-        int tgid;       // Thread group ID
-        int ngid;       // NUMA group ID
-        int pid;        // Thread ID
-        int ppid;       // PID of parent process
-        int tracer_pid; // PID of process tracing this process
+        int tgid;            // Thread group ID
+        int ngid;            // NUMA group ID
+        int pid;             // Thread ID
+        int ppid;            // PID of parent process
+        int tracer_pid;      // PID of process tracing this process
 
-        uid_t ruid;     // Real, effective, saved set, and filesystem UIDs
+        uid_t ruid;          // Real, effective, saved set, and filesystem UIDs
         uid_t euid;
         uid_t suid;
         uid_t fuid;
