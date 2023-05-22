@@ -20,7 +20,7 @@ int main()
               << "    User Name        : " << probe::system::username() << '\n'
               << "    Theme            : " << probe::to_string(os.theme) << '\n'
               << "    Desktop ENV      : " << probe::to_string(probe::system::desktop()) << " ("
-              << probe::to_string(probe::system::desktop_version(probe::system::desktop())) << ")\n"
+              << probe::to_string(probe::system::desktop_version()) << ")\n"
               << "    Memory           : " << probe::util::GB(mem.avail) << " / "
               << probe::util::GB(mem.total) << " GB\n";
     return 0;

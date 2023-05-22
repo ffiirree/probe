@@ -11,7 +11,7 @@ namespace probe::system
 
     desktop_t desktop() { return desktop_t::Windows; }
 
-    version_t desktop_version(desktop_t) { return os_version(); }
+    version_t desktop_version() { return os_version(); }
 
     theme_t theme()
     {

@@ -47,8 +47,9 @@ namespace probe::system
 
     PROBE_API theme_t theme();
 
+    // desktop environment
     PROBE_API desktop_t desktop();
-    PROBE_API version_t desktop_version(desktop_t);
+    PROBE_API version_t desktop_version();
 
     PROBE_API std::string os_name();
     PROBE_API std::string kernel_name();

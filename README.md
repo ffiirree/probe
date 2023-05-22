@@ -39,12 +39,12 @@ Output:
 
 ```yaml
 Operating System:                                   |   Operating System:
-    Name             : Windows 11 Pro               |       Name             : Ubuntu 18.04.6 LTS
-    Version          : 10.0.25346.1001 (22H2)       |       Version          : 18.4.6.0 (bionic)
+    Name             : Windows 11 Pro               |       Name             : Ubuntu 20.04.6 LTS
+    Version          : 10.0.25346-1001 (22H2)       |       Version          : 20.4.6 (focal)
     Kernel           : Windows NT                   |       Kernel           : Linux
-    Kernel Version   : 10.0.25346.1001              |       Kernel Version   : 5.4.0.148
+    Kernel Version   : 10.0.25346-1001              |       Kernel Version   : 5.15.0-72 (generic)
     Theme            : dark                         |       Theme            : light
-    Desktop ENV      : Windows                      |       Desktop ENV      : GNOME (3.28.2.0)
+    Desktop ENV      : Windows                      |       Desktop ENV      : GNOME (3.36.8)
     Memory           : 15.2921 / 31.9388 GB         |       Memory           : 9.82002 / 15.6046 GB
 ```
 

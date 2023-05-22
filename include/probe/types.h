@@ -21,12 +21,15 @@ namespace probe
 
     PROBE_API bool operator>=(const version_t&, const version_t&);
     PROBE_API bool operator<=(const version_t&, const version_t&);
+    // not compare codename
     PROBE_API bool operator==(const version_t&, const version_t&);
+    // do  compare codename
+    PROBE_API bool strict_equal(const version_t&, const version_t&);
 
     // version pattern
-    // major.minor.path.build or major.minor.path-build
+    // major.minor.path.build-codename or major.minor.path-build-codename
     inline constexpr char verion_regex[] =
-        "(?:[^\\.]*[^\\d\\.]{1})*(\\d+)\\.(\\d+)(?:\\.(\\d+))?(?:[\\.-]{1}(\\d+))?(?:[^\\d\\.]{1}[^\\.]*)*";
+        "(?:[^\\.]*[^\\d\\.]{1})*(\\d+)\\.(\\d+)(?:\\.(\\d+))?(?:[\\.-]{1}(\\d+))?(?:\\-{1}(\\w+))?(?:[^\\d\\.]{1}[^\\.]*)*";
 
     // use above version_regex to parse version string
     PROBE_API version_t to_version(const std::string&);

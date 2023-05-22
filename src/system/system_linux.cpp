@@ -34,9 +34,9 @@ namespace probe::system
         return desktop_t::unknown;
     }
 
-    version_t desktop_version(desktop_t de)
+    version_t desktop_version()
     {
-        switch (de) {
+        switch (desktop()) {
         case desktop_t::Unity:
         case desktop_t::GNOME: return gnome_version();
         case desktop_t::Cinnamon: return cinnamon_version();

@@ -9,6 +9,10 @@ namespace probe
 {
     version_t to_version(const std::string& str)
     {
+        if (std::regex_match(str, std::regex("\\d+"))) {
+            return { static_cast<uint32_t>(std::stoul(str)) };
+        }
+
         std::smatch matchs;
         if (std::regex_match(str, matchs, std::regex(verion_regex))) {
             return {
@@ -16,6 +20,7 @@ namespace probe
                 matchs[2].str().empty() ? 0 : static_cast<uint32_t>(std::stoul(matchs[2].str())),
                 matchs[3].str().empty() ? 0 : static_cast<uint32_t>(std::stoul(matchs[3].str())),
                 matchs[4].str().empty() ? 0 : static_cast<uint32_t>(std::stoul(matchs[4].str())),
+                matchs[5],
             };
         }
         return {};
@@ -45,6 +50,8 @@ namespace probe
     {
         return l.major == r.major && l.minor == r.minor && l.patch == r.patch && l.build == r.build;
     }
+
+    bool strict_equal(const version_t& l, const version_t& r) { return l == r && l.codename == r.codename; }
 
     std::string vendor_cast(vendor_t vendor)
     {

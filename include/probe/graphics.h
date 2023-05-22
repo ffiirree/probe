@@ -20,8 +20,8 @@ namespace probe
 {
     struct point_t
     {
-        int32_t x;
-        int32_t y;
+        int32_t x{};
+        int32_t y{};
 
 #ifdef BUILD_WITH_QT
         operator QPoint() const { return QPoint{ x, y }; }
@@ -30,10 +30,10 @@ namespace probe
 
     struct PROBE_API geometry_t
     {
-        int32_t x;
-        int32_t y;
-        uint32_t width;
-        uint32_t height;
+        int32_t x{};
+        int32_t y{};
+        uint32_t width{};
+        uint32_t height{};
 
         bool operator==(const geometry_t&) const;
 
