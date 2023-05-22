@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(probe VERSION 0.4.6 LANGUAGES C CXX)
+project(probe VERSION 0.4.7 LANGUAGES C CXX)
 
 # options
 option(PROBE_EXAMPLES       "Build probe examples."     OFF)
 option(PROBE_BUILD_WITH_QT  "Build probe with Qt."      OFF)
+option(PROBE_BUILD_TESTING  "Build probe test cases."   OFF)
 
 # compiler options
 set(CMAKE_CXX_STANDARD 20)
@@ -37,7 +38,7 @@ endif()
 # version header file
 configure_file(${PROJECT_SOURCE_DIR}/version.h.in ${PROJECT_BINARY_DIR}/version.h @ONLY)
 
-#
+# source files
 file(GLOB_RECURSE PROBE_HEADERS include/probe/*.h)
 file(GLOB_RECURSE PROBE_SOURCES src/*.cpp)
 
@@ -69,7 +70,7 @@ set_target_properties(${PROJECT_NAME}
         PUBLIC_HEADER "${PROBE_HEADERS}"
 
         RUNTIME_OUTPUT_DIRECTORY "bin/$<0:>"
-        LIBRARY_OUTPUT_DIRECTORY "bin/$<0:>"
+        LIBRARY_OUTPUT_DIRECTORY "lib/$<0:>"
         ARCHIVE_OUTPUT_DIRECTORY "lib/$<0:>"
 
         DEBUG_POSTFIX "d"
@@ -83,6 +84,7 @@ if(PROBE_BUILD_WITH_QT)
     target_compile_definitions(${PROJECT_NAME} PUBLIC BUILD_WITH_QT)
 endif()
 
+# examples
 if(PROBE_EXAMPLES)
     foreach(example cpu;graphics;system;disk;media;net;process;power;util)
         add_executable(probe_${example} examples/${example}.cpp)
@@ -91,8 +93,13 @@ if(PROBE_EXAMPLES)
         set_target_properties(probe_${example}
             PROPERTIES
                 RUNTIME_OUTPUT_DIRECTORY "bin/$<0:>"
-                LIBRARY_OUTPUT_DIRECTORY "bin/$<0:>"
-                ARCHIVE_OUTPUT_DIRECTORY "lib/$<0:>"
         )
     endforeach()
+endif()
+
+# testing
+if(PROBE_BUILD_TESTING)
+    enable_testing()
+
+    add_subdirectory(test)
 endif()
