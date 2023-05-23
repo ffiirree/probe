@@ -128,7 +128,7 @@ namespace probe
         case graphics::orientation_t::rotate_90:    return "Portrait";
         case graphics::orientation_t::rotate_180:   return "Landscape (flipped)";
         case graphics::orientation_t::rotate_270:   return "Portrait (flipped)";
-        default: return "Unknown";
+        default:                                    return "Unknown";
         }
         // clang-format on
     }

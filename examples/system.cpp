@@ -21,6 +21,7 @@ int main()
               << "    Theme            : " << probe::to_string(os.theme) << '\n'
               << "    Desktop ENV      : " << probe::to_string(probe::system::desktop()) << " ("
               << probe::to_string(probe::system::desktop_version()) << ")\n"
+              << "    Window System    : " << probe::to_string(probe::system::window_system()) << '\n'
               << "    Memory           : " << probe::util::GB(mem.avail) << " / "
               << probe::util::GB(mem.total) << " GB\n";
     return 0;

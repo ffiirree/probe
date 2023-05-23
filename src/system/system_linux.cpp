@@ -11,40 +11,8 @@
 #include <sys/utsname.h>
 #include <unordered_map>
 
-static probe::version_t gnome_version();
-static probe::version_t cinnamon_version();
-
 namespace probe::system
 {
-    desktop_t desktop()
-    {
-        const std::string de = std::getenv("XDG_CURRENT_DESKTOP");
-        // GNOME
-        if (std::regex_search(de, std::regex("gnome", std::regex_constants::icase))) {
-            return desktop_t::GNOME;
-        }
-        // Unity
-        if (std::regex_search(de, std::regex("unity", std::regex_constants::icase))) {
-            return desktop_t::Unity;
-        }
-        // Cinnamon
-        if (std::regex_search(de, std::regex("\\bcinnamon\\b", std::regex_constants::icase))) {
-            return desktop_t::Cinnamon;
-        }
-        return desktop_t::unknown;
-    }
-
-    version_t desktop_version()
-    {
-        switch (desktop()) {
-        case desktop_t::Unity:
-        case desktop_t::GNOME: return gnome_version();
-        case desktop_t::Cinnamon: return cinnamon_version();
-        // TODO:
-        default: return {};
-        }
-    }
-
     theme_t theme()
     {
         if (desktop() == desktop_t::GNOME || desktop() == desktop_t::Unity) {
@@ -201,6 +169,81 @@ namespace probe::system
             return buffer;
         }
         return {};
+    }
+} // namespace probe::system
+
+static probe::version_t gnome_version();
+static probe::version_t cinnamon_version();
+
+namespace probe::system
+{
+    desktop_t desktop()
+    {
+        const std::string de = std::getenv("XDG_CURRENT_DESKTOP");
+        // GNOME
+        if (std::regex_search(de, std::regex("gnome", std::regex_constants::icase))) {
+            return desktop_t::GNOME;
+        }
+        // Unity
+        if (std::regex_search(de, std::regex("unity", std::regex_constants::icase))) {
+            return desktop_t::Unity;
+        }
+        // Cinnamon
+        if (std::regex_search(de, std::regex("\\bcinnamon\\b", std::regex_constants::icase))) {
+            return desktop_t::Cinnamon;
+        }
+        return desktop_t::Unknown;
+    }
+
+    version_t desktop_version()
+    {
+        switch (desktop()) {
+        case desktop_t::Unity:
+        case desktop_t::GNOME: return gnome_version();
+        case desktop_t::Cinnamon: return cinnamon_version();
+        // TODO:
+        default: return {};
+        }
+    }
+} // namespace probe::system
+
+namespace probe::system
+{
+    // https://unix.stackexchange.com/questions/202891/how-to-know-whether-wayland-or-x11-is-being-used
+    // XDG_SESSION_ID / XDG_SESSION_TYPE may be not set
+    // loginctl show-session $(loginctl | grep $(whoami) | awk '{print $1}') -p Type
+
+    window_system_t window_system()
+    {
+        auto whoami  = probe::system::username();
+        auto ws_type = window_system_t::Unknown;
+
+        probe::util::exec_sync({ "loginctl" }, [&](const std::string& line) -> bool {
+            if (std::regex_search(line, std::regex(whoami))) {
+                auto session = probe::util::trim(line);
+                auto epos    = session.find_first_of(probe::util::whitespace);
+
+                if (epos == std::string::npos) return false;
+
+                auto sid = session.substr(0, epos);
+
+                auto type =
+                    probe::util::exec_sync({ "loginctl", "show-session", sid.c_str(), "-p", "Type" });
+
+                if (type.empty()) return false;
+
+                if (std::regex_search(type[0], std::regex("\\bx11\\b", std::regex_constants::icase)))
+                    ws_type = window_system_t::X11;
+
+                if (std::regex_search(type[0], std::regex("\\bwayland\\b", std::regex_constants::icase)))
+                    ws_type = window_system_t::Wayland;
+
+                return false;
+            }
+            return true;
+        });
+
+        return ws_type;
     }
 } // namespace probe::system
 

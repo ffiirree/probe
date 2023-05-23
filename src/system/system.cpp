@@ -20,9 +20,20 @@ namespace probe
         case system::desktop_t::LXQT:           return "LXQT";
         case system::desktop_t::Lumina:         return "Lumina";
 
-        case system::desktop_t::unknown:
-        default:                                return "unknown";
+        default:                                return "Unknown";
         }
         // clang-format on
+    }
+
+    std::string to_string(system::window_system_t ws)
+    {
+        // clang-format off
+        switch (ws) {
+        case system::window_system_t::Windows:  return "Windows";
+        case system::window_system_t::X11:      return "X11";
+        case system::window_system_t::Wayland:  return "Wayland";
+        default:                                return "Unknown";
+        }
+        // // clang-format on
     }
 } // namespace probe
