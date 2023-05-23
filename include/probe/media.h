@@ -51,6 +51,7 @@ namespace probe
         // id
         PROBE_API std::optional<device_t> audio_device_by_id(const std::string& id);
 
+        PROBE_API std::vector<device_t> cameras();
     } // namespace media
 } // namespace probe
 

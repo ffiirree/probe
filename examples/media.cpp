@@ -33,5 +33,15 @@ int main()
                   << "    Type             : " << probe::to_string(audio.type) << '\n'
                   << "    State            : " << probe::to_string(audio.state) << "\n\n";
     }
+
+    auto cameras = probe::media::cameras();
+
+    std::cout << "Cameras: \n";
+    for (const auto& cam : cameras) {
+        std::cout << "    Name             : " << cam.name << '\n'
+                  << "    ID               : " << cam.id << '\n'
+                  << "    Description      : " << cam.description << '\n'
+                  << "    Type             : " << probe::to_string(cam.type) << '\n'
+    }
     return 0;
 }
