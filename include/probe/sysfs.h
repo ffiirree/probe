@@ -34,6 +34,18 @@ namespace probe::sys
 
     PROBE_API std::string guess_bus(const std::string& path);
 
+    // pci devices
+    struct pci_device_t 
+    {
+        uint32_t class_id{};
+        uint32_t vendor_id{};
+        uint32_t product_id{};
+        std::string bus_info{};
+        std::string device_path{};
+        std::string driver_path{};
+    };
+
+    PROBE_API std::vector<pci_device_t> pci_devices(uint32_t=0);
 } // namespace probe::sys
 
 #endif //! PROBE_SYSFS_H

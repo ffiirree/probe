@@ -1,6 +1,9 @@
 #ifdef __linux__
 #include "probe/sysfs.h"
 
+#include "probe/types.h"
+#include "probe/util.h"
+
 #include <regex>
 
 namespace probe::sys
@@ -70,6 +73,34 @@ namespace probe::sys
             }
         }
         return {};
+    }
+
+    // /sys/bus/pci/devices
+    std::vector<pci_device_t> pci_devices(uint32_t cid)
+    {
+        std::vector<pci_device_t> ret;
+
+        for (const auto& entry : std::filesystem::directory_iterator("/sys/bus/pci/devices")) {
+            std::string bus_info = entry.path().filename();
+            auto vendor  = probe::util::to_32u(probe::util::fread(entry.path() / "vendor"), 16).value_or(0);
+            auto device  = probe::util::to_32u(probe::util::fread(entry.path() / "device"), 16).value_or(0);
+            auto classid = probe::util::to_32u(probe::util::fread(entry.path() / "class"), 16).value_or(0);
+            std::string driver_path{};
+            if (std::filesystem::exists(entry.path() / "driver"))
+                driver_path = std::filesystem::canonical(entry.path() / "driver");
+
+            if (!cid || classid == cid) {
+                ret.emplace_back(pci_device_t{
+                    .class_id    = classid,
+                    .vendor_id   = vendor,
+                    .product_id  = device,
+                    .bus_info    = bus_info,
+                    .device_path = std::filesystem::canonical(entry.path()),
+                    .driver_path = driver_path,
+                });
+            }
+        }
+        return ret;
     }
 } // namespace probe::sys
 

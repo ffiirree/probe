@@ -215,13 +215,13 @@ namespace probe::graphics
 {
     struct gpu_info_t
     {
-        std::string name;
+        std::string name{};
 
-        vendor_t vendor;
+        vendor_t vendor{};
 
-        size_t dedicated_memory; // B
-        size_t shared_memory;    // B
-        size_t frequency;
+        size_t dedicated_memory{}; // B
+        size_t shared_memory{};    // B
+        size_t frequency{};
     };
 
     PROBE_API std::vector<gpu_info_t> info();
