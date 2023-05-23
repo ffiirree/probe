@@ -21,7 +21,7 @@ namespace probe::library
 
     void *address_of(const std::shared_ptr<library_t>& lib, const std::string& sym)
     {
-        if (!lib->handle) return nullptr;
+        if (!lib || !lib->handle) return nullptr;
         return ::dlsym(lib->handle, sym.c_str());
     }
 } // namespace probe::library

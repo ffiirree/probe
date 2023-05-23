@@ -137,10 +137,7 @@ namespace probe::system
         return {};
     }
 
-    namespace probe::system
-    {
-        window_system_t window_system() { return window_system_t::Windows; }
-    } // namespace probe::system
+    window_system_t window_system() { return window_system_t::Windows; }
 } // namespace probe::system
 
 #endif // _WIN32

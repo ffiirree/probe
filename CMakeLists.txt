@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(probe VERSION 0.4.8 LANGUAGES C CXX)
+project(probe VERSION 0.4.9 LANGUAGES C CXX)
 
 # options
 option(PROBE_EXAMPLES       "Build probe examples."     OFF)
@@ -60,6 +60,7 @@ target_link_libraries(${PROJECT_NAME}
         $<$<PLATFORM_ID:Windows>:Ws2_32>
         $<$<PLATFORM_ID:Linux>:pthread>
         $<$<PLATFORM_ID:Linux>:X11::Xrandr>
+        $<$<PLATFORM_ID:Linux>:dl>
         $<$<BOOL:${PROBE_BUILD_WITH_QT}>:Qt5::Core>
 )
 

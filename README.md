@@ -63,6 +63,7 @@ Operating System:                                   |   Operating System:
 | dark/light mode     |      &#10004;      | `Ubuntu 22.04`  | dark                      |
 | desktop environment |    `= Windows`     | `GNOME`/`Unity` | GNOME                     |
 | DE version          | same as os version | `GNOME`/`Unity` | GNOME (3.28.2.0)          |
+| window system       |    `= Windows`     |    &#10004;     | Windows / X11 / Wayland   |
 | memory              |      &#10004;      |    &#10004;     | 15.29 / 31.94 GB          |
 
 ### CPU
@@ -87,13 +88,13 @@ Operating System:                                   |   Operating System:
 
 #### GPU
 
-| properties       | Windows  | Linux | commments               |
-| ---------------- | :------: | :---: | ----------------------- |
-| name             | &#10004; |       | NVIDIA GeForce RTX 2080 |
-| vendor           | &#10004; |       | NVIDIA Corporation      |
-| dedicated memory | &#10004; |       | 8390705152 B            |
-| shared memory    | &#10004; |       | 17146988544 B           |
-| frequency        |          |       |                         |
+| properties       | Windows  |  Linux   | commments               |
+| ---------------- | :------: | :------: | ----------------------- |
+| name             | &#10004; | &#10004; | NVIDIA GeForce RTX 2080 |
+| vendor           | &#10004; | &#10004; | NVIDIA Corporation      |
+| dedicated memory | &#10004; |          | 8390705152 B            |
+| shared memory    | &#10004; |          | 17146988544 B           |
+| frequency        |          |          |                         |
 
 #### Display Monitor
 
