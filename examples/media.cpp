@@ -41,7 +41,7 @@ int main()
         std::cout << "    Name             : " << cam.name << '\n'
                   << "    ID               : " << cam.id << '\n'
                   << "    Description      : " << cam.description << '\n'
-                  << "    Type             : " << probe::to_string(cam.type) << '\n'
+                  << "    Type             : " << probe::to_string(cam.type) << "\n\n";
     }
     return 0;
 }

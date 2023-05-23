@@ -61,9 +61,9 @@ namespace probe::media
         RETURN_NONE_IF_FAILED(
             dev_enum->CreateClassEnumerator(CLSID_VideoInputDeviceCategory, enum_moniker.put(), 0));
 
-        winrt::com_ptr<IMoniker> moniker{};
         std::vector<device_t> list;
-        while (enum_moniker->Next(1, moniker.put(), nullptr) == S_OK) {
+        for (winrt::com_ptr<IMoniker> moniker{}; enum_moniker->Next(1, moniker.put(), nullptr) == S_OK;
+             moniker = nullptr) {
             if (auto dev = DisplayDeviceInformation(moniker); dev) {
                 list.emplace_back(dev.value());
             }

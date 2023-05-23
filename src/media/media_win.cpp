@@ -93,8 +93,8 @@ namespace probe::media
 
         UINT count = 0;
         RETURN_NONE_IF_FAILED(collection->GetCount(&count));
-        winrt::com_ptr<IMMDevice> endpoint{};
         for (ULONG i = 0; i < count; i++) {
+            winrt::com_ptr<IMMDevice> endpoint{};
             RETURN_NONE_IF_FAILED(collection->Item(i, endpoint.put()));
 
             auto dev = device_info(endpoint.get());

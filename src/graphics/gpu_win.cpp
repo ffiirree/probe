@@ -19,7 +19,8 @@ namespace probe::graphics
         std::vector<gpu_info_t> cards;
 
         winrt::com_ptr<IDXGIAdapter1> adapter{};
-        for (UINT idx = 0; factory->EnumAdapters1(idx, adapter.put()) != DXGI_ERROR_NOT_FOUND; ++idx) {
+        for (UINT idx = 0; factory->EnumAdapters1(idx, adapter.put()) != DXGI_ERROR_NOT_FOUND;
+             ++idx, adapter = nullptr) {
             DXGI_ADAPTER_DESC1 desc{};
             adapter->GetDesc1(&desc);
 
