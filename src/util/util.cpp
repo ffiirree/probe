@@ -3,8 +3,11 @@
 #include "probe/system.h"
 
 #include <algorithm>
+#include <fstream>
 #include <limits>
 #include <ranges>
+#include <regex>
+#include <sstream>
 
 namespace probe::util
 {
@@ -32,5 +35,73 @@ namespace probe::util
         }
         // empty or all spaces
         return {};
+    }
+
+    std::string fread(const std::string& file)
+    {
+        std::ifstream fd(file);
+
+        if (!fd) return {};
+
+        std::stringstream buffer;
+        buffer << fd.rdbuf();
+
+        return buffer.str();
+    }
+
+    void fread(const std::string& file, const std::function<bool(const std::string&)>& callback)
+    {
+        std::ifstream fd(file);
+
+        if (fd) {
+            for (std::string line; std::getline(fd, line);) {
+                if (!callback(line)) break;
+            }
+        }
+    }
+
+    std::optional<int32_t> to_32i(const std::string& str, int base) noexcept
+    {
+        try {
+            return static_cast<int32_t>(std::stol(str, nullptr, base));
+        }
+        catch (...) {
+            return std::nullopt;
+        }
+    }
+
+    std::optional<uint32_t> to_32u(const std::string& str, int base) noexcept
+    {
+        try {
+            return static_cast<uint32_t>(std::stoul(str, nullptr, base));
+        }
+        catch (...) {
+            return std::nullopt;
+        }
+    }
+
+    std::optional<int64_t> to_64i(const std::string& str, int base) noexcept
+    {
+        try {
+            return static_cast<int64_t>(std::stoll(str, nullptr, base));
+        }
+        catch (...) {
+            return std::nullopt;
+        }
+    }
+
+    std::optional<uint64_t> to_64u(const std::string& str, int base) noexcept
+    {
+        try {
+            return static_cast<uint64_t>(std::stoull(str, nullptr, base));
+        }
+        catch (...) {
+            return std::nullopt;
+        }
+    }
+
+    std::optional<bool> to_bool(const std::string& str) noexcept
+    {
+        return (std::regex_match(str, std::regex("1|on|true", std::regex_constants::icase)));
     }
 } // namespace probe::util

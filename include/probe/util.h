@@ -35,6 +35,21 @@ namespace probe::util
     PROBE_API inline double MB(uint64_t v) { return (static_cast<double>(v) / (1'024 * 1'024)); }
 
     PROBE_API inline double GB(uint64_t v) { return (static_cast<double>(v) / (1'024 * 1'024 * 1'024)); }
+
+    // read all to a string
+    PROBE_API std::string fread(const std::string&);
+    // per line
+    PROBE_API void fread(const std::string&, const std::function<bool(const std::string&)>&);
+
+    // string to integer
+    PROBE_API std::optional<int32_t> to_32i(const std::string&, int = 10) noexcept;
+    PROBE_API std::optional<uint32_t> to_32u(const std::string&, int = 10) noexcept;
+
+    PROBE_API std::optional<int64_t> to_64i(const std::string&, int = 10) noexcept;
+    PROBE_API std::optional<uint64_t> to_64u(const std::string&, int = 10) noexcept;
+
+    // string to bool
+    PROBE_API std::optional<bool> to_bool(const std::string&) noexcept;
 } // namespace probe::util
 
 // windows registry
