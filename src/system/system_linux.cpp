@@ -174,6 +174,7 @@ namespace probe::system
 
 static probe::version_t gnome_version();
 static probe::version_t cinnamon_version();
+static probe::version_t kde_version();
 
 namespace probe::system
 {
@@ -192,6 +193,18 @@ namespace probe::system
         if (std::regex_search(de, std::regex("\\bcinnamon\\b", std::regex_constants::icase))) {
             return desktop_t::Cinnamon;
         }
+        // KDE
+        if (std::regex_search(de, std::regex("\\bKDE\\b", std::regex_constants::icase))) {
+            return desktop_t::KDE;
+        }
+        // Xfce
+        if (std::regex_search(de, std::regex("\\bXfce\\b", std::regex_constants::icase))) {
+            return desktop_t::Xfce;
+        }
+        // MATE
+        if (std::regex_search(de, std::regex("\\bMATE\\b", std::regex_constants::icase))) {
+            return desktop_t::MATE;
+        }
         return desktop_t::Unknown;
     }
 
@@ -201,6 +214,7 @@ namespace probe::system
         case desktop_t::Unity:
         case desktop_t::GNOME: return gnome_version();
         case desktop_t::Cinnamon: return cinnamon_version();
+        case desktop_t::KDE: return kde_version();
         // TODO:
         default: return {};
         }
@@ -302,6 +316,21 @@ static probe::version_t cinnamon_version()
         return probe::to_version(ver[0]);
     }
     return {};
+}
+
+static probe::version_t kde_version()
+{
+    probe::version_t ver{};
+    // KDE 5
+    probe::util::exec_sync({ "kf5-config", "--version" }, [&](const std::string& line){
+        if (std::regex_search(line, std::regex("KDE Frameworks"))) {
+            ver = probe::to_version(line);
+            return false;
+        }
+        return true;
+    });
+
+    return ver;
 }
 
 #endif // __linux__
