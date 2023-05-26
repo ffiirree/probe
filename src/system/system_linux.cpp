@@ -180,7 +180,7 @@ namespace probe::system
 {
     desktop_t desktop()
     {
-        const std::string de = std::getenv("XDG_CURRENT_DESKTOP");
+        const std::string de = probe::util::env("XDG_CURRENT_DESKTOP");
         // GNOME
         if (std::regex_search(de, std::regex("gnome", std::regex_constants::icase))) {
             return desktop_t::GNOME;

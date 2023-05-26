@@ -34,19 +34,19 @@ int main()
     auto l3      = probe::cpu::cache(3, probe::cpu::cache_type_t::unified);
 
     if (!l1_data.empty())
-        std::cout << "    L1 Data          : " << l1_data.size() << " x " << std::setw(3)
+        std::cout << "    L1 Data          : " << std::setw(2) << l1_data.size() << " x " << std::setw(4)
                   << probe::util::KB(l1_data[0].size) << " KB\n";
 
     if (!l1_inst.empty())
-        std::cout << "    L1 Inst.         : " << l1_inst.size() << " x " << std::setw(3)
+        std::cout << "    L1 Inst.         : " << std::setw(2) << l1_inst.size() << " x " << std::setw(4)
                   << probe::util::KB(l1_inst[0].size) << " KB\n";
 
     if (!l2.empty())
-        std::cout << "    L2               : " << l2.size() << " x " << std::setw(3)
+        std::cout << "    L2               : " << std::setw(2) << l2.size() << " x " << std::setw(4)
                   << probe::util::KB(l2[0].size) << " KB\n";
 
     if (!l3.empty())
-        std::cout << "    L3               : " << l3.size() << " x " << std::setw(3)
+        std::cout << "    L3               : " << std::setw(2) << l3.size() << " x " << std::setw(4)
                   << probe::util::MB(l3[0].size) << " MB\n";
 
     return 0;

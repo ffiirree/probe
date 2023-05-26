@@ -1,4 +1,4 @@
-#ifdef __linux__
+#if defined(__linux__) && defined(PROBE_WITH_X11)
 
 #include "probe/defer.h"
 #include "probe/graphics.h"

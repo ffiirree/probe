@@ -28,10 +28,15 @@ endif()
 
 # depdencies
 if(UNIX AND NOT APPLE)
-    find_package(X11 REQUIRED)
+    find_package(X11)
 
-    if(NOT X11_Xrandr_FOUND)
-        message(FATAL_ERROR "Xrandr is required")
+    if(X11_FOUND)
+        if(NOT X11_Xrandr_FOUND)
+            message(FATAL_ERROR "Xrandr is required, please install libxrandr-dev")
+        endif()
+        add_compile_definitions(PROBE_WITH_X11)
+    else()
+        message(STATUS "Can not find X11, build probe without X11")
     endif()
 endif()
 
@@ -59,7 +64,7 @@ target_link_libraries(${PROJECT_NAME}
         $<$<PLATFORM_ID:Windows>:Iphlpapi>
         $<$<PLATFORM_ID:Windows>:Ws2_32>
         $<$<PLATFORM_ID:Linux>:pthread>
-        $<$<PLATFORM_ID:Linux>:X11::Xrandr>
+        $<$<AND:$<PLATFORM_ID:Linux>,$<BOOL:${X11_Xrandr_FOUND}>>:X11::Xrandr>
         $<$<PLATFORM_ID:Linux>:dl>
         $<$<BOOL:${PROBE_BUILD_WITH_QT}>:Qt5::Core>
 )

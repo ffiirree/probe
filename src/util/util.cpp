@@ -104,4 +104,10 @@ namespace probe::util
     {
         return (std::regex_match(str, std::regex("1|on|true", std::regex_constants::icase)));
     }
+
+    std::string env(const std::string& name)
+    {
+        auto value = std::getenv(name.c_str());
+        return value ? value : "";
+    }
 } // namespace probe::util

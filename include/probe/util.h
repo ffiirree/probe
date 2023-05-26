@@ -50,6 +50,9 @@ namespace probe::util
 
     // string to bool
     PROBE_API std::optional<bool> to_bool(const std::string&) noexcept;
+
+    // return empty string if such variable is not found.
+    PROBE_API std::string env(const std::string&);
 } // namespace probe::util
 
 // windows registry
