@@ -60,6 +60,9 @@ namespace probe::sys
         if (std::filesystem::exists(dir / "device" / "driver")) {
             driver_path = std::filesystem::canonical(dir / "device" / "driver");
         }
+        else if (std::filesystem::exists(dir / "device" / "device" / "driver")) {
+            driver_path = std::filesystem::canonical(dir / "device" / "device" / "driver");
+        }
 
         return { device_path, driver_path };
     }

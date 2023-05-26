@@ -7,7 +7,6 @@
 #include <array>
 #include <bitset>
 #include <format>
-#include <iostream>
 #include <SetupAPI.h>
 #include <Windows.h>
 
@@ -61,15 +60,12 @@ namespace probe::disk
                 drive.removable = !!descriptor->RemovableMedia;
 
                 if (descriptor->SerialNumberOffset)
-                    drive.serial_number = buffer.data() + descriptor->SerialNumberOffset;
+                    drive.serial = buffer.data() + descriptor->SerialNumberOffset;
 
-                if (descriptor->VendorIdOffset)
-                    drive.vendor_id = buffer.data() + descriptor->VendorIdOffset;
+                if (descriptor->VendorIdOffset) drive.vendor = buffer.data() + descriptor->VendorIdOffset;
 
                 if (descriptor->ProductIdOffset)
-                    drive.product_id = buffer.data() + descriptor->ProductIdOffset;
-
-                std::cout << (int)descriptor->DeviceType << "\n";
+                    drive.product = buffer.data() + descriptor->ProductIdOffset;
             }
         }
 

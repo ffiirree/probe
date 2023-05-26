@@ -58,6 +58,7 @@ namespace probe
 
     PROBE_API std::string product_name(uint32_t, uint32_t);
 
+    // TODO: bus / protocol ...
     enum class bus_type_t
     {
         // Windows: STORAGE_BUS_TYPE

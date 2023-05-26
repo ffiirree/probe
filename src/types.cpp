@@ -147,6 +147,7 @@ namespace probe
         SEARCH_IF("\\bSAS\\b|Serial[ _-]?Attached[ _-]?SCSI", SAS);
         SEARCH_IF("\\bSATA\\b|Serial[ _-]?ATA|Serial[ _-]?AT[ _-]?Attachment", SATA);
         SEARCH_IF("\\bSCM\\b", SCM);
+        SEARCH_IF("\\bSCSI\\b", SCSI);
         SEARCH_IF("\\bSDIO\\b|\\bSD\\b", SDIO);
         SEARCH_IF("\\bSpaces\\b", Spaces);
         SEARCH_IF("\\bSPI\\b|Serial[ _-]Peripheral[ _-]Interface", SPI);

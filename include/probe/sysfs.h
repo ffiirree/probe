@@ -32,6 +32,7 @@ namespace probe::sys
     PROBE_API std::pair<std::filesystem::path, std::filesystem::path>
     device_by_class(const std::string& cls, const std::string& name);
 
+    // guess bus type by the driver path of device
     PROBE_API std::string guess_bus(const std::string& path);
 
     // pci devices

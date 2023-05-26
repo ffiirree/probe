@@ -143,23 +143,23 @@ Operating System:                                   |   Operating System:
 
 > Run as Administrator
 
-| properties       | Windows  | Linux | commments                                                                                   |
-| ---------------- | :------: | :---: | ------------------------------------------------------------------------------------------- |
-| name             | &#10004; |       | \\\\.\\PhysicalDrive2                                                                       |
-| path             | &#10004; |       | \\\\?\\scsi#disk&ven_phi&prod_h1#6&314c6ca8&0&000000#{53f56307-b6bf-11d0-94f2-00a0c91efb8b} |
-| serial number    | &#10004; |       | 98BB9969766F                                                                                |
-| GUID/signature   | &#10004; |       | {C65630B2-E183-4363-9E18-93CE442B9515} (GPT) or 9BD1A50 (MBR)                               |
-| vendor id        | &#10004; |       | Samsung                                                                                     |
-| product id       | &#10004; |       | Samsung SSD 970 EVO Plus                                                                    |
-| bus type         | &#10004; |       | SATA / NVMe / USB ...                                                                       |
-| removable        | &#10004; |       | true / false                                                                                |
-| writable         | &#10004; |       | true / false                                                                                |
-| trim             | &#10004; |       | true / false                                                                                |
-| cylinders        | &#10004; |       | 121601                                                                                      |
-| tracks/cylinders | &#10004; |       | 255                                                                                         |
-| sectors/track    | &#10004; |       | 63                                                                                          |
-| bytes/sector     | &#10004; |       | 512                                                                                         |
-| partitions       | &#10004; |       | 6                                                                                           |
+| properties       | Windows  |  Linux   | commments                                                                                   |
+| ---------------- | :------: | :------: | ------------------------------------------------------------------------------------------- |
+| name             | &#10004; | &#10004; | \\\\.\\PhysicalDrive2                                                                       |
+| path             | &#10004; | &#10004; | \\\\?\\scsi#disk&ven_phi&prod_h1#6&314c6ca8&0&000000#{53f56307-b6bf-11d0-94f2-00a0c91efb8b} |
+| serial number    | &#10004; | &#10004; | 98BB9969766F                                                                                |
+| GUID/signature   | &#10004; |          | {C65630B2-E183-4363-9E18-93CE442B9515} (GPT) or 9BD1A50 (MBR)                               |
+| vendor           | &#10004; | &#10004; | Samsung                                                                                     |
+| product          | &#10004; | &#10004; | Samsung SSD 970 EVO Plus                                                                    |
+| bus type         | &#10004; | &#10004; | SATA / NVMe / USB ...                                                                       |
+| removable        | &#10004; |          | true / false                                                                                |
+| writable         | &#10004; |          | true / false                                                                                |
+| trim             | &#10004; |          | true / false                                                                                |
+| cylinders        | &#10004; |          | 121601                                                                                      |
+| tracks/cylinders | &#10004; |          | 255                                                                                         |
+| sectors/track    | &#10004; |          | 63                                                                                          |
+| bytes/sector     | &#10004; |          | 512                                                                                         |
+| partitions       | &#10004; |          | 6                                                                                           |
 
 #### Partition
 
