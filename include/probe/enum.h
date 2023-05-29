@@ -12,7 +12,11 @@ template<typename T>
 struct is_bitmask_enum<T, std::enable_if_t<sizeof(T::__ENABLE_BITMASK_OPERATORS__)>> : std::true_type
 {};
 
-template<class Enum> concept Bitmask = requires { is_bitmask_enum<Enum>::value&& std::is_enum_v<Enum>; };
+template<class Enum>
+concept Bitmask = requires {
+    is_bitmask_enum<Enum>::value && std::is_enum_v<Enum> &&
+        !std::is_convertible_v<Enum, std::underlying_type_t<Enum>>;
+};
 
 // bitwise operators
 template<Bitmask Enum> constexpr Enum operator|(Enum lhs, Enum rhs)

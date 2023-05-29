@@ -2041,7 +2041,7 @@ V(0x1eae,"XFX Limited")\
 V(0x1eb1,"VeriSilicon Inc")\
 V(0x1eb4,"Quantum Nebula Microelectronics Technology Co.,Ltd.")\
 V(0x1ebd,"EMERGETECH Company Ltd.")\
-V(0x1ec6,"Vastai Technologies (Shanghai) Inc.")\
+V(0x1ec6,"Vastai Technologies")\
 V(0x1ec8,"Innosilicon Co Ltd")\
 V(0x1ec9,"Wingtech Group(HongKong)Limited")\
 V(0x1eca,"Lightmatter")\
@@ -11824,6 +11824,7 @@ P(0x14c37615,"MT7615E 802.11ac PCI Express Wireless Network Adapter")\
 P(0x14c37630,"MT7630e 802.11bgn Wireless Network Adapter")\
 P(0x14c37662,"MT7662E 802.11ac PCI Express Wireless Network Adapter")\
 P(0x14c37915,"MT7915E 802.11ax PCI Express Wireless Network Adapter")\
+P(0x14c37916,"MT7905D/MT7975")\
 P(0x14c37922,"MT7922 802.11ax PCI Express Wireless Network Adapter")\
 P(0x14c37961,"MT7921 802.11ax PCI Express Wireless Network Adapter")\
 P(0x14cd0001,"USI-1514-1GbaseT [OCP1]")\
@@ -12214,9 +12215,9 @@ P(0x14e4c909,"BCM78909 Switch ASIC")\
 P(0x14e4d802,"BCM58802 Stingray 50Gb Ethernet SoC")\
 P(0x14e4d804,"BCM58804 Stingray 100Gb Ethernet SoC")\
 P(0x14e4f800,"BCM78800 Switch ASIC [Trident5-X12]")\
-P(0x14e4f900,"BCM78900 Switch ASIC [Tomahawk5]")\
+P(0x14e4f900,"BCM78900 Switch ASIC [Tomahawk6]")\
 P(0x14e4f903,"BCM78903 Switch ASIC [Tomahawk6]")\
-P(0x14e4f905,"BCM78905 Switch ASIC [Tomahawk5]")\
+P(0x14e4f905,"BCM78905 Switch ASIC [Tomahawk5+]")\
 P(0x14e4f910,"BCM78910 Switch ASIC [Tomahawk6]")\
 P(0x14e4f914,"BCM78914 Switch ASIC [Tomahawk6]")\
 P(0x14e4f917,"BCM78917 Switch ASIC [Tomahawk6]")\
@@ -14467,6 +14468,7 @@ P(0x1d6a07b1,"AQC107 NBase-T/IEEE 802.3bz Ethernet Controller [AQtion]")\
 P(0x1d6a08b1,"AQC108 NBase-T/IEEE 802.3bz Ethernet Controller [AQtion]")\
 P(0x1d6a11b1,"AQC111 NBase-T/IEEE 802.3bz Ethernet Controller [AQtion]")\
 P(0x1d6a12b1,"AQC112 NBase-T/IEEE 802.3bz Ethernet Controller [AQtion]")\
+P(0x1d6a14c0,"AQC113C NBase-T/IEEE 802.3bz Ethernet Controller [AQtion]")\
 P(0x1d6a87b1,"AQC107 NBase-T/IEEE 802.3bz Ethernet Controller [AQtion]")\
 P(0x1d6a94c0,"AQC113CS NBase-T/IEEE 802.3bz Ethernet Controller [AQtion]")\
 P(0x1d6ad107,"AQC107 NBase-T/IEEE 802.3bz Ethernet Controller [AQtion]")\
@@ -14724,6 +14726,8 @@ P(0x1eb11001,"Video Accelerator")\
 P(0x1eb43401,"SSD Contoller")\
 P(0x1ebd0101,"Seirios 2063 Video Codec")\
 P(0x1ec60100,"SV100")\
+P(0x1ec60200,"SG100")\
+P(0x1ec6020f,"SG100 vGPU")\
 P(0x1ec88800,"Fantasy I")\
 P(0x1ec88810,"Fantasy I")\
 P(0x1ec89800,"Fantasy II")\
@@ -16396,6 +16400,8 @@ P(0x80861a31,"82845 845 [Brookdale] Chipset AGP Bridge")\
 P(0x80861a38,"5000 Series Chipset DMA Engine")\
 P(0x80861a48,"82597EX 10GbE Ethernet Controller")\
 P(0x80861b48,"82597EX 10GbE Ethernet Controller")\
+P(0x80861bd2,"Sapphire Rapids SATA AHCI Controller")\
+P(0x80861bf2,"Sapphire Rapids SATA AHCI Controller")\
 P(0x80861c00,"6 Series/C200 Series Chipset Family Desktop SATA Controller (IDE mode, ports 0-3)")\
 P(0x80861c01,"6 Series/C200 Series Chipset Family Mobile SATA Controller (IDE mode, ports 0-3)")\
 P(0x80861c02,"6 Series/C200 Series Chipset Family 6 port Desktop SATA AHCI Controller")\
@@ -18651,6 +18657,11 @@ P(0x80867af0,"Alder Lake-S PCH CNVi WiFi")\
 P(0x80867afc,"Alder Lake-S PCH Serial IO I2C Controller #4")\
 P(0x80867afd,"Alder Lake-S PCH Serial IO I2C Controller #5")\
 P(0x80867d0b,"Volume Management Device NVMe RAID Controller Intel Corporation")\
+P(0x80867d40,"Meteor Lake [Intel Graphics]")\
+P(0x80867d45,"Meteor Lake [Intel Graphics]")\
+P(0x80867d55,"Meteor Lake [Intel Graphics]")\
+P(0x80867d60,"Meteor Lake [Intel Graphics]")\
+P(0x80867dd5,"Meteor Lake [Intel Graphics]")\
 P(0x80867e01,"Meteor Lake-P LPC/eSPI Controller")\
 P(0x80867e22,"Meteor Lake-P SMBus Controller")\
 P(0x80867e23,"Meteor Lake-P SPI Controller")\
@@ -19741,9 +19752,11 @@ P(0x9d321204,"STAR1200E NVMe SSD")\
 P(0x9d321500,"STAR1500 PCIe NVMe SSD Controller")\
 P(0x9d321501,"STAR1500C NVMe SSD")\
 P(0x9d321502,"STAR1500E NVMe SSD")\
+P(0x9d321504,"STAR1500L NVMe SSD")\
 P(0x9d322000,"STAR2000 NVMe Controller")\
 P(0x9d322001,"STAR2000E NVMe SSD")\
 P(0x9d322002,"STAR2000C NVMe SSD")\
+P(0x9d322003,"STAR2000L NVMe SSD")\
 P(0xa7270013,"3CRPAG175 Wireless PC Card")\
 P(0xa7276803,"3CRDAG675B Wireless 11a/b/g Adapter")\
 P(0xaaaa0001,"H1 PCIe over fiber optic host controller")\
