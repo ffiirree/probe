@@ -75,4 +75,6 @@ template<Bitmask Enum> constexpr Enum operator>>(Enum lhs, int bits)
 
 template<Bitmask Enum> constexpr bool any(Enum lhs) { return lhs != static_cast<Enum>(0); }
 
+template<Bitmask Enum> constexpr bool operator!(Enum lhs) { return lhs == static_cast<Enum>(0); }
+
 #endif //! PROBE_ENUM_H

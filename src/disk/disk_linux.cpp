@@ -70,7 +70,7 @@ namespace probe::disk
         return drives;
     }
 
-    std::vector<partition_t> partitions(const drive_t& drive)
+    std::vector<partition_t> partitions(const drive_t&)
     {
         std::vector<partition_t> ret;
         return ret;
