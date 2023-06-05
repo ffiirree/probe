@@ -88,6 +88,22 @@ namespace probe::process
         return ret;
     }
 
+    int64_t id() { return static_cast<int64_t>(::GetCurrentProcessId()); }
+
+    std::string path(uint64_t pid)
+    {
+        auto process = ::OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, false, static_cast<DWORD>(pid));
+        defer(::CloseHandle(process));
+
+        if (process != nullptr) {
+            wchar_t buffer[MAX_PATH]{};
+            if (::GetModuleFileNameEx(process, nullptr, buffer, MAX_PATH) != 0) {
+                return probe::util::to_utf8(buffer);
+            }
+        }
+        return {};
+    }
+
     std::string name(uint64_t pid)
     {
         auto process = ::OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, false, static_cast<DWORD>(pid));

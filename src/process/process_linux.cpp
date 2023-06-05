@@ -63,12 +63,19 @@ namespace probe::process
             // user
             auto pws = getpwuid(status.ruid);
 
+            // path
+            std::string proc_exe = "/proc/" + pids + "/exe", proc_path{};
+            if (!::access(proc_exe.c_str(), R_OK) && std::filesystem::exists(proc_exe)) {
+                proc_path = std::filesystem::canonical(proc_exe);
+            }
+
             ret.emplace_back(process_t{
                 .pid        = std::stoi(pids),
                 .ppid       = stat.ppid,
                 .state      = stat.state,
                 .priority   = stat.priority,
                 .name       = stat.comm,
+                .path       = proc_path,
                 .cmdline    = parse_cmdline(pids),
                 .starttime  = (stat.starttime / sysconf(_SC_CLK_TCK)) * 1'000'000'000 + sysuptime,
                 .nb_threads = static_cast<uint64_t>(stat.nb_threads),
@@ -79,7 +86,18 @@ namespace probe::process
         return ret;
     }
 
+    int64_t id() { return getpid(); }
+
     std::string name(uint64_t pid) { return parse_comm(pid); }
+
+    std::string path(uint64_t pid)
+    {
+        auto proc_exe = "/proc/" + std::to_string(pid) + "/exe";
+        if (std::filesystem::exists(proc_exe)) {
+            return std::filesystem::canonical(proc_exe);
+        }
+        return {};
+    }
 
     std::vector<thread_t> threads(uint64_t) { return {}; }
 

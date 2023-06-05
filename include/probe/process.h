@@ -51,9 +51,16 @@ namespace probe::process
     // probe all process
     PROBE_API std::vector<process_t> processes();
 
+    // get pid of current process
+    PROBE_API int64_t id();
+
     // get name by pid
     PROBE_API std::string name(uint64_t);
 
+    // get path of the process
+    PROBE_API std::string path(uint64_t);
+
+    // get all threads of the process
     PROBE_API std::vector<thread_t> threads(uint64_t);
 
     // bytes

@@ -204,7 +204,7 @@ Operating System:                                   |   Operating System:
 | state      |          | &#10004; | R, S, D, Z, T, t, X          |
 | priority   | &#10004; | &#10004; |                              |
 | name       | &#10004; | &#10004; | Win: "xxx.exe", Linux: "xxx" |
-| path       | &#10004; |          | "C:\path\to\file.exe"        |
+| path       | &#10004; | &#10004; | "C:\path\to\file.exe"        |
 | cmdline    |          | &#10004; |                              |
 | starttime  | &#10004; | &#10004; | unix time, ns                |
 | nb_threads | &#10004; | &#10004; |                              |
@@ -215,6 +215,7 @@ Operating System:                                   |   Operating System:
 Parse the following files:
 
 - /proc/uptime
+- /proc/[pid]/exe
 - /proc/[pid]/stat
 - /proc/[pid]/status
 - /proc/[pid]/statm
