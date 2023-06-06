@@ -6,7 +6,7 @@
 
 ## Usage
 
-**Probe** contains several modules, including `system`, `cpu`, `graphics`, `process`, `network`, `disk`, `media device` and so on, it is simple to use like:
+**Probe** contains several modules to probe the *hardware & software information*, including `system`, `cpu`, `graphics`, `process`, `network`, `disk`, `media device` and so on, it is simple to use like:
 
 ```C++
 #include "probe/system.h"
@@ -52,19 +52,19 @@ Operating System:                                   |   Operating System:
 
 ### System
 
-| properties          |      Windows       |      Linux      | commments                 |
-| ------------------- | :----------------: | :-------------: | ------------------------- |
-| os name             |      &#10004;      |    &#10004;     | Windows 11 Pro            |
-| os version          |      &#10004;      |    &#10004;     | 10.0.25346.1001(22H2)     |
-| kernel name         |      &#10004;      |    &#10004;     | Windows NT                |
-| kernel version      |      &#10004;      |    &#10004;     | 10.0.25346.1001           |
-| hostname            |      &#10004;      |    &#10004;     | Device Name/Computer Name |
-| username            |      &#10004;      |    &#10004;     | Name of Current User      |
-| dark/light mode     |      &#10004;      | `Ubuntu 22.04`  | dark                      |
-| desktop environment |    `= Windows`     | `GNOME`/`Unity` | GNOME                     |
-| DE version          | same as os version | `GNOME`/`Unity` | GNOME (3.28.2.0)          |
-| window system       |    `= Windows`     |    &#10004;     | Windows / X11 / Wayland   |
-| memory              |      &#10004;      |    &#10004;     | 15.29 / 31.94 GB          |
+| properties          |      Windows       |     Linux      | commments                                    |
+| ------------------- | :----------------: | :------------: | -------------------------------------------- |
+| os name             |      &#10004;      |    &#10004;    | Windows 11 Pro                               |
+| os version          |      &#10004;      |    &#10004;    | 10.0.25346.1001(22H2)                        |
+| kernel name         |      &#10004;      |    &#10004;    | Windows NT                                   |
+| kernel version      |      &#10004;      |    &#10004;    | 10.0.25346.1001                              |
+| hostname            |      &#10004;      |    &#10004;    | Device Name/Computer Name                    |
+| username            |      &#10004;      |    &#10004;    | Name of Current User                         |
+| dark/light mode     |      &#10004;      | `Ubuntu 22.04` | dark                                         |
+| desktop environment |    `= Windows`     |    &#10004;    | GNOME / Unity / Cinnamon / KDE / Xfce / MATE |
+| DE version          | same as os version |    &#10004;    | GNOME (3.28.2.0) / Unity / Cinnamon / KDE    |
+| window system       |    `= Windows`     |    &#10004;    | Windows / X11 / Wayland                      |
+| memory              |      &#10004;      |    &#10004;    | 15.29 / 31.94 GB                             |
 
 ### CPU
 
@@ -126,18 +126,18 @@ Operating System:                                   |   Operating System:
 
 #### Window List
 
-> order: up to down
+> Z-order: up to down
 
 | properties     | Windows  |  Linux   | commments                                |
 | -------------- | :------: | :------: | ---------------------------------------- |
 | name           | &#10004; | &#10004; | "README.md - probe - Visual Studio Code" |
-| classname      | &#10004; |    -     | "Chrome_WidgetWin_1"                     |
-| position       | &#10004; | &#10004; | (741, 328)                               |
-| size           | &#10004; | &#10004; | 1568 x 995                               |
-| navtive handle | &#10004; | &#10004; | 132198                                   |
+| classname      | &#10004; | &#10004; | "Chrome_WidgetWin_1"                     |
+| geometry       | &#10004; | &#10004; | (741, 328), 1568 x 995                   |
+| navtive handle | &#10004; | &#10004; | Windows: `HWND`, Linux: `Window`         |
+| parent handle  | &#10004; | &#10004; |                                          |
 | visible        | &#10004; | &#10004; | true / false                             |
-| process id     | &#10004; |    -     |                                          |
-| process name   | &#10004; |    -     | explorer.exe                             |
+| process id     | &#10004; | &#10004; |                                          |
+| process name   | &#10004; | &#10004; | explorer.exe                             |
 
 ### Disk
 
@@ -201,7 +201,7 @@ Operating System:                                   |   Operating System:
 | ---------- | :------: | :------: | ---------------------------- |
 | pid        | &#10004; | &#10004; | process id                   |
 | ppid       | &#10004; | &#10004; | pid of parent process        |
-| state      |          | &#10004; | R, S, D, Z, T, t, X          |
+| state      |    -     | &#10004; | R, S, D, Z, T, t, X          |
 | priority   | &#10004; | &#10004; |                              |
 | name       | &#10004; | &#10004; | Win: "xxx.exe", Linux: "xxx" |
 | path       | &#10004; | &#10004; | "C:\path\to\file.exe"        |
@@ -209,6 +209,13 @@ Operating System:                                   |   Operating System:
 | starttime  | &#10004; | &#10004; | unix time, ns                |
 | nb_threads | &#10004; | &#10004; |                              |
 | user       | &#10004; | &#10004; | username                     |
+
+#### Thread
+
+| properties | Windows  |  Linux   | commments              |
+| ---------- | :------: | :------: | ---------------------- |
+| name (get) | &#10004; | &#10004; | get name of the thread |
+| name (set) | &#10004; | &#10004; | set name of the thread |
 
 #### Linux
 
@@ -268,12 +275,11 @@ Parse the following files:
 
 ### Utils
 
-| functions       | Windows  |  Linux   | commments     |
-| --------------- | :------: | :------: | ------------- |
-| thread_set_name | &#10004; | &#10004; |               |
-| thread_get_name | &#10004; | &#10004; |               |
-| to_utf8         | &#10004; |          | wchar -> utf8 |
-| to_utf16        | &#10004; |          | utf8 -> wchar |
+| functions | Windows  |  Linux   | commments     |
+| --------- | :------: | :------: | ------------- |
+| to_utf8   | &#10004; |          | wchar -> utf8 |
+| to_utf16  | &#10004; |          | utf8 -> wchar |
+| trim      | &#10004; | &#10004; | trim string   |
 
 #### Windows
 
@@ -284,18 +290,18 @@ Parse the following files:
 
 #### Linux
 
-| functions / classes | commments                                                      |
-| ------------------- | -------------------------------------------------------------- |
-| exec_sync           | execute a commond and return the standard output               |
-| pipe_open           | execute a commond and redirect the standard output to the pipe |
-| PipeListener        | listen the pipe of the the executed commond                    |
-| gsettings functions | wrapper to gsettings commond                                   |
+| functions / classes  | commments                                                      |
+| -------------------- | -------------------------------------------------------------- |
+| exec_sync            | execute a commond and return the standard output               |
+| pipe_open/pipe_close | execute a commond and redirect the standard output to the pipe |
+| PipeListener         | listen the pipe of the the executed commond                    |
+| gsettings functions  | wrapper to gsettings commond                                   |
 
 ### Compilation Requirement
 
 - `C++ 20`
-- `CMake 3.16`
-- `Windows 10 1607`
+- `CMake >= 3.16`
+- `Windows >= 10 1607`
 - `Linux` : install `libxrandr-dev`
 
 ```bash
