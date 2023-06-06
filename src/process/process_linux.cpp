@@ -65,8 +65,12 @@ namespace probe::process
 
             // path
             std::string proc_exe = "/proc/" + pids + "/exe", proc_path{};
-            if (!::access(proc_exe.c_str(), R_OK) && std::filesystem::exists(proc_exe)) {
-                proc_path = std::filesystem::canonical(proc_exe);
+            try {
+                if (!::access(proc_exe.c_str(), R_OK) && std::filesystem::exists(proc_exe))
+                    proc_path = std::filesystem::canonical(proc_exe);
+            }
+            catch (...) {
+                proc_path = {};
             }
 
             ret.emplace_back(process_t{

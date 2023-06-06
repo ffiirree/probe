@@ -4,6 +4,7 @@
 #include "probe/dllport.h"
 
 #include <any>
+#include <cstdint>
 #include <functional>
 #include <string>
 

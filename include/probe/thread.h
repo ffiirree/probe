@@ -3,6 +3,7 @@
 
 #include "probe/dllport.h"
 
+#include <cstdint>
 #include <string>
 
 namespace probe::thread
