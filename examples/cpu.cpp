@@ -33,6 +33,7 @@ int main()
     auto l2      = probe::cpu::cache(2, probe::cpu::cache_type_t::unified);
     auto l3      = probe::cpu::cache(3, probe::cpu::cache_type_t::unified);
 
+    // ATTENTION: cache size may be not the same at each level
     if (!l1_data.empty())
         std::cout << "    L1 Data          : " << std::setw(2) << l1_data.size() << " x " << std::setw(4)
                   << probe::util::KB(l1_data[0].size) << " KB\n";
