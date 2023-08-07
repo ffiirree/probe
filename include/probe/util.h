@@ -30,6 +30,10 @@ namespace probe::util
     inline constexpr auto whitespace = " \f\n\r\t\v";
     PROBE_API std::string trim(const std::string&);
 
+    PROBE_API std::string toupper(std::string);
+
+    PROBE_API std::string tolower(std::string);
+
     PROBE_API inline double KB(uint64_t v) { return (static_cast<double>(v) / (1'024)); }
 
     PROBE_API inline double MB(uint64_t v) { return (static_cast<double>(v) / (1'024 * 1'024)); }

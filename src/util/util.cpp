@@ -30,11 +30,25 @@ namespace probe::util
     {
         auto lpos = str.find_first_not_of(whitespace);
         auto rpos = str.find_last_not_of(whitespace);
-        if (rpos != std::string::npos && rpos != std::string::npos && rpos >= lpos) {
+        if (lpos != std::string::npos && rpos != std::string::npos && rpos >= lpos) {
             return str.substr(lpos, rpos - lpos + 1);
         }
         // empty or all spaces
         return {};
+    }
+
+    std::string toupper(std::string str)
+    {
+        std::transform(str.begin(), str.end(), str.begin(),
+                       [](unsigned char ch) { return std::toupper(ch); });
+        return str;
+    }
+
+    std::string tolower(std::string str)
+    {
+        std::transform(str.begin(), str.end(), str.begin(),
+                       [](unsigned char ch) { return std::tolower(ch); });
+        return str;
     }
 
     std::string fread(const std::string& file)

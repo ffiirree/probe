@@ -1778,6 +1778,7 @@ V(0x199a,"Pulse-LINK, Inc.")\
 V(0x199d,"Xsigo Systems")\
 V(0x199f,"Auvitek")\
 V(0x19a2,"Emulex Corporation")\
+V(0x19a4,"Owl Cyber Defense Solutions")\
 V(0x19a8,"DAQDATA GmbH")\
 V(0x19ac,"Kasten Chase Applied Research")\
 V(0x19ae,"Progeny Systems Corporation")\
@@ -1891,6 +1892,7 @@ V(0x1bb3,"Bluecherry")\
 V(0x1bb5,"Quantenna Communications, Inc.")\
 V(0x1bbf,"Maxeler Technologies Ltd.")\
 V(0x1bc0,"Innodisk Corporation")\
+V(0x1bcd,"Apacer Technology")\
 V(0x1bcf,"NEC Corporation")\
 V(0x1bd0,"Astronics Corporation")\
 V(0x1bd4,"Inspur Electronic Information Industry Co., Ltd.")\
@@ -1994,6 +1996,7 @@ V(0x1ded,"Alibaba (China) Co., Ltd.")\
 V(0x1dee,"Biwin Storage Technology Co., Ltd.")\
 V(0x1def,"Ampere Computing, LLC")\
 V(0x1df3,"Ethernity Networks")\
+V(0x1df5,"Shenzhen TIGO Semiconductor")\
 V(0x1df7,"opencpi.org")\
 V(0x1df8,"V&G Information System Co.,Ltd")\
 V(0x1dfc,"JSC NT-COM")\
@@ -2060,9 +2063,11 @@ V(0x1ef7,"Shenzhen Gunnir Technology Development Co., Ltd")\
 V(0x1efb,"Flexxon Pte Ltd")\
 V(0x1f02,"Beijing Dayu Technology")\
 V(0x1f03,"Shenzhen Shichuangyi Electronics Co., Ltd")\
+V(0x1f0a,"Motorcomm Microelectronics.")\
 V(0x1f0f,"NebulaMatrix Technology")\
 V(0x1f24,"xFusion Digital Technologies Co., Ltd.")\
 V(0x1f2f,"China Mobile (Hangzhou) Information Technology Co.Ltd.")\
+V(0x1f31,"Nextorage")\
 V(0x1f3f,"3SNIC Ltd")\
 V(0x1f40,"Netac Technology Co.,Ltd")\
 V(0x1f44,"VVDN Technologies Private Limited")\
@@ -2079,6 +2084,7 @@ V(0x1fc9,"Tehuti Networks Ltd.")\
 V(0x1fcc,"StreamLabs")\
 V(0x1fce,"Cognio Inc.")\
 V(0x1fd4,"SUNIX Co., Ltd.")\
+V(0x1fe0,"Allwinmeta Co., Ltd.")\
 V(0x2000,"Smart Link Ltd.")\
 V(0x2001,"Temporal Research Ltd")\
 V(0x2003,"Smart Link Ltd.")\
@@ -2369,6 +2375,8 @@ P(0x01de0002,"Propolis PCI-PCI Bridge")\
 P(0x021b8139,"HNE-300 (RealTek RTL8139c) [iPaq Networking]")\
 P(0x025e0b60,"NVMe DC SSD [Sentinel Rock Plus controller]")\
 P(0x025e0b70,"NVMe DC SSD [Yorktown controller]")\
+P(0x025ef1ab,"P41 Plus NVMe SSD (DRAM-less)")\
+P(0x025ef1ac,"P44 Pro NVMe SSD")\
 P(0x02ac1012,"1012 PCMCIA 10/100 Ethernet Card [RTL81xx]")\
 P(0x0357000a,"TTP-Monitoring Card V2.0")\
 P(0x04320001,"Pluto2 DVB-T Receiver for PCMCIA [EasyWatch MobilSet]")\
@@ -3111,7 +3119,7 @@ P(0x10026617,"Oland LE [Radeon R7 240]")\
 P(0x10026631,"Oland")\
 P(0x10026640,"Saturn XT [FirePro M6100]")\
 P(0x10026641,"Saturn PRO [Radeon HD 8930M]")\
-P(0x10026646,"Bonaire XT [Radeon R9 M280X]")\
+P(0x10026646,"Bonaire XT [Radeon R9 M280X / FirePro W6150M]")\
 P(0x10026647,"Saturn PRO/XT [Radeon R9 M270X/M280X]")\
 P(0x10026649,"Bonaire [FirePro W5100]")\
 P(0x1002664d,"Bonaire [FirePro W5100 / Barco MXRT-5600]")\
@@ -3127,7 +3135,7 @@ P(0x10026664,"Jet XT [Radeon R5 M240]")\
 P(0x10026665,"Jet PRO [Radeon R5 M230 / R7 M260DX / Radeon 520/610 Mobile]")\
 P(0x10026667,"Jet ULT [Radeon R5 M230]")\
 P(0x1002666f,"Sun LE [Radeon HD 8550M / R5 M230]")\
-P(0x100266a0,"Vega 20 [Radeon Instinct]")\
+P(0x100266a0,"Vega 20 [Radeon Pro/Radeon Instinct]")\
 P(0x100266a1,"Vega 20 [Radeon Pro VII/Radeon Instinct MI50 32GB]")\
 P(0x100266a2,"Vega 20")\
 P(0x100266a3,"Vega 20 [Radeon Pro Vega II/Radeon Pro Vega II Duo]")\
@@ -3464,9 +3472,10 @@ P(0x10027422,"Navi 24 [Radeon PRO W6400]")\
 P(0x10027423,"Navi 24 [Radeon PRO W6300/W6300M]")\
 P(0x10027424,"Navi 24 [Radeon RX 6300]")\
 P(0x1002743f,"Navi 24 [Radeon RX 6400/6500 XT/6500M]")\
+P(0x10027446,"Navi 31 USB")\
 P(0x10027448,"Navi31 [Radeon Pro W7900]")\
 P(0x1002744c,"Navi 31 [Radeon RX 7900 XT/7900 XTX]")\
-P(0x1002745e,"Navi 31")\
+P(0x1002745e,"Navi31 [Radeon Pro W7800]")\
 P(0x10027480,"Navi 33 [Radeon RX 7700S/7600S/7600M XT]")\
 P(0x10027483,"Navi 33 [Radeon RX 7600M/7600M XT]")\
 P(0x10027489,"Navi 33")\
@@ -3738,6 +3747,7 @@ P(0x1002ab10,"Lexa HDMI Audio")\
 P(0x1002ab18,"Vega 12 HDMI Audio")\
 P(0x1002ab20,"Vega 20 HDMI Audio [Radeon VII]")\
 P(0x1002ab28,"Navi 21/23 HDMI/DP Audio Controller")\
+P(0x1002ab30,"Navi 31 HDMI/DP Audio")\
 P(0x1002ab38,"Navi 10 HDMI Audio")\
 P(0x1002ac00,"Theater 506 World-Wide Analog Decoder")\
 P(0x1002ac01,"Theater 506 World-Wide Analog Decoder")\
@@ -4162,7 +4172,10 @@ P(0x102214b6,"Family 17h-19h IOMMU")\
 P(0x102214b7,"Family 17h-19h PCIe Dummy Host Bridge")\
 P(0x102214b9,"Family 17h-19h Internal PCIe GPP Bridge")\
 P(0x102214ba,"Family 17h-19h PCIe GPP Bridge")\
+P(0x102214ca,"Genoa CCP/PSP 4.0 Device")\
 P(0x102214cd,"Family 19h USB4/Thunderbolt PCIe tunnel")\
+P(0x102214de,"Phoenix PCIe Dummy Function")\
+P(0x102214ef,"Family 19h USB4/Thunderbolt PCIe tunnel")\
 P(0x10221510,"Family 14h Processor Root Complex")\
 P(0x10221512,"Family 14h Processor Root Port")\
 P(0x10221513,"Family 14h Processor Root Port")\
@@ -4243,6 +4256,9 @@ P(0x102215b4,"Stoney PM Configuration")\
 P(0x102215b5,"Stoney NB Performance Monitor")\
 P(0x102215bc,"Stoney PCIe [GFX,GPP] Bridge [4:0]")\
 P(0x102215be,"Stoney Audio Processor")\
+P(0x102215c4,"Phoenix USB4/Thunderbolt NHI controller #1")\
+P(0x102215c5,"Phoenix USB4/Thunderbolt NHI controller #2")\
+P(0x102215c7,"Family 19h (Model 74h) CCP/PSP 3.0 Device")\
 P(0x102215d0,"Raven/Raven2 Root Complex")\
 P(0x102215d1,"Raven/Raven2 IOMMU")\
 P(0x102215d2,"Raven/Raven2 PCIe Dummy Host Bridge")\
@@ -4362,6 +4378,8 @@ P(0x10221664,"VanGogh Data Fabric; Function 4")\
 P(0x10221665,"VanGogh Data Fabric; Function 5")\
 P(0x10221666,"VanGogh Data Fabric; Function 6")\
 P(0x10221667,"VanGogh Data Fabric; Function 7")\
+P(0x10221668,"Pink Sardine USB4/Thunderbolt NHI controller #1")\
+P(0x10221669,"Pink Sardine USB4/Thunderbolt NHI controller #2")\
 P(0x1022166a,"Cezanne Data Fabric; Function 0")\
 P(0x1022166b,"Cezanne Data Fabric; Function 1")\
 P(0x1022166c,"Cezanne Data Fabric; Function 2")\
@@ -4647,6 +4665,7 @@ P(0x10280016,"PowerEdge Expandable RAID controller S300")\
 P(0x10280073,"NV-RAM Adapter")\
 P(0x10281028,"PCIe Bridge riser")\
 P(0x10282600,"ENT NVMe RT1")\
+P(0x10289602,"RS780/RS880 PCI to PCI bridge (int gfx)")\
 P(0x102a0000,"HYDRA")\
 P(0x102a0010,"ASPEN")\
 P(0x102a001f,"AHA-2940U2/U2W /7890/7891 SCSI Controllers")\
@@ -5152,6 +5171,7 @@ P(0x104d90db,"Baikal PCI Express Glue and Miscellaneous Devices")\
 P(0x104d90dc,"Baikal DMA Controller")\
 P(0x104d90dd,"Baikal Memory (DDR3/SPM)")\
 P(0x104d90de,"Baikal USB 3.0 xHCI Host Controller")\
+P(0x104d9121,"Nextorage NEM-PA NVMe SSD for PlayStation")\
 P(0x104e0017,"OTI-64017")\
 P(0x104e0107,"OTI-107 [Spitfire]")\
 P(0x104e0109,"Video Adapter")\
@@ -8211,7 +8231,7 @@ P(0x10de20f2,"GA100 [A100-PG506-217]")\
 P(0x10de20f3,"GA100 [A800-SXM4-80GB]")\
 P(0x10de20f5,"GA100 [A800 80GB PCIe]")\
 P(0x10de20f6,"GA100 [A800 40GB PCIe]")\
-P(0x10de20fd,"GA100 [A100T]")\
+P(0x10de20fd,"GA100 [AX800 Converged Accelerator]")\
 P(0x10de20fe,"GA100")\
 P(0x10de20ff,"GA100")\
 P(0x10de2182,"TU116 [GeForce GTX 1660 Ti]")\
@@ -8254,13 +8274,19 @@ P(0x10de2296,"Tegra PCIe Endpoint Virtual Network")\
 P(0x10de22ba,"AD102 High Definition Audio Controller")\
 P(0x10de2302,"GH100")\
 P(0x10de2313,"GH100 [H100 CNX]")\
-P(0x10de2321,"GH100")\
+P(0x10de2321,"GH100 [H100L 94GB]")\
 P(0x10de2322,"GH100 [H800 PCIe]")\
 P(0x10de2324,"GH100 [H800]")\
-P(0x10de2330,"GH100[H100 SXM5 80GB]")\
+P(0x10de2330,"GH100 [H100 SXM5 80GB]")\
 P(0x10de2331,"GH100 [H100 PCIe]")\
 P(0x10de2336,"GH100 [H100]")\
-P(0x10de2339,"GH100 [H100]")\
+P(0x10de2337,"GH100 [H100 SXM5 64GB]")\
+P(0x10de2339,"GH100 [H100 SXM5 94GB]")\
+P(0x10de233a,"GH100 [H800L 94GB]")\
+P(0x10de233d,"GH100 [H100 96GB]")\
+P(0x10de2342,"GH100 [GH200 120GB]")\
+P(0x10de2343,"GH100")\
+P(0x10de2345,"GH100 [GH200 480GB]")\
 P(0x10de2414,"GA103 [GeForce RTX 3060 Ti]")\
 P(0x10de2420,"GA103M [GeForce RTX 3080 Ti Mobile]")\
 P(0x10de2438,"GA103GLM [RTX A5500 Laptop GPU]")\
@@ -8358,7 +8384,7 @@ P(0x10de2717,"GN21-X11 [GeForce RTX 4090 Laptop GPU]")\
 P(0x10de2730,"AD103GLM [RTX 5000 Ada Generation Laptop GPU]")\
 P(0x10de2757,"GN21-X11")\
 P(0x10de2782,"AD104 [GeForce RTX 4070 Ti]")\
-P(0x10de2785,"AD104")\
+P(0x10de2785,"AD104 [AC AD104 20GB]")\
 P(0x10de2786,"AD104 [GeForce RTX 4070]")\
 P(0x10de27a0,"AD104M [GeForce RTX 4080 Max-Q / Mobile]")\
 P(0x10de27b0,"AD104GL [RTX 4000 SFF Ada Generation]")\
@@ -8368,9 +8394,11 @@ P(0x10de27ba,"AD104GLM [RTX 4000 Ada Generation Laptop GPU]")\
 P(0x10de27bb,"AD104GLM [RTX 3500 Ada Generation Laptop GPU]")\
 P(0x10de27e0,"AD104M [GeForce RTX 4080 Max-Q / Mobile]")\
 P(0x10de2803,"AD106 [GeForce RTX 4060 Ti]")\
+P(0x10de2805,"AD106 [GeForce RTX 4060 Ti 16GB]")\
 P(0x10de2820,"AD106M [GeForce RTX 4070 Max-Q / Mobile]")\
 P(0x10de2838,"AD106GLM [RTX 3000 Ada Generation Laptop GPU]")\
 P(0x10de2860,"AD106M [GeForce RTX 4070 Max-Q / Mobile]")\
+P(0x10de2882,"AD107 [GeForce RTX 4060]")\
 P(0x10de28a0,"AD107M [GeForce RTX 4060 Max-Q / Mobile]")\
 P(0x10de28a1,"AD107M [GeForce RTX 4050 Max-Q / Mobile]")\
 P(0x10de28b8,"AD107GLM [RTX 2000 Ada Generation Laptop GPU]")\
@@ -8520,6 +8548,8 @@ P(0x10ec5287,"RTL8411B PCI Express Card Reader")\
 P(0x10ec5288,"RTS5288 PCI Express Card Reader")\
 P(0x10ec5289,"RTL8411 PCI Express Card Reader")\
 P(0x10ec5762,"RTS5763DL NVMe SSD Controller")\
+P(0x10ec5763,"RTS5763DL NVMe SSD Controller (DRAM-less)")\
+P(0x10ec5765,"RTS5765DL NVMe SSD Controller (DRAM-less)")\
 P(0x10ec8029,"RTL-8029(AS)")\
 P(0x10ec8125,"RTL8125 2.5GbE Controller")\
 P(0x10ec8129,"RTL-8129")\
@@ -9538,8 +9568,8 @@ P(0x1178afa1,"Fast Ethernet Adapter")\
 P(0x11790102,"Extended IDE Controller")\
 P(0x11790103,"EX-IDE Type-B")\
 P(0x1179010e,"PXP04 NVMe SSD")\
-P(0x1179010f,"NVMe Controller")\
-P(0x11790110,"NVMe SSD Controller Cx5")\
+P(0x1179010f,"XG3 NVMe SSD Controller")\
+P(0x11790110,"Cx5 NVMe SSD Controller")\
 P(0x11790113,"BG3 NVMe SSD Controller")\
 P(0x11790115,"XG4 NVMe SSD Controller")\
 P(0x11790116,"XG5 NVMe SSD Controller")\
@@ -10033,6 +10063,7 @@ P(0x12178330,"OZ600 MS/xD Controller")\
 P(0x12178331,"O2 Flash Memory Card")\
 P(0x12178520,"SD/MMC Card Reader Controller")\
 P(0x12178621,"SD/MMC Card Reader Controller")\
+P(0x12178760,"FORESEE E2M2 NVMe SSD")\
 P(0x121a0001,"Voodoo")\
 P(0x121a0002,"Voodoo 2")\
 P(0x121a0003,"Voodoo Banshee")\
@@ -10166,6 +10197,7 @@ P(0x126f0718,"SM718 LynxSE+")\
 P(0x126f0720,"SM720 Lynx3DM")\
 P(0x126f0730,"SM731 Cougar3DR")\
 P(0x126f0750,"SM750")\
+P(0x126f0768,"SM768")\
 P(0x126f0810,"SM810 LynxE")\
 P(0x126f0811,"SM811 LynxE")\
 P(0x126f0820,"SM820 Lynx3D")\
@@ -10496,6 +10528,8 @@ P(0x13445161,"RealSSD P420m")\
 P(0x13445163,"RealSSD P425m")\
 P(0x13445180,"9100 PRO NVMe SSD")\
 P(0x13445181,"9100 MAX NVMe SSD")\
+P(0x13445188,"7100 ECO NVMe SSD")\
+P(0x13445189,"7100 MAX NVMe SSD")\
 P(0x13445190,"9200 ECO NVMe SSD")\
 P(0x13445191,"9200 PRO NVMe SSD")\
 P(0x13445192,"9200 MAX NVMe SSD")\
@@ -10507,6 +10541,14 @@ P(0x134451c0,"7400 PRO NVMe SSD")\
 P(0x134451c1,"7400 MAX NVMe SSD")\
 P(0x134451c3,"7450 PRO NVMe SSD")\
 P(0x134451c4,"7450 MAX NVMe SSD")\
+P(0x13445404,"2210 NVMe SSD [Cobain]")\
+P(0x13445405,"2300 NVMe SSD [Santana]")\
+P(0x13445407,"3400 NVMe SSD [Hendrix]")\
+P(0x13445410,"2200S NVMe SSD [Cassandra]")\
+P(0x13445411,"2450 NVMe SSD [HendrixV] (DRAM-less)")\
+P(0x13445413,"2400 NVMe SSD (DRAM-less)")\
+P(0x13445414,"3460 NVMe SSD")\
+P(0x13446001,"2100AI NVMe SSD [Nitro]")\
 P(0x134a0001,"Domex 536")\
 P(0x134a0002,"Domex DMX3194UP SCSI Adapter")\
 P(0x134d2189,"HSP56 MicroModem")\
@@ -11740,17 +11782,21 @@ P(0x144a9111,"PCI-9111")\
 P(0x144a9113,"PCI-9113")\
 P(0x144a9114,"PCI-9114")\
 P(0x144aa001,"ADi-BSEC")\
-P(0x144d1600,"Apple PCIe SSD")\
+P(0x144d1600,"S4LN053X01 AHCI SSD Controller(Apple slot)")\
+P(0x144d9602,"RS780/RS880 PCI to PCI bridge (int gfx)")\
 P(0x144da544,"Exynos 8890 PCIe Root Complex")\
 P(0x144da575,"Exynos 7420 PCIe Root Complex")\
 P(0x144da5e3,"Exynos 5433 PCIe Root Complex")\
 P(0x144da800,"XP941 PCIe SSD")\
+P(0x144da801,"S4LN058A01[SSUBX] AHCI SSD Controller (Apple slot)")\
 P(0x144da802,"NVMe SSD Controller SM951/PM951")\
 P(0x144da804,"NVMe SSD Controller SM961/PM961/SM963")\
+P(0x144da806,"NVMe SSD SM0032L")\
 P(0x144da808,"NVMe SSD Controller SM981/PM981/PM983")\
 P(0x144da809,"NVMe SSD Controller 980")\
 P(0x144da80a,"NVMe SSD Controller PM9A1/PM9A3/980PRO")\
 P(0x144da80b,"NVMe SSD Controller PM9B1")\
+P(0x144da80c,"NVMe SSD Controller S4LV008[Pascal]")\
 P(0x144da820,"NVMe SSD Controller 171X")\
 P(0x144da821,"NVMe SSD Controller 172X")\
 P(0x144da822,"NVMe SSD Controller 172Xa/172Xb")\
@@ -12215,8 +12261,9 @@ P(0x14e4c909,"BCM78909 Switch ASIC")\
 P(0x14e4d802,"BCM58802 Stingray 50Gb Ethernet SoC")\
 P(0x14e4d804,"BCM58804 Stingray 100Gb Ethernet SoC")\
 P(0x14e4f800,"BCM78800 Switch ASIC [Trident5-X12]")\
-P(0x14e4f900,"BCM78900 Switch ASIC [Tomahawk6]")\
-P(0x14e4f903,"BCM78903 Switch ASIC [Tomahawk6]")\
+P(0x14e4f900,"BCM78900 Switch ASIC [Tomahawk5]")\
+P(0x14e4f902,"BCM78902 Switch ASIC [Tomahawk5T]")\
+P(0x14e4f903,"BCM78903 Switch ASIC [Tomahawk5]")\
 P(0x14e4f905,"BCM78905 Switch ASIC [Tomahawk5+]")\
 P(0x14e4f910,"BCM78910 Switch ASIC [Tomahawk6]")\
 P(0x14e4f914,"BCM78914 Switch ASIC [Tomahawk6]")\
@@ -12660,13 +12707,23 @@ P(0x15b75003,"WD Blue SN500 / PC SN520 NVMe SSD")\
 P(0x15b75004,"PC SN520 NVMe SSD")\
 P(0x15b75005,"PC SN520 NVMe SSD")\
 P(0x15b75006,"WD Black SN750 / PC SN730 NVMe SSD")\
+P(0x15b75007,"IX SN530 NVMe SSD (DRAM-less)")\
+P(0x15b75008,"PC SN530 NVMe SSD (DRAM-less)")\
 P(0x15b75009,"WD Blue SN550 NVMe SSD")\
 P(0x15b7500b,"PC SN530 NVMe SSD")\
 P(0x15b7500d,"WD Ultrastar DC SN340 NVMe SSD")\
 P(0x15b75011,"WD PC SN810 / Black SN850 NVMe SSD")\
-P(0x15b75017,"WD Black SN770 NVMe SSD")\
+P(0x15b75014,"WD Green SN350 NVMe SSD 1 TB (DRAM-less)")\
+P(0x15b75015,"PC SN740 NVMe SSD (DRAM-less)")\
+P(0x15b75016,"WD PC SN740 NVMe SSD 512GB (DRAM-less)")\
+P(0x15b75017,"WD Black SN770 / PC SN740 256GB / PC SN560 (DRAM-less) NVMe SSD")\
+P(0x15b75019,"WD Green SN350 NVMe SSD 240GB (DRAM-less)")\
 P(0x15b7501a,"WD Blue SN570 NVMe SSD 1TB")\
+P(0x15b7501d,"WD Blue SN550 NVMe SSD 2TB (DRAM-less)")\
+P(0x15b7501e,"PC SN735 NVMe SSD (DRAM-less)")\
+P(0x15b7501f,"WD PC SN735 NVMe SSD 512GB (DRAM-less)")\
 P(0x15b75025,"WD Blue SN570 NVMe SSD 2TB")\
+P(0x15b75026,"WD PC SN735 NVMe SSD 1TB (DRAM-less)")\
 P(0x15b75030,"Western Digital WD Black SN850X NVMe SSD")\
 P(0x15b81001,"APCI1516 SP controller (16 digi outputs)")\
 P(0x15b81003,"APCI1032 SP controller (32 digi inputs w/ opto coupler)")\
@@ -13809,10 +13866,13 @@ P(0x197b2394,"xD Host Controller")\
 P(0x19821600,"OX16C954 HOST-A")\
 P(0x198216ff,"OX16C954 HOST-B")\
 P(0x19875007,"E7 NVMe Controller")\
+P(0x19875008,"E8 PCIe3 NVMe Controller")\
 P(0x19875012,"E12 NVMe Controller")\
 P(0x19875013,"PS5013 E13 NVMe Controller")\
 P(0x19875016,"E16 PCIe4 NVMe Controller")\
 P(0x19875018,"E18 PCIe4 NVMe Controller")\
+P(0x19875019,"PS5019-E19 PCIe4 NVMe Controller (DRAM-less)")\
+P(0x19875021,"PS5021-E21 PCIe4 NVMe Controller (DRAM-less)")\
 P(0x19890001,"RapidFile Bridge")\
 P(0x19898001,"RapidFile")\
 P(0x1999a900,"AM-7209 Video Processor")\
@@ -14184,7 +14244,8 @@ P(0x1bb00002,"OmniCube Accelerator OA-3000")\
 P(0x1bb00010,"OmniCube Accelerator OA-3000-2")\
 P(0x1bb1005d,"Nytro PCIe Flash Storage")\
 P(0x1bb10100,"Nytro Flash Storage")\
-P(0x1bb15012,"FireCuda 510 SSD")\
+P(0x1bb15012,"FireCuda/IronWolf 510 SSD")\
+P(0x1bb15013,"BarraCuda Q5 NVMe SSD (DRAM-less)")\
 P(0x1bb15016,"FireCuda 520 SSD")\
 P(0x1bb15018,"FireCuda 530 SSD")\
 P(0x1bb34304,"BC-04120A MPEG4 4 port video encoder / decoder")\
@@ -14199,7 +14260,7 @@ P(0x1bb35310,"BC-H16480A 16 port H.264 video and audio encoder / decoder")\
 P(0x1bbf0003,"MAX3")\
 P(0x1bbf0004,"MAX4")\
 P(0x1bc01001,"PCIe 3TG6-P Controller")\
-P(0x1bc01002,"PCIe 3TE6 Controller")\
+P(0x1bc01002,"PCIe 3TE6 Controller (DRAM-less)")\
 P(0x1bc01160,"PCIe 3TE2 Controller")\
 P(0x1bc01321,"PCIe 4TG-P Controller")\
 P(0x1bc01322,"PCIe 4TE Controller")\
@@ -14207,6 +14268,7 @@ P(0x1bc02262,"PCIe 3TG3-P Controller")\
 P(0x1bc05208,"PCIe 3TE7 Controller")\
 P(0x1bc05216,"PCIe 3TE8 Controller")\
 P(0x1bc05236,"PCIe 4TG2-P Controller")\
+P(0x1bcd0120,"NVMe SSD Drive 960GB")\
 P(0x1bcf001c,"Vector Engine 1.0")\
 P(0x1bd01001,"Mx5 PMC/XMC Databus Interface Card")\
 P(0x1bd01002,"PM1553-5 (PC/104+ MIL-STD-1553 Interface Card)")\
@@ -14295,19 +14357,26 @@ P(0x1c360001,"Gigabit Ethernet Adapter")\
 P(0x1c360002,"SFP+ 10G Ethernet Adapter")\
 P(0x1c3b0200,"Telas2")\
 P(0x1c3b0300,"Telas 2.V")\
+P(0x1c441100,"Fuzedrive NVMe SSD")\
 P(0x1c448000,"8000 Storage IO Controller")\
 P(0x1c580003,"Ultrastar SN100 Series NVMe SSD")\
 P(0x1c580023,"Ultrastar SN200 Series NVMe SSD")\
+P(0x1c5c1282,"PC300 NVMe Solid State Drive 128GB")\
 P(0x1c5c1283,"PC300 NVMe Solid State Drive 256GB")\
 P(0x1c5c1284,"PC300 NVMe Solid State Drive 512GB")\
 P(0x1c5c1285,"PC300 NVMe Solid State Drive 1TB")\
 P(0x1c5c1327,"BC501 NVMe Solid State Drive")\
-P(0x1c5c1339,"BC511")\
+P(0x1c5c1339,"BC511 NVMe SSD")\
 P(0x1c5c1504,"PC400 NVMe SSD")\
 P(0x1c5c1527,"PC401 NVMe Solid State Drive 256GB")\
-P(0x1c5c174a,"Gold P31/PC711 NVMe Solid State Drive")\
-P(0x1c5c1959,"Platinum P41 NVMe Solid State Drive 2TB")\
+P(0x1c5c1627,"PC601 NVMe Solid State Drive")\
+P(0x1c5c1639,"PC611 NVMe Solid State Drive")\
+P(0x1c5c1739,"BC701 NVMe Solid State Drive")\
+P(0x1c5c174a,"Gold P31/BC711/PC711 NVMe Solid State Drive")\
+P(0x1c5c1959,"Platinum P41/PC801 NVMe Solid State Drive")\
+P(0x1c5c1d59,"BC901 NVMe Solid State Drive (DRAM-less)")\
 P(0x1c5c2204,"960GB TLC PCIe Gen3 x4 NVMe M.2 22110")\
+P(0x1c5c2429,"PE6011 NVMe Solid State Drive")\
 P(0x1c5c243b,"PE6110 NVMe Solid State Drive")\
 P(0x1c5c2839,"PE8000 Series NVMe Solid State Drive")\
 P(0x1c5c2849,"PE81x0 U.2/3 NVMe Solid State Drive")\
@@ -14315,7 +14384,7 @@ P(0x1c5f000d,"PBlaze5 520/526")\
 P(0x1c5f000e,"PBlaze6 6530/6531/6541/6630")\
 P(0x1c5f003d,"PBlaze5 920/926")\
 P(0x1c5f003e,"PBlaze6 6920/6930")\
-P(0x1c5f003f,"PBlaze7 7940/7946 Gen5 NVMe SSD")\
+P(0x1c5f003f,"PBlaze7 7940/7946 NVMe SSD")\
 P(0x1c5f0540,"PBlaze4 NVMe SSD")\
 P(0x1c5f0550,"PBlaze5 700/900")\
 P(0x1c5f0555,"PBlaze5 510/516")\
@@ -14327,13 +14396,27 @@ P(0x1c8a0001,"Hunter PCI Express")\
 P(0x1cb08266,"SP4 Series SSD")\
 P(0x1cb0d000,"Venice NVMe SSD")\
 P(0x1cb50002,"Clarett")\
+P(0x1cc133f3,"IM2P33F3 NVMe SSD (DRAM-less)")\
 P(0x1cc133f8,"IM2P33F8ABR1 NVMe SSD")\
 P(0x1cc15350,"XPG GAMMIX S50 NVMe SSD")\
 P(0x1cc15766,"ADATA XPG GAMMIXS1 1L Media")\
 P(0x1cc18201,"XPG SX8200 Pro PCIe Gen3x4 M.2 2280 Solid State Drive")\
 P(0x1cc41203,"NVMe SSD Controller UHXXXa series")\
-P(0x1cc417ab,"NVMe 256G SSD device")\
+P(0x1cc417a9,"RPITJ1TBVME2HWD NVMe SSD 1024GB")\
+P(0x1cc417aa,"AH631 PCIe 3.0 NVMe SSD 512GB")\
+P(0x1cc417ab,"AH631 PCIe 3.0 NVMe SSD 256GB")\
+P(0x1cc42263,"AM611 PCIe 3.0 NVMe SSD 256GB")\
+P(0x1cc45008,"AM610 PCIe 3.0 NVMe SSD 128GB")\
+P(0x1cc45012,"RPITJ512PED2OWX NVMe SSD 512GB")\
+P(0x1cc46201,"AM620 PCIe 3.0 NVMe SSD 128GB")\
+P(0x1cc46202,"AM620 PCIe 3.0 NVMe SSD 256GB")\
+P(0x1cc46203,"AM620 PCIe 3.0 NVMe SSD 512GB")\
+P(0x1cc46204,"AM620 PCIe 3.0 NVMe SSD 1024GB")\
+P(0x1cc46302,"AM630 PCIe 4.0 NVMe SSD 256GB")\
 P(0x1cc46303,"AM630 PCIe 4.0 x4 NVMe SSD Controller")\
+P(0x1cc46304,"AM630 PCIe 4.0 NVMe SSD 1024GB")\
+P(0x1cc46a03,"RPETJ512MKP1QDQ PCIe 4.0 NVMe SSD 512GB (DRAM-less)")\
+P(0x1cc46a14,"RPEYJ1T24MKN2QWY PCIe 4.0 NVMe SSD 1024GB (DRAM-less)")\
 P(0x1cc50100,"PCIe-CAN-02 Dual CAN bus (9-pin male). PCI Express x1.")\
 P(0x1cc50101,"PCIe-CAN-01 Single CAN bus (9-pin male). PCI Express x1.")\
 P(0x1cc70200,"RMS-200")\
@@ -14512,6 +14595,9 @@ P(0x1d6c4200,"A5PL-E1-10GETI [10 GbE Ethernet Traffic Instrument]")\
 P(0x1d781512,"TAI NVMe Controller")\
 P(0x1d781513,"DERA MENG NVMe Controller")\
 P(0x1d781515,"DERA EMEI NVMe Controller")\
+P(0x1d792262,"NVMe PCIe SSD 220S")\
+P(0x1d792263,"NVMe PCIe SSD 120S/112S (DRAM-less)")\
+P(0x1d792264,"NVMe PCIe SSD 250H")\
 P(0x1d7c0001,"HyperWire Adapter")\
 P(0x1d820101,"Codensity D400 SSD")\
 P(0x1d820102,"Codensity D408 PCIe Gen4 NVMe SSD")\
@@ -14555,7 +14641,12 @@ P(0x1d94790b,"FCH SMBus Controller")\
 P(0x1d94790e,"FCH LPC Bridge")\
 P(0x1d950001,"Colossus GC2 [C2]")\
 P(0x1d950002,"Colossus GC1 [S1]")\
+P(0x1d971062,"Lexar NM710 NVME SSD")\
+P(0x1d971d97,"Lexar NM620 NVME SSD (DRAM-less)")\
 P(0x1d972263,"SM2263EN/SM2263XT-based OEM SSD")\
+P(0x1d972269,"Lexar NM760 NVME SSD (DRAM-less)")\
+P(0x1d975216,"Lexar NM620 NVME SSD (DRAM-less)")\
+P(0x1d975236,"Lexar NM800 PRO NVME SSD")\
 P(0x1d9b0010,"Networking DOM Engine")\
 P(0x1d9b0011,"IO Bridge")\
 P(0x1da2e26a,"Radeon R7 250")\
@@ -14565,6 +14656,8 @@ P(0x1da30030,"Greco AI Inference Accelerator")\
 P(0x1da31000,"HL-2000 AI Training Accelerator [Gaudi]")\
 P(0x1da31010,"HL-2000 AI Training Accelerator [Gaudi secured]")\
 P(0x1da31020,"Gaudi2 AI Training Accelerator")\
+P(0x1da83800,"Network Flow Processor 3800")\
+P(0x1da83803,"Network Flow Processor 3800 Virtual Function")\
 P(0x1db7dc20,"[X100 Series]")\
 P(0x1db7dc21,"VPU Controller [X100 Series]")\
 P(0x1db7dc22,"DC Controller [X100 Series]")\
@@ -14587,9 +14680,13 @@ P(0x1db7dc36,"LDMA Controller [X100 Series]")\
 P(0x1db7dc38,"LSD_CFG Controller [X100 Series]")\
 P(0x1db7dc3a,"SWITCH Controller [X100 Series]")\
 P(0x1db7dc3c,"GPU_DMA Controller [X100 Series]")\
+P(0x1dbe5216,"NVMe SSD Controller IG5216 (DRAM-less)")\
+P(0x1dbe5220,"NVMe SSD Controller IG5220 (DRAM-less)")\
+P(0x1dbe5236,"NVMe SSD Controller IG5236")\
 P(0x1dbe5636,"NVMe DC SSD IG5636")\
 P(0x1dbe5638,"NVMe DC SSD IG5638")\
 P(0x1dbf0401,"StarDragon4800 PCI Express Root Port")\
+P(0x1dd40010,"N-10m2 NVMe SSD")\
 P(0x1dd80002,"DSC2 Elba Upstream Port")\
 P(0x1dd81000,"DSC Capri Upstream Port")\
 P(0x1dd81001,"DSC Virtual Downstream Port")\
@@ -14619,6 +14716,8 @@ P(0x1ded8001,"ACC-RCiEP")\
 P(0x1ded8002,"RCiEP VF")\
 P(0x1ded8003,"RCEC PF")\
 P(0x1ded8004,"RCEC VF")\
+P(0x1dee2262,"HP EX950 NVMe SSD")\
+P(0x1dee2263,"HP EX900 NVMe SSD (DRAM-less)")\
 P(0x1defe005,"eMAG PCI Express Root Port 0")\
 P(0x1defe006,"eMAG PCI Express Root Port 1")\
 P(0x1defe007,"eMAG PCI Express Root Port 2")\
@@ -14653,6 +14752,7 @@ P(0x1df30205,"ACE-NIC250 Programmable Network Accelerator")\
 P(0x1df30206,"ACE-NIC200 Programmable Network Accelerator")\
 P(0x1df30207,"ACE-NIC50RN Programmable Network Accelerator")\
 P(0x1df30208,"ACE-NIC100RN Programmable Network Accelerator")\
+P(0x1df51202,"kimtigo NVMe SSD (DRAM-less)")\
 P(0x1df70001,"ml605")\
 P(0x1df70002,"alst4")\
 P(0x1df70003,"alst4x")\
@@ -14660,12 +14760,17 @@ P(0x1df83000,"PC NVMe SSD")\
 P(0x1df8c000,"DC NVMe SSD")\
 P(0x1df8d000,"PC NVMe SSD")\
 P(0x1dfc1181,"TDM 8 Port E1/T1/J1 Adapter")\
-P(0x1e0f0001,"NVMe SSD Controller BG4")\
+P(0x1e0f0001,"NVMe SSD Controller BG4 (DRAM-less)")\
 P(0x1e0f0007,"NVMe SSD Controller Cx6")\
+P(0x1e0f0008,"RD500/Exceria Plus/Exceria Plus G2 NVMe SSD")\
 P(0x1e0f0009,"NVMe SSD")\
+P(0x1e0f000c,"NVMe SSD Controller BG5 (DRAM-less)")\
+P(0x1e0f000d,"NVMe SSD Controller XG7")\
+P(0x1e0f0010,"NVMe SSD Controller XG8")\
 P(0x1e0f0011,"NVMe SSD Controller CD7")\
 P(0x1e0f0013,"NVMe SSD Controller CM7 2.5\"")\
 P(0x1e0f0014,"NVMe SSD Controller CM7 EDSFF")\
+P(0x1e0f0018,"Exceria Pro NVMe SSD")\
 P(0x1e0f001f,"NVMe SSD Controller CD8")\
 P(0x1e240101,"Acorn CLE-101")\
 P(0x1e240215,"Acorn CLE-215")\
@@ -14688,8 +14793,12 @@ P(0x1e380102,"Xplorer X1600")\
 P(0x1e3b0600,"NVMe SSD Controller DP600")\
 P(0x1e3b1098,"Haishen3 NVMe SSD")\
 P(0x1e3b1333,"Haishen5 NVMe SSD")\
+P(0x1e490001,"ZHITAI PC005 NVMe SSD")\
 P(0x1e490021,"ZHITAI TiPro5000 NVMe SSD")\
 P(0x1e490041,"ZHITAI TiPro7000")\
+P(0x1e490071,"ZHITAI TiPlus7100")\
+P(0x1e491001,"PC005 NVMe SSD")\
+P(0x1e491011,"PC210 NVMe SSD")\
 P(0x1e491013,"PC210")\
 P(0x1e4b1001,"NVMe SSD Controller MAP1001")\
 P(0x1e4b1002,"NVMe SSD Controller MAP1002")\
@@ -14697,6 +14806,7 @@ P(0x1e4b1003,"NVMe SSD Controller MAP1003")\
 P(0x1e4b1201,"NVMe SSD Controller MAP1201")\
 P(0x1e4b1202,"NVMe SSD Controller MAP1202")\
 P(0x1e4b1601,"NVMe SSD Controller MAP1601")\
+P(0x1e4b1602,"NVMe SSD Controller MAP1602")\
 P(0x1e4c0010,"Associative Processing Unit [Leda]")\
 P(0x1e52401e,"Wormhole")\
 P(0x1e52b140,"Blackhole")\
@@ -14710,16 +14820,19 @@ P(0x1e670002,"runAI200 AI Inference Accelerator")\
 P(0x1e7cbca1,"AKD1000 Neural Network Coprocessor [Akida]")\
 P(0x1e7e9034,"Pliops Extreme Data Processor [XDP1.0]")\
 P(0x1e811203,"NVMe SSD Controller UHXXXa series")\
+P(0x1e816206,"AM620 NVMe SSD")\
 P(0x1e890002,"Quantis-PCIe-40M")\
 P(0x1e890003,"Quantis-PCIe-240M")\
 P(0x1e951002,"NVMe SSD [3DNAND] 2.5\" U.2 (LJ1)")\
+P(0x1e951007,"CL4-8D512 NVMe SSD M.2")\
+P(0x1e959100,"CL1-3D256-Q11 NVMe SSD M.2")\
 P(0x1ea02a16,"Cloud Intelligent Inference Controller")\
 P(0x1ea02a18,"Video Transcode Controller")\
 P(0x1ea02a20,"Cloud Intelligent Inference and Training Controller")\
 P(0x1ea7223a,"Typhon+ PCIe to Gen-Z Bridge")\
 P(0x1ea7224a,"IPA-PE224A CXL to Gen-Z Bridge [Sphinx]")\
 P(0x1eab300a,"NVMe SSD Controller 300A")\
-P(0x1eab300b,"NVMe SSD Controller 300B")\
+P(0x1eab300b,"NVMe SSD Controller 300B (DRAM-less)")\
 P(0x1eac1001,"EM120R-GL LTE Modem")\
 P(0x1eac1002,"EM160R-GL LTE Modem")\
 P(0x1eb11001,"Video Accelerator")\
@@ -14733,7 +14846,7 @@ P(0x1ec88810,"Fantasy I")\
 P(0x1ec89800,"Fantasy II")\
 P(0x1ec89802,"Fantasy II")\
 P(0x1ec89804,"Fantasy II")\
-P(0x1ec89810,"Fantasy II")\
+P(0x1ec89810,"Fantasy II-M")\
 P(0x1eca0000,"Envise-B")\
 P(0x1ed20000,"Warboy")\
 P(0x1ed50100,"MTT S10")\
@@ -14750,12 +14863,16 @@ P(0x1ed50200,"MTT S80 Engineering Sample")\
 P(0x1ed50201,"MTT S80")\
 P(0x1ed50202,"MTT S70")\
 P(0x1ed50203,"MTT S60")\
-P(0x1ed50211,"G2D40")\
+P(0x1ed50211,"MTT X200")\
 P(0x1ed50221,"G2S80")\
 P(0x1ed50222,"MTT S3000")\
 P(0x1ed50223,"G2S4")\
 P(0x1ed50251,"G2N10")\
 P(0x1ed502ff,"MTT HDMI/DP Audio")\
+P(0x1ed50300,"MTT S90 Engineering Sample")\
+P(0x1ed50301,"MTT S90")\
+P(0x1ed50323,"MTT S4000")\
+P(0x1ed503ff,"MTT HDMI/DP Audio")\
 P(0x1ed80101,"FG4 PCIe Frame Grabber")\
 P(0x1ee10050,"Aurora NVMe SSD Controller")\
 P(0x1ee41180,"P8118 U.2 Single Port SSD")\
@@ -14796,6 +14913,7 @@ P(0x1f035216,"IG5216-based NVMe SSD")\
 P(0x1f035220,"IG5220-Based NVMe SSD")\
 P(0x1f035236,"IG5236-Based NVMe SSD")\
 P(0x1f035636,"IG5636-Based NVMe SSD")\
+P(0x1f0a6801,"YT6801 Gigabit Ethernet Controller")\
 P(0x1f0f1041,"D1055AS vDPA Ethernet Controller")\
 P(0x1f0f1042,"D1055AS vDPA Storage Controller")\
 P(0x1f0f1220,"D1055AS Ethernet Controller")\
@@ -14810,6 +14928,7 @@ P(0x1f0f2022,"D1055AS PCI Express Switch Upstream Port")\
 P(0x1f0f9088,"D1055AS PCI Express Switch Downstream Port")\
 P(0x1f241058,"EP500/EP600 NVMe SSD")\
 P(0x1f2f1513,"DERA MENG NVMe Controller")\
+P(0x1f314512,"Nextorage NE1N NVMe SSD")\
 P(0x1f3f2100,"SSSHBA SAS/SATA HBA")\
 P(0x1f3f2200,"SSSRAID RAID controller")\
 P(0x1f3f9001,"SSSNIC Ethernet VF")\
@@ -14866,12 +14985,21 @@ P(0x20038800,"LM-I56N")\
 P(0x22b822a0,"Flex Logix InferX X1 Inference Accelerator")\
 P(0x23482010,"8142 100VG/AnyLAN")\
 P(0x26460010,"HyperX Predator PCIe AHCI SSD")\
-P(0x26462262,"KC2000 NVMe SSD")\
+P(0x26462262,"KC2000/KC2500 NVMe SSD")\
 P(0x26462263,"A2000 NVMe SSD")\
 P(0x26465008,"U-SNS8154P3 NVMe SSD")\
+P(0x2646500c,"OM8PCP Design-In PCIe 3 NVMe SSD (DRAM-less)")\
 P(0x2646500d,"OM3PDP3 NVMe SSD")\
 P(0x2646500e,"SNVS2000G [NV1 NVMe PCIe SSD 2TB]")\
+P(0x26465010,"OM8SBP NVMe PCIe SSD (DRAM-less)")\
 P(0x26465012,"DC1500M U.2 Enterprise SSD")\
+P(0x26465013,"KC3000/Renegade NVMe SSD")\
+P(0x26465014,"Design-In PCIe 4 NVMe SSD (TLC)")\
+P(0x26465016,"OM3PGP4 NVMe SSD")\
+P(0x2646501b,"OM8PGP4 NVMe PCIe SSD (DRAM-less)")\
+P(0x2646501d,"NV2 NVMe PCIe 4 SSD 500GB (DRAM-less)")\
+P(0x2646501f,"FURY Renegade NVMe SSD with heatsink")\
+P(0x26465021,"Design-In PCIe 4 NVMe SSD (QLC)")\
 P(0x29556e61,"OHCI USB 1.1 controller")\
 P(0x31ab1faa,"ZEW1602 802.11b/g Wireless Adapter")\
 P(0x33880013,"HiNT HC4 PCI to ISDN bridge, Multimedia audio controller")\
@@ -15347,10 +15475,13 @@ P(0x808602b3,"Comet Lake PCI Express Root Port #12")\
 P(0x808602b4,"Comet Lake PCI Express Root Port #13")\
 P(0x808602b8,"Comet Lake PCI Express Root Port #1")\
 P(0x808602bc,"Comet Lake PCI Express Root Port #5")\
+P(0x808602bf,"Comet Lake PCI Express Root Port #8")\
 P(0x808602c5,"Comet Lake Serial IO I2C Host Controller")\
 P(0x808602c8,"Comet Lake PCH-LP cAVS")\
 P(0x808602d3,"Comet Lake SATA AHCI Controller")\
+P(0x808602d7,"Comet Lake RAID Controller")\
 P(0x808602e0,"Comet Lake Management Engine Interface")\
+P(0x808602e3,"Comet Lake AMT SOL Redirection")\
 P(0x808602e8,"Serial IO I2C Host Controller")\
 P(0x808602e9,"Comet Lake Serial IO I2C Host Controller")\
 P(0x808602ea,"Comet Lake PCH-LP LPSS: I2C Controller #2")\
@@ -15543,6 +15674,7 @@ P(0x8086095e,"Quark SoC X1000 Legacy Bridge")\
 P(0x80860960,"80960RP (i960RP) Microprocessor/Bridge")\
 P(0x80860962,"80960RM (i960RM) Bridge")\
 P(0x80860964,"80960RP (i960RP) Microprocessor/Bridge")\
+P(0x80860975,"Optane NVME SSD H10 with Solid State Storage [Teton Glacier]")\
 P(0x80860998,"Ice Lake IEH")\
 P(0x808609a2,"Ice Lake Memory Map/VT-d")\
 P(0x808609a3,"Ice Lake RAS")\
@@ -15550,6 +15682,7 @@ P(0x808609a4,"Ice Lake Mesh 2 PCIe")\
 P(0x808609a6,"Ice Lake MSM")\
 P(0x808609a7,"Ice Lake PMON MSM")\
 P(0x808609ab,"RST VMD Managed Controller")\
+P(0x808609ad,"Optane NVME SSD H20 with Solid State Storage [Pyramid Glacier]")\
 P(0x808609c4,"PAC with Intel Arria 10 GX FPGA")\
 P(0x80860a03,"Haswell-ULT Thermal Subsystem")\
 P(0x80860a04,"Haswell-ULT DRAM Controller")\
@@ -15661,7 +15794,7 @@ P(0x80860d4f,"Ethernet Connection (10) I219-V")\
 P(0x80860d53,"Ethernet Connection (12) I219-LM")\
 P(0x80860d55,"Ethernet Connection (12) I219-V")\
 P(0x80860d58,"Ethernet Controller XXV710 Intel(R) FPGA Programmable Acceleration Card N3000 for Networking")\
-P(0x80860d9f,"Ethernet Controller (2) I225-IT")\
+P(0x80860d9f,"Ethernet Controller I225-IT")\
 P(0x80860dcd,"Ethernet Connection C825-X")\
 P(0x80860dd2,"Ethernet Network Adapter I710")\
 P(0x80860dd5,"Ethernet Adaptive Virtual Function")\
@@ -16072,6 +16205,7 @@ P(0x8086124f,"Ethernet Connection E823-L 1GbE")\
 P(0x80861250,"430HX - 82439HX TXC [Triton II]")\
 P(0x8086125b,"Ethernet Controller I226-LM")\
 P(0x8086125c,"Ethernet Controller I226-V")\
+P(0x8086125d,"Ethernet Controller I226-IT")\
 P(0x80861360,"82806AA PCI64 Hub PCI Bridge")\
 P(0x80861361,"82806AA PCI64 Hub Controller (HRes)")\
 P(0x80861460,"82870P2 P64H2 Hub PCI Bridge")\
@@ -17726,9 +17860,17 @@ P(0x808634a9,"Ice Lake-LP Serial IO UART Controller #1")\
 P(0x808634aa,"Ice Lake-LP Serial IO SPI Controller #0")\
 P(0x808634ab,"Ice Lake-LP Serial IO SPI Controller #1")\
 P(0x808634b0,"Ice Lake-LP PCI Express Root Port #9")\
+P(0x808634b1,"Ice Lake-LP PCIe Port #10")\
+P(0x808634b4,"Ice Lake-LP PCIe Port #13")\
+P(0x808634b5,"Ice Lake-LP PCIe Port #14")\
 P(0x808634b7,"Ice Lake-LP PCI Express Root Port #16")\
+P(0x808634b8,"Ice Lake-LP PCIe Port #1")\
 P(0x808634ba,"Ice Lake-LP PCI Express Root Port #3")\
+P(0x808634bb,"Ice Lake-LP PCIe Port #4")\
 P(0x808634bc,"Ice Lake-LP PCI Express Root Port #5")\
+P(0x808634bd,"Ice Lake-LP PCIe Port #6")\
+P(0x808634be,"Ice Lake-LP PCIe Port #7")\
+P(0x808634bf,"Ice Lake-LP PCIe Port #8")\
 P(0x808634c4,"Ice Lake-LP SD Host Controller")\
 P(0x808634c5,"Ice Lake-LP Serial IO I2c Controller #4")\
 P(0x808634c6,"Ice Lake-LP Serial IO I2c Controller #5")\
@@ -18141,12 +18283,31 @@ P(0x8086423a,"PRO/Wireless 5350 AGN [Echo Peak] Network Connection")\
 P(0x8086423b,"PRO/Wireless 5350 AGN [Echo Peak] Network Connection")\
 P(0x8086423c,"WiMAX/WiFi Link 5150")\
 P(0x8086423d,"WiMAX/WiFi Link 5150")\
-P(0x8086438b,"Tiger Lake-H LPC/eSPI Controller")\
+P(0x80864384,"Q570 LPC/eSPI Controller")\
+P(0x80864385,"Z590 LPC/eSPI Controller")\
+P(0x80864386,"H570 LPC/eSPI Controller")\
+P(0x80864387,"B560 LPC/eSPI Controller")\
+P(0x80864388,"H510 LPC/eSPI Controller")\
+P(0x80864389,"WM590 LPC/eSPI Controller")\
+P(0x8086438a,"QM580 LPC/eSPI Controller")\
+P(0x8086438b,"HM570 LPC/eSPI Controller")\
+P(0x8086438c,"C252 LPC/eSPI Controller")\
+P(0x8086438d,"C256 LPC/eSPI Controller")\
+P(0x8086438e,"H310D LPC/eSPI Controller")\
+P(0x8086438f,"W580 LPC/eSPI Controller")\
+P(0x80864390,"RM590E LPC/eSPI Controller")\
+P(0x80864391,"R580E LPC/eSPI Controller")\
 P(0x808643a3,"Tiger Lake-H SMBus Controller")\
 P(0x808643a4,"Tiger Lake-H SPI Controller")\
 P(0x808643b0,"Tiger Lake-H PCI Express Root Port #9")\
+P(0x808643b8,"Tiger Lake-H PCIe Root Port #1")\
+P(0x808643ba,"Tiger Lake-H PCIe Root Port #3")\
+P(0x808643bb,"Tiger Lake-H PCIe Root Port #4")\
 P(0x808643bc,"Tiger Lake-H PCI Express Root Port #5")\
+P(0x808643c0,"Tiger Lake-H PCIe Root Port #17")\
+P(0x808643c7,"Tiger Lake-H PCIe Root Port #24")\
 P(0x808643c8,"Tiger Lake-H HD Audio Controller")\
+P(0x808643d3,"Tiger Lake SATA AHCI Controller")\
 P(0x808643e0,"Tiger Lake-H Management Engine Interface")\
 P(0x808643e8,"Tiger Lake-H Serial IO I2C Controller #0")\
 P(0x808643e9,"Tiger Lake-H Serial IO I2C Controller #1")\
@@ -18159,6 +18320,7 @@ P(0x80864511,"Elkhart Lake Gaussian and Neural Accelerator")\
 P(0x80864538,"Elkhart Lake PCI-e Root Complex")\
 P(0x80864555,"Elkhart Lake [UHD Graphics Gen11 16EU]")\
 P(0x80864571,"Elkhart Lake [UHD Graphics Gen11 32EU]")\
+P(0x80864602,"Alder Lake Host and DRAM Controller")\
 P(0x8086460d,"12th Gen Core Processor PCI Express x16 Controller #1")\
 P(0x8086461d,"Alder Lake Innovation Platform Framework Processor Participant")\
 P(0x8086461e,"Alder Lake-P Thunderbolt 4 USB Controller")\
@@ -18177,6 +18339,7 @@ P(0x8086463f,"Alder Lake-P Thunderbolt 4 PCI Express Root Port #1")\
 P(0x80864641,"12th Gen Core Processor Host Bridge/DRAM Registers")\
 P(0x8086464d,"12th Gen Core Processor PCI Express x4 Controller #0")\
 P(0x8086464f,"12th Gen Core Processor Gaussian & Neural Accelerator")\
+P(0x8086465d,"Alder Lake Imaging Signal Processor")\
 P(0x80864660,"12th Gen Core Processor Host Bridge/DRAM Registers")\
 P(0x80864668,"12th Gen Core Processor Host Bridge/DRAM Registers")\
 P(0x8086466d,"Alder Lake-P Thunderbolt 4 NHI #1")\
@@ -18219,7 +18382,10 @@ P(0x80864b23,"Elkhart Lake SMBus Controller")\
 P(0x80864b24,"Elkhart Lake SPI (Flash) Controller")\
 P(0x80864b38,"Elkhart Lake PCH PCI Express Root Port #0")\
 P(0x80864b39,"Elkhart Lake PCH PCI Express Root Port #1")\
+P(0x80864b3c,"Elkhart Lake PCIe Root Port #4")\
 P(0x80864b3e,"Elkhart Lake PCH PCI Express Root Port #6")\
+P(0x80864b4b,"Elkhart Lake Serial IO I2C Controller #4")\
+P(0x80864b4d,"Elkhart Lake Serial IO UART Controller #2")\
 P(0x80864b58,"Elkhart Lake High Density Audio bus interface")\
 P(0x80864b63,"Elkhart Lake SATA AHCI")\
 P(0x80864b70,"Elkhart Lake Management Engine Interface")\
@@ -18297,15 +18463,19 @@ P(0x8086504b,"EP80579 Reserved")\
 P(0x8086504c,"EP80579 Integrated Processor with QuickAssist TDM")\
 P(0x80865181,"Alder Lake PCH-P LPC/eSPI Controller")\
 P(0x80865182,"Alder Lake PCH eSPI Controller")\
+P(0x80865187,"Alder Lake LPC Controller")\
 P(0x808651a3,"Alder Lake PCH-P SMBus Host Controller")\
 P(0x808651a4,"Alder Lake-P PCH SPI Controller")\
 P(0x808651a8,"Alder Lake PCH UART #0")\
 P(0x808651a9,"Alder Lake PCH UART #1")\
+P(0x808651aa,"Alder Lake SPI Controller")\
+P(0x808651ab,"Alder Lake SPI Controller")\
 P(0x808651b1,"Alder Lake PCI Express x1 Root Port #10")\
 P(0x808651bf,"Alder Lake PCH-P PCI Express Root Port #9")\
 P(0x808651c5,"Alder Lake-P Serial IO I2C Controller #0")\
 P(0x808651c6,"Alder Lake-P Serial IO I2C Controller #1")\
 P(0x808651c8,"Alder Lake PCH-P High Definition Audio Controller")\
+P(0x808651cc,"Alder Lake Smart Sound Technology Audio Controller")\
 P(0x808651d3,"Alder Lake-P SATA AHCI Controller")\
 P(0x808651d8,"Alder Lake-P Serial IO I2C Controller #2")\
 P(0x808651d9,"Alder Lake-P Serial IO I2C Controller #3")\
@@ -18329,18 +18499,38 @@ P(0x80865692,"DG2 [Arc A550M]")\
 P(0x80865693,"DG2 [Arc A370M]")\
 P(0x80865694,"DG2 [Arc A350M]")\
 P(0x80865695,"DG2 [Iris Xe MAX A200M]")\
+P(0x80865696,"DG2 [Arc A570M]")\
+P(0x80865697,"DG2 [Arc A530M]")\
+P(0x80865698,"DG2 [Arc Xe Graphics]")\
 P(0x808656a0,"DG2 [Arc A770]")\
 P(0x808656a1,"DG2 [Arc A750]")\
 P(0x808656a2,"DG2 [Arc A580]")\
+P(0x808656a3,"DG2 [Arc Xe Graphics]")\
+P(0x808656a4,"DG2 [Arc Xe Graphics]")\
 P(0x808656a5,"DG2 [Arc A380]")\
 P(0x808656a6,"DG2 [Arc A310]")\
+P(0x808656a7,"DG2 [Arc Xe Graphics]")\
+P(0x808656a8,"DG2 [Arc Xe Graphics]")\
+P(0x808656a9,"DG2 [Arc Xe Graphics]")\
 P(0x808656b0,"DG2 [Arc Pro A30M]")\
 P(0x808656b1,"DG2 [Arc Pro A40/A50]")\
-P(0x808656c0,"Data Center GPU Flex 170")\
-P(0x808656c1,"Data Center GPU Flex 140")\
+P(0x808656b2,"DG2 [Arc Pro A60M]")\
+P(0x808656b3,"DG2 [Arc Pro A60]")\
+P(0x808656c0,"ATS-M [Data Center GPU Flex 170]")\
+P(0x808656c1,"ATS-M [Data Center GPU Flex 140]")\
+P(0x80865780,"Thunderbolt 80/120G Bridge [Barlow Ridge Host 80G 2023]")\
+P(0x80865781,"Thunderbolt 80/120G NHI [Barlow Ridge Host 80G 2023]")\
+P(0x80865782,"Thunderbolt 80/120G USB Controller [Barlow Ridge Host 80G 2023]")\
+P(0x80865783,"Thunderbolt Bridge [Barlow Ridge Host 40G 2023]")\
+P(0x80865784,"Thunderbolt NHI [Barlow Ridge Host 40G 2023]")\
+P(0x80865785,"Thunderbolt USB Controller [Barlow Ridge Host 40G 2023]")\
+P(0x80865786,"Thunderbolt 80/120G Bridge [Barlow Ridge Hub 80G 2023]")\
+P(0x80865787,"Thunderbolt 80/120G USB Controller [Barlow Ridge Hub 80G 2023]")\
 P(0x8086579c,"Ethernet Connection E825-C for backplane")\
 P(0x8086579d,"Ethernet Connection E825-C for QSFP")\
 P(0x8086579e,"Ethernet Connection E825-C for SFP")\
+P(0x808657a4,"Thunderbolt Bridge [Barlow Ridge Hub 40G 2023]")\
+P(0x808657a5,"Thunderbolt USB Controller [Barlow Ridge Hub 40G 2023]")\
 P(0x808657b1,"Ethernet Controller E610 1GBASE T")\
 P(0x80865845,"QEMU NVM Express Controller")\
 P(0x80865900,"Xeon E3-1200 v6/7th Gen Core Processor Host Bridge/DRAM Registers")\
@@ -18657,11 +18847,11 @@ P(0x80867af0,"Alder Lake-S PCH CNVi WiFi")\
 P(0x80867afc,"Alder Lake-S PCH Serial IO I2C Controller #4")\
 P(0x80867afd,"Alder Lake-S PCH Serial IO I2C Controller #5")\
 P(0x80867d0b,"Volume Management Device NVMe RAID Controller Intel Corporation")\
-P(0x80867d40,"Meteor Lake [Intel Graphics]")\
-P(0x80867d45,"Meteor Lake [Intel Graphics]")\
-P(0x80867d55,"Meteor Lake [Intel Graphics]")\
-P(0x80867d60,"Meteor Lake [Intel Graphics]")\
-P(0x80867dd5,"Meteor Lake [Intel Graphics]")\
+P(0x80867d40,"Meteor Lake-M [Intel Graphics]")\
+P(0x80867d45,"Meteor Lake-P [Intel Graphics]")\
+P(0x80867d55,"Meteor Lake-P [Intel Graphics]")\
+P(0x80867d60,"Meteor Lake-M [Intel Graphics]")\
+P(0x80867dd5,"Meteor Lake-P [Intel Graphics]")\
 P(0x80867e01,"Meteor Lake-P LPC/eSPI Controller")\
 P(0x80867e22,"Meteor Lake-P SMBus Controller")\
 P(0x80867e23,"Meteor Lake-P SPI Controller")\
@@ -19134,7 +19324,7 @@ P(0x80869d3e,"iTouch Controller")\
 P(0x80869d43,"Sunrise Point-LP LPC Controller")\
 P(0x80869d46,"LPC/eSPI Controller")\
 P(0x80869d48,"Sunrise Point-LP LPC Controller")\
-P(0x80869d4e,"Sunrise Point LPC Controller/eSPI Controller")\
+P(0x80869d4e,"Sunrise Point LPC/eSPI Controller")\
 P(0x80869d50,"Sunrise Point LPC Controller")\
 P(0x80869d56,"Sunrise Point-LP LPC Controller")\
 P(0x80869d58,"Sunrise Point-LP LPC Controller")\
@@ -19193,6 +19383,7 @@ P(0x8086a0a9,"Tiger Lake-LP Serial IO UART Controller #1")\
 P(0x8086a0ab,"Tiger Lake-LP Serial IO SPI Controller #1")\
 P(0x8086a0b0,"Tiger Lake-LP PCI Express Root Port #9")\
 P(0x8086a0b1,"Tiger Lake-LP PCI Express Root Port #10")\
+P(0x8086a0b3,"Tiger Lake-LP PCI Express Root Port #12")\
 P(0x8086a0bc,"Tiger Lake-LP PCI Express Root Port #5")\
 P(0x8086a0bd,"Tigerlake PCH-LP PCI Express Root Port #6")\
 P(0x8086a0be,"Tiger Lake-LP PCI Express Root Port #7")\
@@ -19515,8 +19706,11 @@ P(0x8086d156,"Core Processor Semaphore and Scratchpad Registers")\
 P(0x8086d157,"Core Processor System Control and Status Registers")\
 P(0x8086d158,"Core Processor Miscellaneous Registers")\
 P(0x8086f1a5,"SSD 600P Series")\
-P(0x8086f1a6,"SSD Pro 7600p/760p/E 6100p Series")\
+P(0x8086f1a6,"SSD DC P4101/Pro 7600p/760p/E 6100p Series")\
+P(0x8086f1a7,"SSD 700p Series")\
 P(0x8086f1a8,"SSD 660P Series")\
+P(0x8086f1aa,"SSD 670p Series [Keystone Harbor]")\
+P(0x8086faf0,"SSD 665p Series [Neptune Harbor Refresh]")\
 P(0x80880100,"WX1860AL-W Gigabit Ethernet Controller")\
 P(0x80880101,"WX1860A2 Gigabit Ethernet Controller")\
 P(0x80880102,"WX1860A2S Gigabit Ethernet Controller")\
@@ -19551,7 +19745,7 @@ P(0x88481000,"Ethernet Controller N10 Series for 10GbE or 40GbE (Dual-port)")\
 P(0x88481001,"Ethernet Controller N400 Series for 1GbE (Dual-port)")\
 P(0x88481020,"Ethernet Controller N10 Series for 10GbE (Quad-port)")\
 P(0x88481021,"Ethernet Controller N400 Series for 1GbE (Quad-port)")\
-P(0x88481060,"Ethernet Controller N10 Series for 10GbE (8-port)")\
+P(0x88481060,"Ethernet Controller N10 Series for 1GbE or 10GbE (8-port)")\
 P(0x88481080,"Ethernet Controller N10 Series Virtual Function")\
 P(0x88481081,"Ethernet Controller N400 Series Virtual Function")\
 P(0x88488308,"Ethernet Controller N500 Series for 1GbE (Quad-port, Copper RJ45)")\
@@ -19744,6 +19938,7 @@ P(0x99020001,"SG2010 PCI over Starfabric Bridge")\
 P(0x99020002,"SG2010 PCI to Starfabric Gateway")\
 P(0x99020003,"SG1010 Starfabric Switch and PCI Bridge")\
 P(0x9d320000,"STAR1000 PCIe NVMe SSD Controller")\
+P(0x9d321000,"STAR1000 PCIe NVMe SSD Controller")\
 P(0x9d321001,"STAR1000P PCIe NVMe SSD Controller")\
 P(0x9d321201,"STAR1200C NVMe SSD")\
 P(0x9d321202,"STAR1200I NVMe SSD")\
@@ -19757,6 +19952,8 @@ P(0x9d322000,"STAR2000 NVMe Controller")\
 P(0x9d322001,"STAR2000E NVMe SSD")\
 P(0x9d322002,"STAR2000C NVMe SSD")\
 P(0x9d322003,"STAR2000L NVMe SSD")\
+P(0x9d32bb5b,"Asgard AN3+ NVMe SSD")\
+P(0x9d32fc22,"Asgard AN3+ NVMe SSD")\
 P(0xa7270013,"3CRPAG175 Wireless PC Card")\
 P(0xa7276803,"3CRDAG675B Wireless 11a/b/g Adapter")\
 P(0xaaaa0001,"H1 PCIe over fiber optic host controller")\
@@ -19802,9 +19999,11 @@ P(0xbdbda148,"DeckLink SDI Micro")\
 P(0xbdbda14b,"DeckLink 8K Pro")\
 P(0xbdbda14e,"DeckLink Quad HDMI Recorder")\
 P(0xbdbda1ff,"eGPU RX580")\
-P(0xc0a92263,"P1 NVMe PCIe SSD")\
+P(0xc0a92263,"P1 NVMe PCIe SSD[Frampton]")\
+P(0xc0a95403,"P1 NVMe PCIe SSD[Frampton2]")\
 P(0xc0a95407,"P5 Plus NVMe PCIe SSD")\
-P(0xc0a9540a,"P2 NVMe PCIe SSD")\
+P(0xc0a9540a,"P2 NVMe PCIe SSD[Nick P2]")\
+P(0xc0a95412,"P5 NVMe PCIe SSD[SlashP5]")\
 P(0xca010212,"Vulcan-CL CameraLink Frame Grabber")\
 P(0xca020213,"Vulcan-CXP Frame Grabber")\
 P(0xcace0001,"TurboCap Port A")\
