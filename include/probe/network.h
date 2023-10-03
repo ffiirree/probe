@@ -75,6 +75,7 @@ namespace probe::network
         std::string name{};
         vendor_t vendor_id{};         // PCI: vendor id
         std::string product{};        // PCI: product name
+        std::string instance_id{};    // Windows: Device instance ID, Device ID + Instance ID + UniqueID
         std::string id{};             // Windows: adapter name, linux: device path
         std::string guid{};           // Windows: network guid
         std::string interface_guid{}; // Windows: interface guid

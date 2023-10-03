@@ -8,7 +8,11 @@
 #include <vector>
 
 #ifdef _WIN32
+// clang-format off
 #include <Windows.h>
+#include <SetupAPI.h>
+#include <cfgmgr32.h>
+// clang-format on
 #endif
 
 #include "probe/dllport.h"
@@ -19,7 +23,7 @@ namespace probe::util
     PROBE_API std::string to_utf8(const wchar_t *, size_t = 0);
     PROBE_API std::string to_utf8(const std::wstring&);
 
-    // must has a null-terminating-character if the size_t == 0
+    // must have a null-terminating-character if the size_t == 0
     PROBE_API std::string to_utf8(const char *, size_t = 0);
     PROBE_API std::string to_utf8(const std::string&);
 
@@ -61,37 +65,47 @@ namespace probe::util
 
 // windows registry
 #ifdef _WIN32
-namespace probe::util
+
+namespace probe::util::registry
 {
-    namespace registry
+    template<typename T> std::optional<T> read(HKEY key, const std::string&, const std::string&);
+
+    template<>
+    PROBE_API std::optional<std::string> read<std::string>(HKEY, const std::string&, const std::string&);
+
+    template<> PROBE_API std::optional<DWORD> read<DWORD>(HKEY, const std::string&, const std::string&);
+
+    class RegistryListener : public Listener
     {
-        template<typename T> std::optional<T> read(HKEY key, const std::string&, const std::string&);
+    public:
+        PROBE_API ~RegistryListener() override { stop(); }
 
-        template<>
-        PROBE_API std::optional<std::string> read<std::string>(HKEY, const std::string&,
-                                                               const std::string&);
+        PROBE_API int listen(const std::any&, const std::function<void(const std::any&)>&) override;
+        PROBE_API void stop() override;
 
-        template<> PROBE_API std::optional<DWORD> read<DWORD>(HKEY, const std::string&, const std::string&);
+        PROBE_API bool running() override { return running_; }
 
-        class RegistryListener : public Listener
-        {
-        public:
-            PROBE_API ~RegistryListener() override { stop(); }
+    private:
+        HKEY key_;
+        HANDLE STOP_EVENT{ nullptr };
+        HANDLE NOTIFY_EVENT{ nullptr };
+        std::thread thread_;
+        std::atomic<bool> running_{ false };
+    };
+} // namespace probe::util::registry
 
-            PROBE_API int listen(const std::any&, const std::function<void(const std::any&)>&) override;
-            PROBE_API void stop() override;
+namespace probe::util::setup
+{
+    template<typename T> std::optional<T> property(HDEVINFO info_set, PSP_DEVINFO_DATA info, DWORD type);
 
-            PROBE_API bool running() override { return running_; }
+    template<>
+    PROBE_API std::optional<std::string> property<std::string>(HDEVINFO info_set, PSP_DEVINFO_DATA info,
+                                                               DWORD type);
 
-        private:
-            HKEY key_;
-            HANDLE STOP_EVENT{ nullptr };
-            HANDLE NOTIFY_EVENT{ nullptr };
-            std::thread thread_;
-            std::atomic<bool> running_{ false };
-        };
-    } // namespace registry
-} // namespace probe::util
+    std::string device_instance_id(DEVINST inst);
+
+} // namespace probe::util::setup
+
 #endif
 
 // linux

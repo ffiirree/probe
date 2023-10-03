@@ -72,25 +72,9 @@ namespace probe::network
         return info->HostName;
     }
 
-    static std::string setup_get_property(HDEVINFO sets, SP_DEVINFO_DATA *info, DWORD type)
-    {
-        WCHAR *buffer{};
-        DWORD size{};
-
-        ::SetupDiGetDeviceRegistryProperty(sets, info, type, nullptr, nullptr, 0, &size);
-
-        buffer = reinterpret_cast<WCHAR *>(malloc(size));
-        defer(free(buffer));
-
-        if (!::SetupDiGetDeviceRegistryProperty(sets, info, type, nullptr, reinterpret_cast<LPBYTE>(buffer),
-                                                size, 0))
-            return {};
-
-        return probe::util::to_utf8(buffer);
-    }
-
     struct net_device_info_t
     {
+        std::string instance_id{}; // Windows: Device instance ID
         std::string mfg{};
         std::string driver{};
         std::string driver_version{};
@@ -103,22 +87,31 @@ namespace probe::network
 
     static std::map<std::string, net_device_info_t> device_mfg_mapping()
     {
-        HDEVINFO device_sets = ::SetupDiGetClassDevs(&GUID_DEVCLASS_NET, nullptr, nullptr, DIGCF_PRESENT);
+        HDEVINFO dev_set = ::SetupDiGetClassDevs(&GUID_DEVCLASS_NET, nullptr, nullptr, DIGCF_PRESENT);
 
-        if (INVALID_HANDLE_VALUE == device_sets) return {};
-        defer(::SetupDiDestroyDeviceInfoList(device_sets));
+        if (INVALID_HANDLE_VALUE == dev_set) return {};
+        defer(::SetupDiDestroyDeviceInfoList(dev_set));
 
         SP_DEVINFO_DATA info{ .cbSize = sizeof(SP_DEVINFO_DATA) };
         std::map<std::string, net_device_info_t> pairs{};
 
-        for (DWORD idx = 0; ::SetupDiEnumDeviceInfo(device_sets, idx, &info); ++idx) {
-            if (auto desc = setup_get_property(device_sets, &info, SPDRP_DEVICEDESC); !desc.empty()) {
+        for (DWORD idx = 0; ::SetupDiEnumDeviceInfo(dev_set, idx, &info); ++idx) {
+            if (auto desc = probe::util::setup::property<std::string>(dev_set, &info, SPDRP_DEVICEDESC)
+                                .value_or("");
+                !desc.empty()) {
 
                 net_device_info_t dev{
-                    .mfg         = setup_get_property(device_sets, &info, SPDRP_MFG),
-                    .driver      = setup_get_property(device_sets, &info, SPDRP_DRIVER),
-                    .hardware_id = setup_get_property(device_sets, &info, SPDRP_HARDWAREID),
-                    .bus_info    = setup_get_property(device_sets, &info, SPDRP_LOCATION_PATHS),
+                    .instance_id = probe::util::setup::device_instance_id(info.DevInst),
+                    .mfg =
+                        probe::util::setup::property<std::string>(dev_set, &info, SPDRP_MFG).value_or(""),
+                    .driver = probe::util::setup::property<std::string>(dev_set, &info, SPDRP_DRIVER)
+                                  .value_or(""),
+                    .hardware_id =
+                        probe::util::setup::property<std::string>(dev_set, &info, SPDRP_HARDWAREID)
+                            .value_or(""),
+                    .bus_info =
+                        probe::util::setup::property<std::string>(dev_set, &info, SPDRP_LOCATION_PATHS)
+                            .value_or(""),
                 };
 
                 dev.driver_version =
@@ -132,7 +125,7 @@ namespace probe::network
                     std::smatch matches;
                     // "PCI\\VEN_14E4&DEV_43A0&SUBSYS_061914E4&REV_03"
                     if (std::regex_match(dev.hardware_id, matches,
-                                         std::regex("^PCI\\\\VEN_([\\dA-F]{4})&DEV_([\\dA-F]{4}).*",
+                                         std::regex(R"(^PCI\\VEN_([\dA-F]{4})&DEV_([\dA-F]{4}).*)",
                                                     std::regex_constants::icase))) {
                         dev.vendor_id = std::stoul(matches[1], nullptr, 16);
                         auto x = probe::product_name(dev.vendor_id, std::stoul(matches[2], nullptr, 16));
@@ -244,6 +237,7 @@ namespace probe::network
                 .vendor_id =
                     static_cast<vendor_t>(dmmap.contains(desc) ? dmmap.at(desc).vendor_id : 0x0000),
                 .product        = dmmap.contains(desc) ? dmmap.at(desc).product : "",
+                .instance_id    = dmmap.contains(desc) ? dmmap.at(desc).instance_id : "",
                 .id             = info->AdapterName,
                 .guid           = to_string(info->NetworkGuid),
                 .interface_guid = to_string(if_guid),

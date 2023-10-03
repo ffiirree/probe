@@ -7,7 +7,6 @@
 
 #include <dwmapi.h>
 #include <map>
-#include <psapi.h>
 #include <regex>
 #include <ShellScalingApi.h>
 
@@ -53,8 +52,8 @@ namespace probe::graphics
                 //          - driver:   {4d36e96e-e325-11ce-bfc1-08002be10318}\\0001
                 auto device_id = probe::util::to_utf8(device_info.DeviceID);
 
-                auto _1 = device_id.find_first_of("\\");
-                auto _2 = device_id.find_first_of("\\", _1 + 1);
+                auto _1 = device_id.find_first_of('\\');
+                auto _2 = device_id.find_first_of('\\', _1 + 1);
 
                 return std::pair{ device_id.substr(_1 + 1, _2 - _1 - 1), device_id.substr(_2 + 1) };
             }
@@ -189,13 +188,13 @@ namespace probe::graphics
         return display_info_of(reinterpret_cast<uint64_t>(hmonitor));
     }
 
-    std::optional<display_t> display_contains(const geometry_t& __rect)
+    std::optional<display_t> display_contains(const geometry_t& r)
     {
         auto rect = RECT{
-            static_cast<LONG>(__rect.left()),
-            static_cast<LONG>(__rect.top()),
-            static_cast<LONG>(__rect.right()),
-            static_cast<LONG>(__rect.bottom()),
+            static_cast<LONG>(r.left()),
+            static_cast<LONG>(r.top()),
+            static_cast<LONG>(r.right()),
+            static_cast<LONG>(r.bottom()),
         };
 
         HMONITOR hmonitor = ::MonitorFromRect(&rect, MONITOR_DEFAULTTONEAREST);

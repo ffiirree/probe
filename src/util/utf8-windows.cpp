@@ -1,6 +1,5 @@
 #ifdef _WIN32
 
-#include "probe/defer.h"
 #include "probe/util.h"
 
 namespace probe::util

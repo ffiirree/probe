@@ -16,6 +16,7 @@ int main()
                   << "    Number              : " << drive.number << '\n'
                   << "    Name                : " << drive.name << '\n'
                   << "    Path                : " << drive.path << '\n'
+                  << "    Device Instance ID  : " << drive.instance_id << '\n'
                   << "    ID                  : " << drive.id << '\n'
                   << "    Serial Number       : " << drive.serial << '\n'
                   << "    Vendor              : " << drive.vendor << '\n'

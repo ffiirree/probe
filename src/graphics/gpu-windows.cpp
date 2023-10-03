@@ -4,7 +4,6 @@
 #include "probe/util.h"
 
 #include <DXGI.h>
-#include <Windows.h>
 #include <winrt/base.h>
 
 namespace probe::graphics

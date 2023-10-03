@@ -273,6 +273,15 @@ Parse the following files:
 | multicast ibytes | &#10004; |       |                |
 | multicast obytes | &#10004; |       |                |
 
+### Serial Ports
+
+| properties   | Windows  | Linux | commments                   |
+| ------------ | :------: | :---: | --------------------------- |
+| name         | &#10004; |       | Windows: COM1               |
+| instance id  | &#10004; |       | Windows: Device Instance ID |
+| description  | &#10004; |       |                             |
+| manufacturer | &#10004; |       |                             |
+
 ### Utils
 
 | functions | Windows  |  Linux   | commments     |

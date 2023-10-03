@@ -52,7 +52,7 @@ namespace probe
     PROBE_API std::string vendor_cast(vendor_t);
 
     // cast uint32_t to vendor_t
-    PROBE_API inline vendor_t vendor_cast(uint32_t id) { return static_cast<vendor_t>(id); };
+    PROBE_API inline vendor_t vendor_cast(uint32_t id) { return static_cast<vendor_t>(id); }
 
     // gausses what vendor_t the string is
     PROBE_API vendor_t vendor_cast(const std::string&);

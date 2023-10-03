@@ -4,6 +4,7 @@
 #include "probe/thread.h"
 #include "probe/util.h"
 
+#include <array>
 #include <Windows.h>
 
 namespace probe::util::registry
@@ -63,7 +64,7 @@ namespace probe::util::registry
         }
 
         running_ = true;
-        thread_  = std::thread([=]() {
+        thread_  = std::thread([=, this]() {
             probe::thread::set_name("listen-" + subkey);
 
             const HANDLE events[] = { STOP_EVENT, NOTIFY_EVENT };
@@ -106,4 +107,31 @@ namespace probe::util::registry
     }
 } // namespace probe::util::registry
 
+namespace probe::util::setup
+{
+    template<>
+    PROBE_API std::optional<std::string> property<std::string>(HDEVINFO info_set, PSP_DEVINFO_DATA info,
+                                                               DWORD type)
+    {
+        DWORD size{};
+        ::SetupDiGetDeviceRegistryProperty(info_set, info, type, nullptr, nullptr, 0, &size);
+
+        std::vector<char> buffer(size + 2, 0);
+        if (!::SetupDiGetDeviceRegistryProperty(info_set, info, type, nullptr,
+                                                reinterpret_cast<LPBYTE>(buffer.data()), size, nullptr))
+            return std::nullopt;
+
+        return probe::util::to_utf8(buffer.data());
+    }
+
+    std::string device_instance_id(DEVINST inst)
+    {
+        std::array<wchar_t, MAX_DEVICE_ID_LEN + 1> buffer{};
+
+        if (::CM_Get_Device_ID(inst, buffer.data(), MAX_DEVICE_ID_LEN + 1, 0) != CR_SUCCESS) {
+            return "";
+        }
+        return probe::util::to_utf8(buffer.data());
+    }
+} // namespace probe::util::setup
 #endif // _WIN32

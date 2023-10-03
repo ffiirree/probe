@@ -1,4 +1,5 @@
 #ifdef _WIN32
+
 #include "probe/library.h"
 #include "probe/util.h"
 
@@ -26,4 +27,5 @@ namespace probe::library
         return ::GetProcAddress(reinterpret_cast<HMODULE>(lib->handle), sym.c_str());
     }
 } // namespace probe::library
+
 #endif

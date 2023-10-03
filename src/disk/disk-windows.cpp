@@ -29,7 +29,7 @@ namespace probe::disk
         if (::DeviceIoControl(handle, IOCTL_STORAGE_GET_DEVICE_NUMBER, nullptr, 0, &number,
                               sizeof(STORAGE_DEVICE_NUMBER), &bytes, nullptr)) {
             drive.number = number.DeviceNumber;
-            drive.name   = std::format("\\\\.\\PhysicalDrive{}", number.DeviceNumber);
+            drive.name   = std::format(R"(\\.\PhysicalDrive{})", number.DeviceNumber);
         }
 
         // geometry
@@ -74,7 +74,7 @@ namespace probe::disk
             ::DeviceIoControl(handle, IOCTL_DISK_IS_WRITABLE, nullptr, 0, nullptr, 0, nullptr, nullptr);
 
         // layout
-        PDRIVE_LAYOUT_INFORMATION_EX layout = (PDRIVE_LAYOUT_INFORMATION_EX)malloc(
+        auto layout = (PDRIVE_LAYOUT_INFORMATION_EX)malloc(
             FIELD_OFFSET(DRIVE_LAYOUT_INFORMATION_EX, PartitionEntry[128]));
         defer(free(layout));
         if (::DeviceIoControl(handle, IOCTL_DISK_GET_DRIVE_LAYOUT_EX, nullptr, 0, layout,
@@ -137,21 +137,22 @@ namespace probe::disk
     {
         std::vector<drive_t> drives{};
 
-        HDEVINFO device_sets =
+        HDEVINFO device_set =
             ::SetupDiGetClassDevs(&DiskClassGuid, nullptr, nullptr, DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
 
-        if (INVALID_HANDLE_VALUE == device_sets) return {};
-        defer(::SetupDiDestroyDeviceInfoList(device_sets));
+        if (INVALID_HANDLE_VALUE == device_set) return {};
+        defer(::SetupDiDestroyDeviceInfoList(device_set));
 
         SP_DEVICE_INTERFACE_DATA idevice{ .cbSize = sizeof(SP_DEVICE_INTERFACE_DATA) };
         PSP_DEVICE_INTERFACE_DETAIL_DATA idevice_detail{};
+        SP_DEVINFO_DATA info{ .cbSize = sizeof(SP_DEVINFO_DATA) };
+
         DWORD size{};
-
         for (DWORD idx = 0;
-             ::SetupDiEnumDeviceInterfaces(device_sets, nullptr, &DiskClassGuid, idx, &idevice); ++idx) {
+             ::SetupDiEnumDeviceInterfaces(device_set, nullptr, &DiskClassGuid, idx, &idevice); ++idx) {
 
-            ::SetupDiGetDeviceInterfaceDetail(device_sets, &idevice, nullptr, 0, &size, nullptr);
-            if (!(ERROR_INSUFFICIENT_BUFFER == ::GetLastError())) continue;
+            ::SetupDiGetDeviceInterfaceDetail(device_set, &idevice, nullptr, 0, &size, nullptr);
+            if (ERROR_INSUFFICIENT_BUFFER != ::GetLastError()) continue;
 
             idevice_detail = (PSP_DEVICE_INTERFACE_DETAIL_DATA)malloc(size);
             defer(free(idevice_detail); idevice_detail = nullptr);
@@ -159,12 +160,14 @@ namespace probe::disk
             ::ZeroMemory(idevice_detail, size);
             idevice_detail->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA);
 
-            if (!::SetupDiGetDeviceInterfaceDetail(device_sets, &idevice, idevice_detail, size, nullptr,
-                                                   nullptr)) {
+            if (!::SetupDiGetDeviceInterfaceDetail(device_set, &idevice, idevice_detail, size, nullptr,
+                                                   &info)) {
                 continue;
             }
 
-            drives.push_back(drive_info(idevice_detail->DevicePath));
+            auto drive = drive_info(idevice_detail->DevicePath);
+            drive.instance_id = probe::util::setup::device_instance_id(info.DevInst);
+            drives.push_back(drive);
         }
 
         return drives;
@@ -248,7 +251,7 @@ namespace probe::disk
     {
         std::vector<volume_t> ret;
 
-        std::array<WCHAR, 512> path;
+        std::array<WCHAR, 512> path{};
 
         auto handle = ::FindFirstVolume(path.data(), 512);
         bool sucess = true;
@@ -256,8 +259,8 @@ namespace probe::disk
              sucess = ::FindNextVolume(handle, path.data(), 512)) {
 
             // info
-            std::array<WCHAR, MAX_PATH> label;
-            std::array<WCHAR, MAX_PATH> fsname;
+            std::array<WCHAR, MAX_PATH> label{};
+            std::array<WCHAR, MAX_PATH> fsname{};
             DWORD serial{};
             ::GetVolumeInformation(path.data(), label.data(), MAX_PATH, &serial, nullptr, nullptr,
                                    fsname.data(), MAX_PATH);

@@ -20,19 +20,20 @@ namespace probe
 
         struct drive_t
         {
-            std::string name{}; // Windows: \\\\.\\PhysicalDrive2, Linux: /dev/sda
-            std::string path{}; // Windows: device path, Linux: path in /sys/devices/
-            uint32_t number{};  // Windows: \\\\.\\PhysicalDrive{N}
-            std::string id{};   // GPT: GUID; MBR: Signature
-            bus_type_t bus{};   //
+            std::string name{};        // Windows: \\.\PhysicalDrive2, Linux: /dev/sda
+            std::string path{};        // Windows: device path, Linux: path in /sys/devices/
+            uint32_t number{};         // Windows: \\.\PhysicalDrive{N}
+            std::string id{};          // GPT: GUID; MBR: Signature
+            std::string instance_id{}; // Windows: Device instance ID
+            bus_type_t bus{};          //
             bool removable{};
             bool writable{};
             bool trim{};
             uint32_t partitions{};
             partition_style_t style{};
             std::string serial{};
-            std::string vendor{};   // (PCI) vendor
-            std::string product{};  // model / PCI product
+            std::string vendor{};  // (PCI) vendor
+            std::string product{}; // model / PCI product
             //
             uint64_t cylinders{};
             uint32_t tracks_per_cylinder{};

@@ -4,7 +4,6 @@
 #include "probe/util.h"
 
 #include <bitset>
-#include <intrin.h>
 #include <vector>
 #include <Windows.h>
 
