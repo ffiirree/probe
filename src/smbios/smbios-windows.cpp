@@ -3,7 +3,6 @@
 #include "probe/smbios.h"
 
 #include <optional>
-#include <vector>
 #include <Windows.h>
 
 struct RawSMBIOSData
@@ -40,14 +39,14 @@ namespace probe::smbios
 
         //
         for (size_t i = 0; i < smb.data.size();) {
-            smb.table.emplace_back(reinterpret_cast<smbios_header_t *>(&smb.data.data()[i]));
+            smb.table.emplace_back(reinterpret_cast<smbios_header_t *>(&smb.data[i]));
 
             // next
-            i += smb.data.data()[i + 1];
+            i += smb.data[i + 1];
 
             // Look for the end of the struct that must be terminated by \0\0
             while (i + 1 < smb.data.size()) {
-                if (0 == smb.data.data()[i] && 0 == smb.data.data()[i + 1]) {
+                if (0 == smb.data[i] && 0 == smb.data[i + 1]) {
                     i += 2;
                     break;
                 }

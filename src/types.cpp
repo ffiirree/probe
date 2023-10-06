@@ -2,7 +2,6 @@
 
 #include "probe/pciids.h"
 
-#include <map>
 #include <regex>
 
 namespace probe
@@ -13,14 +12,14 @@ namespace probe
             return { static_cast<uint32_t>(std::stoul(str)) };
         }
 
-        std::smatch matchs;
-        if (std::regex_match(str, matchs, std::regex(verion_regex))) {
+        std::smatch matches;
+        if (std::regex_match(str, matches, std::regex(version_regex))) {
             return {
-                matchs[1].str().empty() ? 0 : static_cast<uint32_t>(std::stoul(matchs[1].str())),
-                matchs[2].str().empty() ? 0 : static_cast<uint32_t>(std::stoul(matchs[2].str())),
-                matchs[3].str().empty() ? 0 : static_cast<uint32_t>(std::stoul(matchs[3].str())),
-                matchs[4].str().empty() ? 0 : static_cast<uint32_t>(std::stoul(matchs[4].str())),
-                matchs[5],
+                matches[1].str().empty() ? 0 : static_cast<uint32_t>(std::stoul(matches[1].str())),
+                matches[2].str().empty() ? 0 : static_cast<uint32_t>(std::stoul(matches[2].str())),
+                matches[3].str().empty() ? 0 : static_cast<uint32_t>(std::stoul(matches[3].str())),
+                matches[4].str().empty() ? 0 : static_cast<uint32_t>(std::stoul(matches[4].str())),
+                matches[5],
             };
         }
         return {};

@@ -15,7 +15,7 @@ namespace probe::power
     static void batteries(std::vector<supply_t>& list)
     {
         auto set =
-            ::SetupDiGetClassDevs(&GUID_DEVCLASS_BATTERY, 0, 0, DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
+            ::SetupDiGetClassDevs(&GUID_DEVCLASS_BATTERY, nullptr, nullptr, DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
 
         if (set == INVALID_HANDLE_VALUE) return;
         defer(::SetupDiDestroyDeviceInfoList(set));
@@ -28,7 +28,7 @@ namespace probe::power
              ::SetupDiEnumDeviceInterfaces(set, nullptr, &GUID_DEVCLASS_BATTERY, idx, &idevice); ++idx) {
 
             ::SetupDiGetDeviceInterfaceDetail(set, &idevice, nullptr, 0, &size, nullptr);
-            if (!(ERROR_INSUFFICIENT_BUFFER == ::GetLastError())) continue;
+            if (ERROR_INSUFFICIENT_BUFFER != ::GetLastError()) continue;
 
             idevice_detail = (PSP_DEVICE_INTERFACE_DETAIL_DATA)malloc(size);
             defer(free(idevice_detail); idevice_detail = nullptr);

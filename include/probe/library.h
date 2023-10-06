@@ -19,7 +19,7 @@ namespace probe::library
 
     PROBE_API std::shared_ptr<library_t> load(const std::string&);
 
-    PROBE_API void *address_of(const std::shared_ptr<library_t>, const std::string&);
+    PROBE_API void *address_of(const std::shared_ptr<library_t>&, const std::string&);
 } // namespace probe::library
 
 #endif //! PROBE_LIBRARY_H

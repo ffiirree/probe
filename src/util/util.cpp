@@ -39,14 +39,14 @@ namespace probe::util
     std::string toupper(std::string str)
     {
         std::transform(str.begin(), str.end(), str.begin(),
-                       [](unsigned char ch) { return std::toupper(ch); });
+                       [](unsigned char ch) { return static_cast<char>(std::toupper(ch)); });
         return str;
     }
 
     std::string tolower(std::string str)
     {
         std::transform(str.begin(), str.end(), str.begin(),
-                       [](unsigned char ch) { return std::tolower(ch); });
+                       [](unsigned char ch) { return static_cast<char>(std::tolower(ch)); });
         return str;
     }
 

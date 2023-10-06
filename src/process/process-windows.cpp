@@ -113,7 +113,7 @@ namespace probe::process
             wchar_t buffer[MAX_PATH]{};
             if (::GetModuleFileNameEx(process, nullptr, buffer, MAX_PATH) != 0) {
                 auto full_name = probe::util::to_utf8(buffer);
-                auto pos       = full_name.find_last_of("\\");
+                auto pos       = full_name.find_last_of('\\');
                 if (pos != std::string::npos) {
                     return full_name.substr(pos + 1);
                 }

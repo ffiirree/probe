@@ -61,7 +61,7 @@ namespace probe
 
         [[nodiscard]] int32_t bottom() const { return y + static_cast<int32_t>(height) - 1; }
 
-        [[nodiscard]] point_t centor() const
+        [[nodiscard]] point_t center() const
         {
             return { .x = x + static_cast<int>(width / 2), .y = y + static_cast<int>(height / 2) };
         }

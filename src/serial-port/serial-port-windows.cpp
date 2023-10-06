@@ -46,34 +46,8 @@ namespace probe::port
             });
         }
 
-        //        HKEY hKey = nullptr;
-        //        if (::RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"HARDWARE\\DEVICEMAP\\SERIALCOMM", 0, KEY_READ,
-        //        &hKey) !=
-        //            ERROR_SUCCESS) {
-        //            return {};
-        //        }
-        //        defer(::RegCloseKey(hKey));
-        //
-        //
-        //        TCHAR name[MAX_PATH]{};
-        //        BYTE desc[MAX_PATH]{};
-        //        for (DWORD i = 0;; i++) {
-        //            DWORD nlen = MAX_PATH;
-        //            DWORD dlen = MAX_PATH;
-        //            auto ret   = ::RegEnumValue(hKey, i, name, &nlen, nullptr, nullptr, desc, &dlen);
-        //            if (ret == ERROR_NO_MORE_ITEMS) {
-        //                break;
-        //            }
-        //            else if (ret != ERROR_SUCCESS) {
-        //                return list;
-        //            }
-        //
-        //            list.emplace_back(probe::util::to_utf8(reinterpret_cast<wchar_t *>(desc)),
-        //                              probe::util::to_utf8(name));
-        //        }
-
         return list;
     }
-}; // namespace probe::port
+} // namespace probe::port
 
 #endif

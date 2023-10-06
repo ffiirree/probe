@@ -24,7 +24,8 @@ namespace probe::library
     void *address_of(const std::shared_ptr<library_t>& lib, const std::string& sym)
     {
         if (!lib || !lib->handle) return nullptr;
-        return ::GetProcAddress(reinterpret_cast<HMODULE>(lib->handle), sym.c_str());
+        return reinterpret_cast<void *>(
+            ::GetProcAddress(reinterpret_cast<HMODULE>(lib->handle), sym.c_str()));
     }
 } // namespace probe::library
 
