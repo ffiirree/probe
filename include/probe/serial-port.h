@@ -10,9 +10,9 @@ namespace probe::port
 {
     struct serial_port
     {
-        std::string name{};
-        std::string device{};
-        std::string instance_id{};
+        std::string name{};        // Windows: COM*; Linux: ttyUSB*
+        std::string device{};      // Windows: \\.\COM*; Linux: /dev/ttyUSB*
+        std::string instance_id{}; // Windows
         std::string description{};
         std::string manufacturer{};
     };
