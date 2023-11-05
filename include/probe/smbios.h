@@ -106,16 +106,16 @@ namespace probe::smbios
 
     struct smbios_header_t
     {
-        smbios_type_t type;
-        uint8_t length;
-        uint16_t handle;
+        smbios_type_t type{};
+        uint8_t       length{};
+        uint16_t      handle{};
     };
 
     // System Management BIOS
     struct smbios_t
     {
-        version_t version{};
-        std::vector<uint8_t> data{};
+        version_t                      version{};
+        std::vector<uint8_t>           data{};
         std::vector<smbios_header_t *> table{};
     };
 

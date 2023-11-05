@@ -21,9 +21,9 @@ namespace probe::media
         if (!dev) return {};
 
         winrt::com_ptr<IPropertyStore> props = nullptr;
-        LPWSTR id                            = nullptr;
-        PROPVARIANT name                     = {};
-        PROPVARIANT desc                     = {};
+        LPWSTR                         id    = nullptr;
+        PROPVARIANT                    name  = {};
+        PROPVARIANT                    desc  = {};
 
         // Initialize container for property value.
         PropVariantInit(&name);
@@ -52,14 +52,12 @@ namespace probe::media
         RETURN_NONE_IF_FAILED(endpoint->GetDataFlow(&data_flow));
 
         auto type = device_type_t::audio;
-        // clang-format off
         switch (data_flow) {
-        case eRender:   type |= device_type_t::sink;                            break;
-        case eCapture:  type |= device_type_t::source;                          break;
-        case eAll:      type |= device_type_t::source | device_type_t::sink;    break;
-        default:                                                                break;
+        case eRender:  type |= device_type_t::sink; break;
+        case eCapture: type |= device_type_t::source; break;
+        case eAll:     type |= device_type_t::source | device_type_t::sink; break;
+        default:       break;
         }
-        // clang-format on
 
         // state
         DWORD state{};
@@ -78,7 +76,7 @@ namespace probe::media
     {
         winrt::com_ptr<IMMDeviceEnumerator> enumerator{};
         winrt::com_ptr<IMMDeviceCollection> collection{};
-        std::vector<device_t> devices{};
+        std::vector<device_t>               devices{};
 
         winrt::init_apartment();
         defer(winrt::uninit_apartment());

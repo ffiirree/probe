@@ -17,16 +17,16 @@ namespace probe::system
 
     struct os_info_t
     {
-        std::string name;
-        theme_t theme;
+        std::string name{};
+        theme_t     theme{};
 
-        version_t version;
+        version_t version{};
     };
 
     struct kernel_info_t
     {
-        std::string name;
-        version_t version;
+        std::string name{};
+        version_t   version{};
     };
 
     PROBE_API theme_t theme();
@@ -37,7 +37,7 @@ namespace probe::system
     PROBE_API version_t os_version();
     PROBE_API version_t kernel_version();
 
-    PROBE_API os_info_t os_info();
+    PROBE_API os_info_t     os_info();
     PROBE_API kernel_info_t kernel_info();
 
     // hostname

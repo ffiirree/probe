@@ -53,8 +53,8 @@ namespace probe::graphics
         defer(XCloseDisplay(display));
 
         // display number
-        int display_num = 0;
-        auto monitors   = XRRGetMonitors(display, DefaultRootWindow(display), True, &display_num);
+        int  display_num = 0;
+        auto monitors    = XRRGetMonitors(display, DefaultRootWindow(display), True, &display_num);
         defer(XRRFreeMonitors(monitors));
 
         auto screen_res = XRRGetScreenResources(display, XDefaultRootWindow(display));
@@ -97,11 +97,11 @@ namespace probe::graphics
     {
         auto xa_name = ::XInternAtom(display, name, False);
 
-        Atom real_type{};
-        int format{};
+        Atom          real_type{};
+        int           format{};
         unsigned long nb_items{};
         unsigned long bytes{};
-        T *data{};
+        T            *data{};
         if (::XGetWindowProperty(display, win, xa_name, 0, ~0L, False, type, &real_type, &format, &nb_items,
                                  &bytes, reinterpret_cast<unsigned char **>(&data)) != Success) {
             return {};
@@ -122,7 +122,7 @@ namespace probe::graphics
     {
         // title
         std::string title{};
-        char *name = nullptr;
+        char       *name = nullptr;
         if (::XFetchName(display, window, &name) > 0 && name != nullptr) {
             title = name;
             ::XFree(name);
@@ -131,7 +131,7 @@ namespace probe::graphics
             XTextProperty wmname{};
             if (::XGetWMName(display, window, &wmname) != 0 && wmname.value && wmname.format == 8) {
                 char **list = nullptr;
-                int num     = 0;
+                int    num  = 0;
                 // COMPOUND_TEXT, STRING, UTF8_STRING or the encoding of the current locale is
                 // guaranteed
                 if (::Xutf8TextPropertyToTextList(display, &wmname, &list, &num) >= 0 && num > 0 && *list) {
@@ -161,8 +161,8 @@ namespace probe::graphics
     static geometry_t xget_window_geometry(Display *display, Window window)
     {
         unsigned int border, depth;
-        Window root;
-        geometry_t g{};
+        Window       root;
+        geometry_t   g{};
 
         XGetGeometry(display, window, &root, &g.x, &g.y, &g.width, &g.height, &border, &depth);
         XTranslateCoordinates(display, window, DefaultRootWindow(display), 0, 0, &g.x, &g.y, &root);
@@ -172,9 +172,9 @@ namespace probe::graphics
 
     static Window xget_window_parent(Display *display, Window window)
     {
-        Window root, parent;
-        Window *children    = nullptr;
-        unsigned int number = 0;
+        Window                root, parent;
+        Window               *children = nullptr;
+        unsigned int          number   = 0;
         std::vector<window_t> ret;
 
         ::XQueryTree(display, window, &root, &parent, &children, &number);
@@ -208,9 +208,9 @@ namespace probe::graphics
 
     static std::vector<window_t> xget_window_children(Display *display, Window window)
     {
-        Window root, parent;
-        Window *children    = nullptr;
-        unsigned int number = 0;
+        Window                root, parent;
+        Window               *children = nullptr;
+        unsigned int          number   = 0;
         std::vector<window_t> ret;
 
         ::XQueryTree(display, window, &root, &parent, &children, &number);
@@ -242,9 +242,9 @@ namespace probe::graphics
         if (!display) return {};
         defer(::XCloseDisplay(display));
 
-        Window root_return, parent_return;
-        Window *top_windows = nullptr;
-        unsigned int number = 0;
+        Window       root_return, parent_return;
+        Window      *top_windows = nullptr;
+        unsigned int number      = 0;
         // The XQueryTree() function returns the root ID, the parent window ID, a pointer to the list of
         // children windows (NULL when there are no children), and the number of children in the list for
         // the specified window. The children are listed in current stacking order, from bottommost (first)
@@ -274,7 +274,7 @@ namespace probe::graphics
             ret.emplace_front(window);
 
             // children windows
-            auto children = xget_window_children(display, top_windows[i]); // top->bottom
+            auto       children = xget_window_children(display, top_windows[i]); // top->bottom
             geometry_t last_geometry{};
             std::for_each(children.rbegin(), children.rend(), [&](const auto& subwind) {
                 // ignore the children which completely cover their parent

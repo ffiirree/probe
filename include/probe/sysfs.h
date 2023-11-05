@@ -26,27 +26,27 @@ namespace probe::sys
 
     // retrive the <name, device_path, driver_path> of devices in '/sys/class/<cls>'
     PROBE_API std::vector<std::tuple<std::string, std::filesystem::path, std::filesystem::path>>
-    devices_by_class(const std::string& cls);
+              devices_by_class(const std::string& cls);
 
     // retrive the <device_path, driver_path> /sys/class/<cls>/<name>
     PROBE_API std::pair<std::filesystem::path, std::filesystem::path>
-    device_by_class(const std::string& cls, const std::string& name);
+              device_by_class(const std::string& cls, const std::string& name);
 
     // guess bus type by the driver path of device
     PROBE_API std::string guess_bus(const std::string& path);
 
     // pci devices
-    struct pci_device_t 
+    struct pci_device_t
     {
-        uint32_t class_id{};
-        uint32_t vendor_id{};
-        uint32_t product_id{};
+        uint32_t    class_id{};
+        uint32_t    vendor_id{};
+        uint32_t    product_id{};
         std::string bus_info{};
         std::string device_path{};
         std::string driver_path{};
     };
 
-    PROBE_API std::vector<pci_device_t> pci_devices(uint32_t=0);
+    PROBE_API std::vector<pci_device_t> pci_devices(uint32_t = 0);
 } // namespace probe::sys
 
 #endif //! PROBE_SYSFS_H

@@ -36,10 +36,10 @@ namespace probe::media
 
     struct device_t
     {
-        std::string name{};        // utf-8, linux: like 'UVC Camera (046d:081b)'
-        std::string id{};          // utf-8, linux: like '/dev/video0'
-        std::string description{}; // utf-8
-        device_type_t type{};
+        std::string    name{};        // utf-8, linux: like 'UVC Camera (046d:081b)'
+        std::string    id{};          // utf-8, linux: like '/dev/video0'
+        std::string    description{}; // utf-8
+        device_type_t  type{};
         device_state_t state{};
     };
 

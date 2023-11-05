@@ -14,7 +14,7 @@ struct is_bitmask_enum<T, std::enable_if_t<sizeof(T::__ENABLE_BITMASK_OPERATORS_
 
 template<class Enum>
 concept Bitmask = requires {
-    is_bitmask_enum<Enum>::value && std::is_enum_v<Enum> &&
+    is_bitmask_enum<Enum>::value&& std::is_enum_v<Enum> &&
         !std::is_convertible_v<Enum, std::underlying_type_t<Enum>>;
 };
 

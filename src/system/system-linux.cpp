@@ -212,11 +212,11 @@ namespace probe::system
     {
         switch (desktop()) {
         case desktop_t::Unity:
-        case desktop_t::GNOME: return gnome_version();
+        case desktop_t::GNOME:    return gnome_version();
         case desktop_t::Cinnamon: return cinnamon_version();
-        case desktop_t::KDE: return kde_version();
+        case desktop_t::KDE:      return kde_version();
         // TODO:
-        default: return {};
+        default:                  return {};
         }
     }
 } // namespace probe::system
@@ -267,7 +267,7 @@ namespace probe::system
 static probe::version_t gnome_version()
 {
     probe::version_t version{};
-    std::string filename{};
+    std::string      filename{};
 
     if (std::filesystem::exists("/usr/share/gnome/gnome-version.xml")) {
         filename = "/usr/share/gnome/gnome-version.xml";
@@ -322,7 +322,7 @@ static probe::version_t kde_version()
 {
     probe::version_t ver{};
     // KDE 5
-    probe::util::exec_sync({ "kf5-config", "--version" }, [&](const std::string& line){
+    probe::util::exec_sync({ "kf5-config", "--version" }, [&](const std::string& line) {
         if (std::regex_search(line, std::regex("KDE Frameworks"))) {
             ver = probe::to_version(line);
             return false;

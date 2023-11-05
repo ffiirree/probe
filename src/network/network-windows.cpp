@@ -60,7 +60,7 @@ namespace probe::network
     std::string hostname()
     {
         FIXED_INFO *info{};
-        DWORD size{};
+        DWORD       size{};
         if (::GetNetworkParams(nullptr, &size) == ERROR_BUFFER_OVERFLOW) {
             info = reinterpret_cast<FIXED_INFO *>(malloc(size));
             if (::GetNetworkParams(info, &size) != NO_ERROR) {
@@ -79,9 +79,9 @@ namespace probe::network
         std::string driver{};
         std::string driver_version{};
         std::string hardware_id{};
-        bus_type_t bus{};
+        bus_type_t  bus{};
         std::string bus_info{};
-        uint32_t vendor_id{};
+        uint32_t    vendor_id{};
         std::string product{};
     };
 
@@ -92,7 +92,7 @@ namespace probe::network
         if (INVALID_HANDLE_VALUE == dev_set) return {};
         defer(::SetupDiDestroyDeviceInfoList(dev_set));
 
-        SP_DEVINFO_DATA info{ .cbSize = sizeof(SP_DEVINFO_DATA) };
+        SP_DEVINFO_DATA                          info{ .cbSize = sizeof(SP_DEVINFO_DATA) };
         std::map<std::string, net_device_info_t> pairs{};
 
         for (DWORD idx = 0; ::SetupDiEnumDeviceInfo(dev_set, idx, &info); ++idx) {
@@ -162,7 +162,7 @@ namespace probe::network
         defer(free(infos));
 
         std::vector<adapter_t> ret{};
-        auto dmmap = device_mfg_mapping();
+        auto                   dmmap = device_mfg_mapping();
 
         for (auto info = infos; info; info = info->Next) {
             // ignore the software loopback adapter

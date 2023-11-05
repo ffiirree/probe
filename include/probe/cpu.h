@@ -33,23 +33,23 @@ namespace probe::cpu
     struct quantities_t
     {
         // Hyperthreads / Logical processors.
-        uint32_t logical;
+        uint32_t logical{};
         // Physical "Cores".
-        uint32_t physical;
+        uint32_t physical{};
         // Physical CPU units/packages/sockets.
-        uint32_t packages;
+        uint32_t packages{};
     };
 
     struct cpu_info_t
     {
-        std::string name;
-        vendor_t vendor;
-        architecture_t arch;
+        std::string    name{};
+        vendor_t       vendor{};
+        architecture_t arch{};
 
-        endianness_t endianness;
+        endianness_t endianness{};
         // base speed
-        uint64_t frequency;
-        quantities_t quantities;
+        uint64_t     frequency{};
+        quantities_t quantities{};
     };
 
     enum class cache_type_t
@@ -62,11 +62,11 @@ namespace probe::cpu
 
     struct cache_t
     {
-        int32_t level;
-        int32_t associativity;
-        uint64_t line_size;
-        uint64_t size;
-        cache_type_t type;
+        int32_t      level{};
+        int32_t      associativity{};
+        uint64_t     line_size{};
+        uint64_t     size{};
+        cache_type_t type{};
     };
 
     PROBE_API architecture_t architecture();

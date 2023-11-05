@@ -11,12 +11,12 @@ namespace probe::graphics
     {
         std::array<char, 256> arr{};
 
-        HKEY key, subkey, edid_key;
+        HKEY         key, subkey, edid_key;
         std::wstring key_str = LR"(SYSTEM\CurrentControlSet\Enum\DISPLAY\)" + probe::util::to_utf16(name);
         if (::RegOpenKeyEx(HKEY_LOCAL_MACHINE, key_str.c_str(), 0, KEY_READ, &key) == ERROR_SUCCESS) {
-            DWORD subkey_size = MAX_PATH;
+            DWORD    subkey_size = MAX_PATH;
             FILETIME ft;
-            WCHAR subkey_str[MAX_PATH];
+            WCHAR    subkey_str[MAX_PATH];
             for (DWORD idx = 0;
                  !::RegEnumKeyEx(key, idx, subkey_str, &subkey_size, nullptr, nullptr, nullptr, &ft);
                  ++idx, subkey_size = MAX_PATH) {

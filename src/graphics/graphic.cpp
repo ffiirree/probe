@@ -122,14 +122,12 @@ namespace probe
 
     std::string to_string(graphics::orientation_t o)
     {
-        // clang-format off
         switch (o) {
-        case graphics::orientation_t::rotate_0:     return "Landscape";
-        case graphics::orientation_t::rotate_90:    return "Portrait";
-        case graphics::orientation_t::rotate_180:   return "Landscape (flipped)";
-        case graphics::orientation_t::rotate_270:   return "Portrait (flipped)";
-        default:                                    return "Unknown";
+        case graphics::orientation_t::rotate_0:   return "Landscape";
+        case graphics::orientation_t::rotate_90:  return "Portrait";
+        case graphics::orientation_t::rotate_180: return "Landscape (flipped)";
+        case graphics::orientation_t::rotate_270: return "Portrait (flipped)";
+        default:                                  return "Unknown";
         }
-        // clang-format on
     }
 } // namespace probe

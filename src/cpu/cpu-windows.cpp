@@ -68,7 +68,7 @@ namespace probe::cpu
 
             case RelationProcessorPackage: q.packages++; break;
 
-            default: break;
+            default:                       break;
             }
         }
 

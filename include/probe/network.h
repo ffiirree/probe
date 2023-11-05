@@ -73,7 +73,7 @@ namespace probe::network
     struct adapter_t
     {
         std::string name{};
-        vendor_t vendor_id{};         // PCI: vendor id
+        vendor_t    vendor_id{};      // PCI: vendor id
         std::string product{};        // PCI: product name
         std::string instance_id{};    // Windows: Device instance ID, Device ID + Instance ID + UniqueID
         std::string id{};             // Windows: adapter name, linux: device path
@@ -81,23 +81,23 @@ namespace probe::network
         std::string interface_guid{}; // Windows: interface guid
         std::string description{};
         std::string manufacturer{};   // Windows:
-        bool enabled{};
-        bus_type_t bus{};
+        bool        enabled{};
+        bus_type_t  bus{};
         std::string bus_info{};
         std::string driver{};
         std::string driver_version{};
-        bool is_virtual{}; // guessed by physical address and the description (if contains "virtual")
-        if_type_t type{};
+        bool        is_virtual{}; // guessed by physical address and the description (if contains "virtual")
+        if_type_t   type{};
         std::string physical_address{}; // MAC
-        bool dhcp_enabled{};
-        uint64_t mtu{};
+        bool        dhcp_enabled{};
+        uint64_t    mtu{};
         std::vector<std::string> ipv4_addresses{};
         std::vector<std::string> ipv6_addresses{};
-        std::string dhcpv4_server{};
-        std::string dhcpv6_server{};
+        std::string              dhcpv4_server{};
+        std::string              dhcpv6_server{};
         std::vector<std::string> ipv4_gateways{};
         std::vector<std::string> ipv6_gateways{};
-        std::string dns_suffix{};
+        std::string              dns_suffix{};
         std::vector<std::string> ipv4_dns_servers{};
         std::vector<std::string> ipv6_dns_servers{};
     };

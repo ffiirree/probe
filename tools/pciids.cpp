@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
     std::map<std::string, std::string> devices{};
     std::map<std::string, std::string> subsystems{};
 
-    state_t state = state_t::STATE_VENDOR;
+    state_t     state = state_t::STATE_VENDOR;
     std::string vid{};
     std::string did{};
     for (std::string line{}; std::getline(fd, line);) {
@@ -147,7 +147,7 @@ int main(int argc, char *argv[])
         case STATE_CLASS | LEVEL_1: break;
         case STATE_CLASS | LEVEL_2: break;
 
-        default: std::cerr << "unknown state"; break;
+        default:                    std::cerr << "unknown state"; break;
         }
     }
 

@@ -80,7 +80,7 @@ namespace probe::time
         }
 
     private:
-        std::thread thread_{};
+        std::thread       thread_{};
         std::atomic<bool> running_{ false };
     };
 } // namespace probe::time

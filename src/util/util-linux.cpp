@@ -58,7 +58,7 @@ namespace probe::util
 
     std::vector<std::string> exec_sync(const std::vector<const char *>& cmd)
     {
-        char buffer[4'096];
+        char                     buffer[4'096];
         std::vector<std::string> ret{};
 
         auto pp = pipe_open(cmd);
@@ -74,7 +74,7 @@ namespace probe::util
         return ret;
     }
 
-    void exec_sync(const std::vector<const char *>& args,
+    void exec_sync(const std::vector<const char *>&               args,
                    const std::function<bool(const std::string&)>& callback)
     {
         auto pp = pipe_open(args);

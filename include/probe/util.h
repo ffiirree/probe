@@ -47,7 +47,7 @@ namespace probe::util
     // read all to a string
     PROBE_API std::string fread(const std::string&);
     // per line
-    PROBE_API void fread(const std::string&, const std::function<bool(const std::string&)>&);
+    PROBE_API void        fread(const std::string&, const std::function<bool(const std::string&)>&);
 
     // string to integer
     PROBE_API std::optional<int32_t> to_32i(const std::string&, int = 10) noexcept;
@@ -80,16 +80,16 @@ namespace probe::util::registry
     public:
         PROBE_API ~RegistryListener() override { stop(); }
 
-        PROBE_API int listen(const std::any&, const std::function<void(const std::any&)>&) override;
+        PROBE_API int  listen(const std::any&, const std::function<void(const std::any&)>&) override;
         PROBE_API void stop() override;
 
         PROBE_API bool running() override { return running_; }
 
     private:
-        HKEY key_;
-        HANDLE STOP_EVENT{ nullptr };
-        HANDLE NOTIFY_EVENT{ nullptr };
-        std::thread thread_;
+        HKEY              key_;
+        HANDLE            STOP_EVENT{ nullptr };
+        HANDLE            NOTIFY_EVENT{ nullptr };
+        std::thread       thread_;
         std::atomic<bool> running_{ false };
     };
 } // namespace probe::util::registry
@@ -113,7 +113,7 @@ namespace probe::util::setup
 namespace probe::util
 {
     PROBE_API std::pair<FILE *, pid_t> pipe_open(std::vector<const char *>);
-    PROBE_API void pipe_close(std::pair<FILE *, pid_t>);
+    PROBE_API void                     pipe_close(std::pair<FILE *, pid_t>);
 
     PROBE_API std::vector<std::string> exec_sync(const std::vector<const char *>&);
 
@@ -125,15 +125,15 @@ namespace probe::util
     public:
         PROBE_API ~PipeListener() override { stop(); }
 
-        PROBE_API int listen(const std::any&, const std::function<void(const std::any&)>&) override;
+        PROBE_API int  listen(const std::any&, const std::function<void(const std::any&)>&) override;
         PROBE_API void stop() override;
 
         PROBE_API bool running() override { return running_; }
 
     private:
         std::pair<FILE *, pid_t> pipe_{};
-        std::thread thread_;
-        std::atomic<bool> running_{ false };
+        std::thread              thread_;
+        std::atomic<bool>        running_{ false };
     };
 } // namespace probe::util
 

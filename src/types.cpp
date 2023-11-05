@@ -164,53 +164,51 @@ namespace probe
     std::string bus_cast(bus_type_t bus)
     {
         using enum bus_type_t;
-        // clang-format off
-        switch(bus) {
-        case AC97:          return "AC97";
-        case ACPI:          return "ACPI";
-        case Auxiliary:     return "Auxiliary";
-        case ATA:           return "ATA";
-        case ATAPI:         return "ATAPI";
-        case CAN:           return "CAN";
-        case CEC:           return "CEC";
-        case CPU:           return "CPU";
-        case EISA:          return "EISA";
-        case Fibre:         return "Fibre";
+        switch (bus) {
+        case AC97:              return "AC97";
+        case ACPI:              return "ACPI";
+        case Auxiliary:         return "Auxiliary";
+        case ATA:               return "ATA";
+        case ATAPI:             return "ATAPI";
+        case CAN:               return "CAN";
+        case CEC:               return "CEC";
+        case CPU:               return "CPU";
+        case EISA:              return "EISA";
+        case Fibre:             return "Fibre";
         case FileBackedVirtual: return "FileBackedVirtual";
-        case GPIO:          return "GPIO";
-        case HDAudio:       return "HDAudio";
-        case HID:           return "HID";
-        case IEEE1394:      return "1394";
-        case I2C:           return "I2C";
-        case IDE:           return "IDE";
-        case ISA:           return "ISA";
-        case iSCSI:         return "iSCSI";
-        case MAX:           return "MAX";
-        case MDIO:          return "MDIO";
-        case MMC:           return "MMC";
-        case NVMe:          return "NVMe";
-        case NVMEM:         return "NVMEM";
-        case PCI:           return "PCI";
-        case PCIe:          return "PCIe";
-        case PnP:           return "PnP";
-        case RAID:          return "RAID";
-        case SAS:           return "SAS";
-        case SATA:          return "SATA";
-        case SCM:           return "SCM";
-        case SCSI:          return "SCSI";
-        case SDIO:          return "SDIO";
-        case Spaces:        return "Spaces";
-        case SPI:           return "SPI";
-        case SSA:           return "SSA";
-        case UFS:           return "UFS";
-        case USB:           return "USB";
-        case Virtio:        return "Virtio";
-        case Virtual:       return "Virtual";
-        case VME:           return "VME";
-        case Xen:           return "Xen";
+        case GPIO:              return "GPIO";
+        case HDAudio:           return "HDAudio";
+        case HID:               return "HID";
+        case IEEE1394:          return "1394";
+        case I2C:               return "I2C";
+        case IDE:               return "IDE";
+        case ISA:               return "ISA";
+        case iSCSI:             return "iSCSI";
+        case MAX:               return "MAX";
+        case MDIO:              return "MDIO";
+        case MMC:               return "MMC";
+        case NVMe:              return "NVMe";
+        case NVMEM:             return "NVMEM";
+        case PCI:               return "PCI";
+        case PCIe:              return "PCIe";
+        case PnP:               return "PnP";
+        case RAID:              return "RAID";
+        case SAS:               return "SAS";
+        case SATA:              return "SATA";
+        case SCM:               return "SCM";
+        case SCSI:              return "SCSI";
+        case SDIO:              return "SDIO";
+        case Spaces:            return "Spaces";
+        case SPI:               return "SPI";
+        case SSA:               return "SSA";
+        case UFS:               return "UFS";
+        case USB:               return "USB";
+        case Virtio:            return "Virtio";
+        case Virtual:           return "Virtual";
+        case VME:               return "VME";
+        case Xen:               return "Xen";
 
-        default: return "Unknown";
+        default:                return "Unknown";
         }
-        // clang-format on
     }
 } // namespace probe

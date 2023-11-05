@@ -206,7 +206,7 @@ namespace probe::graphics
     {
         // title
         std::wstring name;
-        auto name_len = ::GetWindowTextLength(hwnd);
+        auto         name_len = ::GetWindowTextLength(hwnd);
         if (name_len > 0) {
             name.resize(name_len + 1, {});
 
@@ -215,7 +215,7 @@ namespace probe::graphics
 
         // classname
         std::wstring classname(256, {});
-        auto cn_len = ::GetClassName(hwnd, classname.data(), 256);
+        auto         cn_len = ::GetClassName(hwnd, classname.data(), 256);
 
         auto u8name = probe::util::trim(probe::util::to_utf8(name.c_str(), name_len));
         return {
@@ -255,7 +255,7 @@ namespace probe::graphics
     static auto process_of(HWND hwnd)
     {
         // process
-        DWORD pid = 0;
+        DWORD       pid = 0;
         std::string pname{};
         if (::GetWindowThreadProcessId(hwnd, &pid) != 0) {
             if (pid != 0 && ::GetCurrentProcessId() != pid) {
@@ -385,7 +385,7 @@ namespace probe::graphics
 
             // children
             if (any(flags & window_filter_t::children)) {
-                auto children = children_of(hwnd);
+                auto       children = children_of(hwnd);
                 geometry_t last_rect{};
                 std::for_each(children.rbegin(), children.rend(), [&](const auto& subwind) {
                     // ignore the children which completely cover their parent

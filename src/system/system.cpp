@@ -6,34 +6,30 @@ namespace probe
 
     std::string to_string(system::desktop_t de)
     {
-        // clang-format off
         switch (de) {
-        case system::desktop_t::Windows:        return "Windows";
-        case system::desktop_t::KDE:            return "KDE";
-        case system::desktop_t::GNOME:          return "GNOME";
-        case system::desktop_t::Unity:          return "Unity";
-        case system::desktop_t::MATE:           return "MATE";
-        case system::desktop_t::Cinnamon:       return "Cinnamon";
-        case system::desktop_t::Xfce:           return "Xfce";
-        case system::desktop_t::DeepinDE:       return "DeepinDE";
-        case system::desktop_t::Enlightenment:  return "Enlightenment";
-        case system::desktop_t::LXQT:           return "LXQT";
-        case system::desktop_t::Lumina:         return "Lumina";
+        case system::desktop_t::Windows:       return "Windows";
+        case system::desktop_t::KDE:           return "KDE";
+        case system::desktop_t::GNOME:         return "GNOME";
+        case system::desktop_t::Unity:         return "Unity";
+        case system::desktop_t::MATE:          return "MATE";
+        case system::desktop_t::Cinnamon:      return "Cinnamon";
+        case system::desktop_t::Xfce:          return "Xfce";
+        case system::desktop_t::DeepinDE:      return "DeepinDE";
+        case system::desktop_t::Enlightenment: return "Enlightenment";
+        case system::desktop_t::LXQT:          return "LXQT";
+        case system::desktop_t::Lumina:        return "Lumina";
 
-        default:                                return "Unknown";
+        default:                               return "Unknown";
         }
-        // clang-format on
     }
 
     std::string to_string(system::window_system_t ws)
     {
-        // clang-format off
         switch (ws) {
-        case system::window_system_t::Windows:  return "Windows";
-        case system::window_system_t::X11:      return "X11";
-        case system::window_system_t::Wayland:  return "Wayland";
-        default:                                return "Unknown";
+        case system::window_system_t::Windows: return "Windows";
+        case system::window_system_t::X11:     return "X11";
+        case system::window_system_t::Wayland: return "Wayland";
+        default:                               return "Unknown";
         }
-        // // clang-format on
     }
 } // namespace probe

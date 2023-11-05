@@ -29,7 +29,7 @@ namespace probe::process
     // /proc/uptime
     uint64_t uptime()
     {
-        auto uptime_fd = ::fopen("/proc/uptime", "r");
+        auto   uptime_fd = ::fopen("/proc/uptime", "r");
         double uptime{};
         if (uptime_fd) {
             defer(::fclose(uptime_fd));
@@ -46,9 +46,9 @@ namespace probe::process
 
     pstat_t parse_stat(const std::string& pid)
     {
-        auto stat_fd = ::fopen(("/proc/" + pid + "/stat").c_str(), "r");
+        auto    stat_fd = ::fopen(("/proc/" + pid + "/stat").c_str(), "r");
         pstat_t s{};
-        char buffer[512]{};
+        char    buffer[512]{};
 
         if (stat_fd) {
             defer(::fclose(stat_fd));
@@ -85,8 +85,8 @@ namespace probe::process
         }
 
         std::string comm = buffer;
-        auto fpos        = comm.find_first_of("(");
-        auto lpos        = comm.find_last_of(")");
+        auto        fpos = comm.find_first_of("(");
+        auto        lpos = comm.find_last_of(")");
         if (fpos != std::string::npos && lpos != std::string::npos) {
             s.comm = comm.substr(fpos + 1, lpos - fpos - 1);
         }
@@ -99,7 +99,7 @@ namespace probe::process
 
     pio_t parse_io(const std::string& pid)
     {
-        auto io_fd = ::fopen(("/proc/" + pid + "/io").c_str(), "r");
+        auto  io_fd = ::fopen(("/proc/" + pid + "/io").c_str(), "r");
         pio_t io{};
 
         if (io_fd) {
@@ -132,7 +132,7 @@ namespace probe::process
 
     pstatm_t parse_statm(const std::string& pid)
     {
-        auto statm_fd = ::fopen(("/proc/" + pid + "/statm").c_str(), "r");
+        auto     statm_fd = ::fopen(("/proc/" + pid + "/statm").c_str(), "r");
         pstatm_t m{};
 
         if (statm_fd) {

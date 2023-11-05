@@ -31,20 +31,20 @@ namespace probe::process
         int64_t pid{};
         int64_t ppid{}; // pid of parent process
 
-        int state{};    // linux only
+        int  state{};   // linux only
         long priority{};
 
         std::string name{};
         std::string path{};
-        std::string cmdline{}; // linux only
-        uint64_t starttime{};  // ns
-        uint64_t nb_threads{};
+        std::string cmdline{};   // linux only
+        uint64_t    starttime{}; // ns
+        uint64_t    nb_threads{};
         std::string user{};
     };
 
     struct thread_t
     {
-        uint64_t tid{};
+        uint64_t    tid{};
         std::string name{};
     };
 
@@ -72,15 +72,15 @@ namespace probe::process
 #ifdef __linux__
     struct pstat_t
     {
-        int pid;          // The process ID.
-        std::string comm; // The filename of the executable, in parentheses.
-        char state;
-        int ppid;         // The PID of the parent of this process.
-        int pgrp;         // The process group ID of the process.
-        int session;      // The session ID of the process.
-        int tty_nr;       // The controlling terminal of the process.
+        int         pid;     // The process ID.
+        std::string comm;    // The filename of the executable, in parentheses.
+        char        state;
+        int         ppid;    // The PID of the parent of this process.
+        int         pgrp;    // The process group ID of the process.
+        int         session; // The session ID of the process.
+        int         tty_nr;  // The controlling terminal of the process.
         int tpgid; // The ID of the foreground process group of the controlling terminal of the process.
-        unsigned int flags;   // The kernel flags word of the process.
+        unsigned int  flags;  // The kernel flags word of the process.
         unsigned long minflt; // The number of minor faults the process has made which have not required
                               // loading a memory page from disk.
         unsigned long
@@ -98,24 +98,24 @@ namespace probe::process
         long priority;
         long nice;   // The nice value, a value in the range 19 (low priority) to -20 (high priority).
         long nb_threads;
-        unsigned long long starttime; // The time the process started after system boot.
-        unsigned long vsize;          // Virtual memory size in bytes.
-        long rss;                     // Resident Set Size: number of pages the process has in real memory.
-        unsigned long rsslim;         // Current soft limit in bytes on the rss of the process;
-        unsigned long startcode;      // The address above which program text can run.
-        unsigned long endcode;        // The address below which program text can run.
-        unsigned long startstack;     // The address of the start (i.e., bottom) of the stack.
-        unsigned long kstkesp;    // The current value of ESP (stack pointer), as found in the kernel stack
-                                  // page for the process.
-        unsigned long kstkeip;    // The current EIP (instruction pointer).
-        unsigned long wchan;      // This is the "channel" in which the process is waiting
-        int exit_signal;          // Signal to be sent to parent when we die.
-        int processor;            //  CPU number last executed on.
-        unsigned int rt_priority; // Real-time scheduling priority
-        unsigned int policy;      // Scheduling policy
+        unsigned long long starttime;  // The time the process started after system boot.
+        unsigned long      vsize;      // Virtual memory size in bytes.
+        long               rss;        // Resident Set Size: number of pages the process has in real memory.
+        unsigned long      rsslim;     // Current soft limit in bytes on the rss of the process;
+        unsigned long      startcode;  // The address above which program text can run.
+        unsigned long      endcode;    // The address below which program text can run.
+        unsigned long      startstack; // The address of the start (i.e., bottom) of the stack.
+        unsigned long kstkesp;     // The current value of ESP (stack pointer), as found in the kernel stack
+                                   // page for the process.
+        unsigned long kstkeip;     // The current EIP (instruction pointer).
+        unsigned long wchan;       // This is the "channel" in which the process is waiting
+        int           exit_signal; // Signal to be sent to parent when we die.
+        int           processor;   //  CPU number last executed on.
+        unsigned int  rt_priority; // Real-time scheduling priority
+        unsigned int  policy;      // Scheduling policy
         unsigned long long blkio_ticks; // Aggregated block I/O delays, measured in clock ticks
-        unsigned long guest_time;       // Guest time of the process.
-        long cguest_time;
+        unsigned long      guest_time;  // Guest time of the process.
+        long               cguest_time;
     };
 
     struct pio_t
@@ -148,11 +148,11 @@ namespace probe::process
         unsigned long umask; // Process umask, expressed in octal with a leading zero;
 #endif
         pstate_t state;
-        int tgid;            // Thread group ID
-        int ngid;            // NUMA group ID
-        int pid;             // Thread ID
-        int ppid;            // PID of parent process
-        int tracer_pid;      // PID of process tracing this process
+        int      tgid;       // Thread group ID
+        int      ngid;       // NUMA group ID
+        int      pid;        // Thread ID
+        int      ppid;       // PID of parent process
+        int      tracer_pid; // PID of process tracing this process
 
         uid_t ruid;          // Real, effective, saved set, and filesystem UIDs
         uid_t euid;
@@ -164,8 +164,8 @@ namespace probe::process
         gid_t sgid;
         gid_t fgid;
 
-        long fd_size;       //  Number of file descriptor slots currently allocated.
-        std::string groups; // Supplementary group list.
+        long        fd_size; //  Number of file descriptor slots currently allocated.
+        std::string groups;  // Supplementary group list.
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 1, 0)
         int nstgid; // Thread group ID (i.e., PID) in each of the PID namespaces of which [pid] is a member
@@ -267,7 +267,7 @@ namespace probe::process
 namespace probe
 {
     PROBE_API std::string to_string(process::pstate_t);
-    PROBE_API char to_char(process::pstate_t);
+    PROBE_API char        to_char(process::pstate_t);
 } // namespace probe
 
 #endif //! PROBE_PROCESS_H

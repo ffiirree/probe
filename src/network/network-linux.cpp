@@ -116,8 +116,8 @@ namespace probe::network
                 auto ifv6_fd = ::fopen("/proc/net/if_inet6", "r");
                 if (ifv6_fd) {
                     unsigned char ipv6[16]{};
-                    char dname[IFNAMSIZ]{};
-                    unsigned int if_idx{}, plen{}, scope{};
+                    char          dname[IFNAMSIZ]{};
+                    unsigned int  if_idx{}, plen{}, scope{};
 
                     while (20 == ::fscanf(ifv6_fd,
                                           "%2hhx%2hhx%2hhx%2hhx%2hhx%2hhx%2hhx%2hhx%2hhx%2hhx%2hhx%2hhx"
@@ -159,7 +159,7 @@ namespace probe::network
 
                     // product
                     uint32_t product_id{};
-                    auto product_fd = ::fopen((device_path / "device").c_str(), "r");
+                    auto     product_fd = ::fopen((device_path / "device").c_str(), "r");
                     if (product_fd) {
                         if (::fscanf(product_fd, "%x", &product_id) == 1) {
                             ret[i].product = probe::product_name(vendor_id, product_id);

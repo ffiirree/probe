@@ -9,8 +9,8 @@ namespace probe::memory
 {
     struct memory_status_t
     {
-        uint64_t avail; // bytes
-        uint64_t total; // bytes
+        uint64_t avail{}; // bytes
+        uint64_t total{}; // bytes
     };
 
     PROBE_API memory_status_t status();

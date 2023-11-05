@@ -14,15 +14,15 @@ namespace probe::power
     // https://learn.microsoft.com/en-us/windows/win32/power/enumerating-battery-devices
     static void batteries(std::vector<supply_t>& list)
     {
-        auto set =
-            ::SetupDiGetClassDevs(&GUID_DEVCLASS_BATTERY, nullptr, nullptr, DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
+        auto set = ::SetupDiGetClassDevs(&GUID_DEVCLASS_BATTERY, nullptr, nullptr,
+                                         DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
 
         if (set == INVALID_HANDLE_VALUE) return;
         defer(::SetupDiDestroyDeviceInfoList(set));
 
-        SP_DEVICE_INTERFACE_DATA idevice{ .cbSize = sizeof(SP_DEVICE_INTERFACE_DATA) };
+        SP_DEVICE_INTERFACE_DATA         idevice{ .cbSize = sizeof(SP_DEVICE_INTERFACE_DATA) };
         PSP_DEVICE_INTERFACE_DETAIL_DATA idevice_detail{};
-        DWORD size{};
+        DWORD                            size{};
 
         for (DWORD idx = 0;
              ::SetupDiEnumDeviceInterfaces(set, nullptr, &GUID_DEVCLASS_BATTERY, idx, &idevice); ++idx) {

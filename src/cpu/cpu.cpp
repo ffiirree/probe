@@ -9,8 +9,8 @@ namespace probe::cpu
 {
     endianness_t endianness()
     {
-        const uint16_t test = 0xFF00;
-        const auto result   = *static_cast<const std::uint8_t *>(static_cast<const void *>(&test));
+        const uint16_t test   = 0xFF00;
+        const auto     result = *static_cast<const std::uint8_t *>(static_cast<const void *>(&test));
 
         return (result == 0xFF) ? endianness_t::big : endianness_t::little;
     }
@@ -181,109 +181,101 @@ namespace probe
 {
     std::string to_string(cpu::architecture_t arch)
     {
-        // clang-format off
-        switch(arch) {
-        case cpu::architecture_t::x86:      return "x86";
-        case cpu::architecture_t::ia64:     return "ia64";
-        case cpu::architecture_t::x64:      return "x64";
-        case cpu::architecture_t::arm:      return "arm";
-        case cpu::architecture_t::arm64:    return "arm64";
+        switch (arch) {
+        case cpu::architecture_t::x86:     return "x86";
+        case cpu::architecture_t::ia64:    return "ia64";
+        case cpu::architecture_t::x64:     return "x64";
+        case cpu::architecture_t::arm:     return "arm";
+        case cpu::architecture_t::arm64:   return "arm64";
         case cpu::architecture_t::unknown:
-        default:                            return "unknown";
+        default:                           return "unknown";
         }
-        // clang-format on
     }
 
     std::string to_string(cpu::endianness_t e)
     {
-        // clang-format off
-        switch(e) {
-        case cpu::endianness_t::little:     return "little";
-        case cpu::endianness_t::big:        return "big";
-        default:                            return "unknown";
+        switch (e) {
+        case cpu::endianness_t::little: return "little";
+        case cpu::endianness_t::big:    return "big";
+        default:                        return "unknown";
         }
-        // clang-format on
     }
 
     std::string to_string(cpu::cache_type_t type)
     {
-        // clang-format off
-        switch(type) {
-        case cpu::cache_type_t::unified:    return "Unified";
-        case cpu::cache_type_t::instruction:return "Instruction";
-        case cpu::cache_type_t::data:       return "Data";
-        case cpu::cache_type_t::trace:      return "Trace";
+        switch (type) {
+        case cpu::cache_type_t::unified:     return "Unified";
+        case cpu::cache_type_t::instruction: return "Instruction";
+        case cpu::cache_type_t::data:        return "Data";
+        case cpu::cache_type_t::trace:       return "Trace";
 
-        default:                            return "unknown";
+        default:                             return "unknown";
         }
-        // clang-format on
     }
 
     std::string to_string(cpu::feature_t is)
     {
-        // clang-format off
-        switch(is) {
-        case cpu::feature_t::amd_3dnow:     return "3dnow";
-        case cpu::feature_t::amd_3dnowext:  return "3dnowext";
-        case cpu::feature_t::abm:           return "abm";
-        case cpu::feature_t::adx:           return "adx";
-        case cpu::feature_t::aes:           return "aes";
-        case cpu::feature_t::avx:           return "avx";
-        case cpu::feature_t::avx2:          return "avx2";
-        case cpu::feature_t::avx512_cd:     return "avx512_cd";
-        case cpu::feature_t::avx512_bw:     return "avx512_bw";
-        case cpu::feature_t::avx512_dq:     return "avx512_dq";
-        case cpu::feature_t::avx512_er:     return "avx512_er";
-        case cpu::feature_t::avx512_f:      return "avx512_f";
-        case cpu::feature_t::avx512_ifma:   return "avx512_ifma";
-        case cpu::feature_t::avx512_pf:     return "avx512_pf";
-        case cpu::feature_t::avx512_vbmi:   return "avx512_vbmi";
-        case cpu::feature_t::avx512_vbmi2:  return "avx512_vbmi2";
-        case cpu::feature_t::avx512_vl:     return "avx512_vl";
-        case cpu::feature_t::bmi1:          return "bmi1";
-        case cpu::feature_t::bmi2:          return "bmi2";
-        case cpu::feature_t::clfsh:         return "clfsh";
-        case cpu::feature_t::cmov:          return "cmov";
-        case cpu::feature_t::cx8:           return "cx8";
-        case cpu::feature_t::cx16:          return "cx16";
-        case cpu::feature_t::erms:          return "erms";
-        case cpu::feature_t::f16c:          return "f16c";
-        case cpu::feature_t::fma:           return "fma";
-        case cpu::feature_t::fma4:          return "fma4";
-        case cpu::feature_t::fsgsbase:      return "fsgsbase";
-        case cpu::feature_t::fxsr:          return "fxsr";
-        case cpu::feature_t::hle:           return "hle";
-        case cpu::feature_t::invpcid:       return "invpcid";
-        // case cpu::feature_t::lzcnt:         return "lzcnt";
-        case cpu::feature_t::mmx:           return "mmx";
-        case cpu::feature_t::mmxext:        return "mmxext";
-        case cpu::feature_t::monitor:       return "monitor";
-        case cpu::feature_t::movbe:         return "movbe";
-        case cpu::feature_t::msr:           return "msr";
-        case cpu::feature_t::osxsave:       return "osxsave";
-        case cpu::feature_t::pclmulqdq:     return "pclmulqdq";
-        case cpu::feature_t::popcnt:        return "popcnt";
-        case cpu::feature_t::prefetchwt1:   return "prefetchwt1";
-        case cpu::feature_t::rdrnd:         return "rdrnd";
-        case cpu::feature_t::rdseed:        return "rdseed";
-        case cpu::feature_t::rdtscp:        return "rdtscp";
-        case cpu::feature_t::rtm:           return "rtm";
-        case cpu::feature_t::sep:           return "sep";
-        case cpu::feature_t::sha:           return "sha";
-        case cpu::feature_t::sse:           return "sse";
-        case cpu::feature_t::sse2:          return "sse2";
-        case cpu::feature_t::sse3:          return "sse3";
-        case cpu::feature_t::ssse3:         return "ssse3";
-        case cpu::feature_t::sse4_1:        return "sse4_1";
-        case cpu::feature_t::sse4_2:        return "sse4_2";
-        case cpu::feature_t::sse4a:         return "sse4a";
-        case cpu::feature_t::syscall:       return "syscall";
-        case cpu::feature_t::tbm:           return "tbm";
-        case cpu::feature_t::xop:           return "xop";
-        case cpu::feature_t::xsave:         return "xsave";
+        switch (is) {
+        case cpu::feature_t::amd_3dnow:    return "3dnow";
+        case cpu::feature_t::amd_3dnowext: return "3dnowext";
+        case cpu::feature_t::abm:          return "abm";
+        case cpu::feature_t::adx:          return "adx";
+        case cpu::feature_t::aes:          return "aes";
+        case cpu::feature_t::avx:          return "avx";
+        case cpu::feature_t::avx2:         return "avx2";
+        case cpu::feature_t::avx512_cd:    return "avx512_cd";
+        case cpu::feature_t::avx512_bw:    return "avx512_bw";
+        case cpu::feature_t::avx512_dq:    return "avx512_dq";
+        case cpu::feature_t::avx512_er:    return "avx512_er";
+        case cpu::feature_t::avx512_f:     return "avx512_f";
+        case cpu::feature_t::avx512_ifma:  return "avx512_ifma";
+        case cpu::feature_t::avx512_pf:    return "avx512_pf";
+        case cpu::feature_t::avx512_vbmi:  return "avx512_vbmi";
+        case cpu::feature_t::avx512_vbmi2: return "avx512_vbmi2";
+        case cpu::feature_t::avx512_vl:    return "avx512_vl";
+        case cpu::feature_t::bmi1:         return "bmi1";
+        case cpu::feature_t::bmi2:         return "bmi2";
+        case cpu::feature_t::clfsh:        return "clfsh";
+        case cpu::feature_t::cmov:         return "cmov";
+        case cpu::feature_t::cx8:          return "cx8";
+        case cpu::feature_t::cx16:         return "cx16";
+        case cpu::feature_t::erms:         return "erms";
+        case cpu::feature_t::f16c:         return "f16c";
+        case cpu::feature_t::fma:          return "fma";
+        case cpu::feature_t::fma4:         return "fma4";
+        case cpu::feature_t::fsgsbase:     return "fsgsbase";
+        case cpu::feature_t::fxsr:         return "fxsr";
+        case cpu::feature_t::hle:          return "hle";
+        case cpu::feature_t::invpcid:      return "invpcid";
+        // case cpu::feature_t::lzcnt:        return "lzcnt";
+        case cpu::feature_t::mmx:          return "mmx";
+        case cpu::feature_t::mmxext:       return "mmxext";
+        case cpu::feature_t::monitor:      return "monitor";
+        case cpu::feature_t::movbe:        return "movbe";
+        case cpu::feature_t::msr:          return "msr";
+        case cpu::feature_t::osxsave:      return "osxsave";
+        case cpu::feature_t::pclmulqdq:    return "pclmulqdq";
+        case cpu::feature_t::popcnt:       return "popcnt";
+        case cpu::feature_t::prefetchwt1:  return "prefetchwt1";
+        case cpu::feature_t::rdrnd:        return "rdrnd";
+        case cpu::feature_t::rdseed:       return "rdseed";
+        case cpu::feature_t::rdtscp:       return "rdtscp";
+        case cpu::feature_t::rtm:          return "rtm";
+        case cpu::feature_t::sep:          return "sep";
+        case cpu::feature_t::sha:          return "sha";
+        case cpu::feature_t::sse:          return "sse";
+        case cpu::feature_t::sse2:         return "sse2";
+        case cpu::feature_t::sse3:         return "sse3";
+        case cpu::feature_t::ssse3:        return "ssse3";
+        case cpu::feature_t::sse4_1:       return "sse4_1";
+        case cpu::feature_t::sse4_2:       return "sse4_2";
+        case cpu::feature_t::sse4a:        return "sse4a";
+        case cpu::feature_t::syscall:      return "syscall";
+        case cpu::feature_t::tbm:          return "tbm";
+        case cpu::feature_t::xop:          return "xop";
+        case cpu::feature_t::xsave:        return "xsave";
         case cpu::feature_t::unknown:
-        default:                            return "unknown";
+        default:                           return "unknown";
         }
-        // clang-format on
     }
 } // namespace probe

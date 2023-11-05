@@ -101,7 +101,7 @@ namespace probe::cpu
 
     static std::optional<unsigned long> file_read_lu(const std::filesystem::path& path)
     {
-        auto fd = ::fopen(path.c_str(), "r");
+        auto          fd = ::fopen(path.c_str(), "r");
         unsigned long value;
 
         if (fd) {
@@ -193,8 +193,8 @@ namespace probe::cpu
 
     std::vector<cache_t> cache(int l, cache_type_t t)
     {
-        auto all = caches();
-        std::vector<cache_t> ret;
+        auto                 all = caches();
+        std::vector<cache_t> ret{};
 
         for (const auto& c : all) {
             if (c.level == l && c.type == t) {

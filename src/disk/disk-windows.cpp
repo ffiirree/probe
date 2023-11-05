@@ -14,7 +14,7 @@ namespace probe::disk
 {
     static drive_t drive_info(const WCHAR *path)
     {
-        drive_t drive{ .path = probe::util::to_utf8(path) };
+        drive_t               drive{ .path = probe::util::to_utf8(path) };
         STORAGE_DEVICE_NUMBER number;
 
         // get the physical driver number
@@ -43,7 +43,7 @@ namespace probe::disk
         }
 
         // Storage Device Property
-        STORAGE_PROPERTY_QUERY query          = { StorageDeviceProperty, PropertyStandardQuery };
+        STORAGE_PROPERTY_QUERY    query       = { StorageDeviceProperty, PropertyStandardQuery };
         STORAGE_DESCRIPTOR_HEADER desc_header = { 0 };
         if (::DeviceIoControl(handle, IOCTL_STORAGE_QUERY_PROPERTY, &query, sizeof(STORAGE_PROPERTY_QUERY),
                               &desc_header, sizeof(STORAGE_DESCRIPTOR_HEADER), &bytes, nullptr)) {
@@ -143,9 +143,9 @@ namespace probe::disk
         if (INVALID_HANDLE_VALUE == device_set) return {};
         defer(::SetupDiDestroyDeviceInfoList(device_set));
 
-        SP_DEVICE_INTERFACE_DATA idevice{ .cbSize = sizeof(SP_DEVICE_INTERFACE_DATA) };
+        SP_DEVICE_INTERFACE_DATA         idevice{ .cbSize = sizeof(SP_DEVICE_INTERFACE_DATA) };
         PSP_DEVICE_INTERFACE_DETAIL_DATA idevice_detail{};
-        SP_DEVINFO_DATA info{ .cbSize = sizeof(SP_DEVINFO_DATA) };
+        SP_DEVINFO_DATA                  info{ .cbSize = sizeof(SP_DEVINFO_DATA) };
 
         DWORD size{};
         for (DWORD idx = 0;
@@ -165,7 +165,7 @@ namespace probe::disk
                 continue;
             }
 
-            auto drive = drive_info(idevice_detail->DevicePath);
+            auto drive        = drive_info(idevice_detail->DevicePath);
             drive.instance_id = probe::util::setup::device_instance_id(info.DevInst);
             drives.push_back(drive);
         }
@@ -181,7 +181,7 @@ namespace probe::disk
         if (INVALID_HANDLE_VALUE == handle) return {};
         defer(::CloseHandle(handle); handle = INVALID_HANDLE_VALUE);
 
-        std::vector<partition_t> ret;
+        std::vector<partition_t>     ret{};
         PDRIVE_LAYOUT_INFORMATION_EX layout{};
 
         //
@@ -261,13 +261,13 @@ namespace probe::disk
             // info
             std::array<WCHAR, MAX_PATH> label{};
             std::array<WCHAR, MAX_PATH> fsname{};
-            DWORD serial{};
+            DWORD                       serial{};
             ::GetVolumeInformation(path.data(), label.data(), MAX_PATH, &serial, nullptr, nullptr,
                                    fsname.data(), MAX_PATH);
 
             // letter
             std::array<WCHAR, MAX_PATH> path_name{};
-            DWORD returned_size;
+            DWORD                       returned_size;
             ::GetVolumePathNamesForVolumeName(path.data(), path_name.data(), MAX_PATH, &returned_size);
 
             // spaces

@@ -45,8 +45,8 @@ namespace probe::system
         }
 
         char *ctx{};
-        auto token = strtok_s(&buildlabex.value()[0], ".", &ctx);
-        token      = strtok_s(nullptr, ".", &ctx);
+        auto  token = strtok_s(&buildlabex.value()[0], ".", &ctx);
+        token       = strtok_s(nullptr, ".", &ctx);
         return token ? std::strtoul(token, nullptr, 10) : 0;
     }
 

@@ -30,8 +30,8 @@ namespace probe
 
     struct PROBE_API geometry_t
     {
-        int32_t x{};
-        int32_t y{};
+        int32_t  x{};
+        int32_t  y{};
         uint32_t width{};
         uint32_t height{};
 
@@ -101,20 +101,20 @@ namespace probe::graphics
     {
         std::string name{};
         std::string id{};
-        uint64_t handle{};
+        uint64_t    handle{};
 
 #ifdef _WIN32
         std::string driver{}; // for registry
 #endif
 
         geometry_t geometry{};
-        double frequency{}; // Hz
+        double     frequency{};  // Hz
 
-        uint32_t bpp{};
-        uint32_t dpi{ 96 }; // logical dot per inch
+        uint32_t      bpp{};
+        uint32_t      dpi{ 96 }; // logical dot per inch
         orientation_t orientation{ orientation_t::landscape };
-        bool primary{ false };
-        double scale{ 1.0 };
+        bool          primary{ false };
+        double        scale{ 1.0 };
     };
 
     PROBE_API std::vector<display_t> displays();
@@ -151,20 +151,20 @@ namespace probe::graphics
 {
     struct edid_t
     {
-        std::string manufacturer;
-        uint16_t product_code;
-        uint32_t serial_number;
+        std::string manufacturer{};
+        uint16_t    product_code{};
+        uint32_t    serial_number{};
 
-        uint16_t year;
-        uint16_t week;
+        uint16_t year{};
+        uint16_t week{};
 
-        uint8_t version;
-        uint8_t revision;
+        uint8_t version{};
+        uint8_t revision{};
 
-        uint16_t hsize; // centimetres
-        uint16_t vsize; // centimetres
+        uint16_t hsize{}; // centimetres
+        uint16_t vsize{}; // centimetres
 
-        double gamma;
+        double gamma{};
     };
 
     PROBE_API std::array<char, 256> edid_of(const std::string&, const std::string& = {});
@@ -190,12 +190,12 @@ namespace probe::graphics
         std::string classname{}; // utf-8
 
         geometry_t geometry{};   // absolute coordinate
-        bool visible{};          //
+        bool       visible{};    //
 
         uint64_t handle{};       // window id, Linux: Window, Windows: HWND
         uint64_t parent{};       // handle of parent window
 
-        uint64_t pid{};          // process id
+        uint64_t    pid{};       // process id
         std::string pname{};     // process name
 
         uint64_t desktop{};      // index of the desktop, not used on Windows
