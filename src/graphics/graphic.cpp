@@ -91,7 +91,7 @@ namespace probe::graphics
         int32_t l = std::numeric_limits<int32_t>::max(), t = std::numeric_limits<int32_t>::max();
         int32_t r = std::numeric_limits<int32_t>::min(), b = std::numeric_limits<int32_t>::min();
 
-        for (auto& display : displays()) {
+        for (const auto& display : displays()) {
             if (l > display.geometry.x) l = display.geometry.x;
 
             if (t > display.geometry.y) t = display.geometry.y;
@@ -114,7 +114,7 @@ namespace probe::graphics
 
 namespace probe
 {
-    std::string to_string(geometry_t g)
+    std::string to_string(const geometry_t& g)
     {
         return "<<" + std::to_string(g.x) + ", " + std::to_string(g.y) + ">, " + std::to_string(g.width) +
                "x" + std::to_string(g.height) + ">";

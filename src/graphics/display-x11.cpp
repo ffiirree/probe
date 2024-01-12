@@ -14,20 +14,31 @@
 //   Wayland
 namespace probe::graphics
 {
-    static double calculate_frequency(XRRScreenResources *res, RRMode mode_id)
+
+    // xrandr
+    static double xrrget_frequency(const XRRModeInfo *mode)
     {
-        for (auto k = 0; k < res->nmode; ++k) {
-            auto mode = res->modes[k];
-            if (mode.id == mode_id) {
-                if (mode.hTotal != 0 && mode.vTotal != 0) {
-                    return static_cast<double>((1'000 * mode.dotClock) / (mode.hTotal * mode.vTotal)) /
-                           1000.0;
-                }
-                break;
-            }
-        }
+        if (mode->hTotal != 0 && mode->vTotal != 0)
+            return static_cast<double>(mode->dotClock) / (mode->hTotal * mode->vTotal);
 
         return 0;
+    }
+
+    // xrandr
+    static display_mode_t xrrget_mode(const XRRScreenResources *res, const RRMode id)
+    {
+        for (auto k = 0; k < res->nmode; ++k) {
+            const auto& mode = res->modes[k];
+            if (id == mode.id) {
+                return {
+                    .name      = mode.name,
+                    .width     = mode.width,
+                    .height    = mode.height,
+                    .frequency = xrrget_frequency(&mode),
+                };
+            }
+        }
+        return {};
     }
 
     // The X Window System supports one or more screens containing overlapping windows or subwindows. A
@@ -43,42 +54,51 @@ namespace probe::graphics
     // display.
     //
     // ATTENTION: our 'display' concept is equal to the 'screen' concept in X.
+    //
+    // TODO: Fracional Scaling
+    //  https://wiki.gnome.org/Initiatives/FracionalScaling
+    //  https://askubuntu.com/a/1435227
+    //  3840(application) x 2 / 1.5(scaling) = 5120(framebuffer|screen) / 1.3 = 3840(physical)
     std::vector<display_t> displays()
     {
         std::vector<display_t> _displays;
 
         // display
-        auto display = XOpenDisplay(nullptr);
+        auto display = ::XOpenDisplay(nullptr);
         if (!display) return {};
-        defer(XCloseDisplay(display));
+        defer(::XCloseDisplay(display));
 
         // display number
-        int  display_num = 0;
-        auto monitors    = XRRGetMonitors(display, DefaultRootWindow(display), True, &display_num);
-        defer(XRRFreeMonitors(monitors));
+        int        monitor_num = 0;
+        const auto monitors    = ::XRRGetMonitors(display, DefaultRootWindow(display), True, &monitor_num);
+        defer(::XRRFreeMonitors(monitors));
 
-        auto screen_res = XRRGetScreenResources(display, XDefaultRootWindow(display));
-        defer(XRRFreeScreenResources(screen_res));
+        const auto screen_res = ::XRRGetScreenResources(display, XDefaultRootWindow(display));
+        defer(::XRRFreeScreenResources(screen_res));
 
-        for (auto i = 0; i < display_num; ++i) {
-            // monitors[i]->noutput == 1
-            auto output_info = XRRGetOutputInfo(display, screen_res, monitors[i].outputs[0]);
-            defer(XRRFreeOutputInfo(output_info));
+        for (auto i = 0; i < monitor_num; ++i) {
+            // TODO: monitors[i]->noutput == 1 ?
+            if (monitors[i].noutput < 1) continue;
 
-            if (output_info->connection == RR_Disconnected || !output_info->crtc) {
-                continue;
-            }
+            auto output_info = ::XRRGetOutputInfo(display, screen_res, monitors[i].outputs[0]);
+            defer(::XRRFreeOutputInfo(output_info));
 
-            auto crtc_info = XRRGetCrtcInfo(display, screen_res, output_info->crtc);
+            if (output_info->connection == RR_Disconnected || !output_info->crtc) continue;
+
+            // Cathode Ray Tube Controller
+            auto crtc_info = ::XRRGetCrtcInfo(display, screen_res, output_info->crtc);
             defer(XRRFreeCrtcInfo(crtc_info));
+
+            // Display mode
+            const auto actived_mode = xrrget_mode(screen_res, crtc_info->mode);
 
             //
             _displays.push_back({
-                .name      = XGetAtomName(display, monitors[i].name),
+                .name      = ::XGetAtomName(display, monitors[i].name),
                 .id        = "DISPLAY:" + std::to_string(i),
                 .handle    = reinterpret_cast<uint64_t>(display),
                 .geometry  = geometry_t{ crtc_info->x, crtc_info->y, crtc_info->width, crtc_info->height },
-                .frequency = calculate_frequency(screen_res, crtc_info->mode),
+                .frequency = actived_mode.frequency,
                 .bpp       = static_cast<uint32_t>(DefaultDepth(display, 0)),   // global
                 .dpi       = static_cast<uint32_t>((DisplayWidth(display, 0) * 25.4) /
                                              DisplayWidthMM(display, 0)), // global
@@ -86,7 +106,7 @@ namespace probe::graphics
                     static_cast<orientation_t>((crtc_info->rotation & 0x000f) |
                                                static_cast<uint32_t>(!!(crtc_info->rotation & 0x00f0))),
                 .primary = !!monitors[i].primary,
-                .scale   = 1.0 // TODO:
+                .scale   = 1.0, // TODO:
             });
         }
         return _displays;
@@ -95,7 +115,7 @@ namespace probe::graphics
     template<typename T>
     static std::vector<T> xget_property(Display *display, Window win, Atom type, const char *name)
     {
-        auto xa_name = ::XInternAtom(display, name, False);
+        const auto xa_name = ::XInternAtom(display, name, False);
 
         Atom          real_type{};
         int           format{};
@@ -191,12 +211,22 @@ namespace probe::graphics
         XWindowAttributes attrs{};
         ::XGetWindowAttributes(display, window, &attrs);
 
-        auto desktop = xget_property<unsigned long>(display, window, XA_CARDINAL, "_NET_WM_DESKTOP");
+        const auto desktop = xget_property<unsigned long>(display, window, XA_CARDINAL, "_NET_WM_DESKTOP");
+        // { left, right, top, bottom }
+        const auto margins =
+            xget_property<unsigned long>(display, window, XA_CARDINAL, "_GTK_FRAME_EXTENTS");
+        auto geometry = xget_window_geometry(display, window);
+        if (margins.size() == 4) {
+            geometry.x += static_cast<int32_t>(margins[0]);
+            geometry.width -= margins[0] + margins[1];
+            geometry.y += static_cast<int32_t>(margins[2]);
+            geometry.height -= margins[2] + margins[3];
+        }
 
         return {
             .name      = name,
             .classname = cname,
-            .geometry  = xget_window_geometry(display, window),
+            .geometry  = geometry,
             .visible   = attrs.map_state >= IsViewable && !attrs.override_redirect,
             .handle    = static_cast<uint64_t>(window),
             .parent    = xget_window_parent(display, window),
@@ -238,11 +268,11 @@ namespace probe::graphics
     {
         std::deque<window_t> ret;
 
-        auto display = ::XOpenDisplay(nullptr);
+        const auto display = ::XOpenDisplay(nullptr);
         if (!display) return {};
         defer(::XCloseDisplay(display));
 
-        Window       root_return, parent_return;
+        Window       root, parent;
         Window      *top_windows = nullptr;
         unsigned int number      = 0;
         // The XQueryTree() function returns the root ID, the parent window ID, a pointer to the list of
@@ -252,14 +282,8 @@ namespace probe::graphics
         // non-NULL children list when it is no longer needed, use XFree().
         //
         // Top windows
-        ::XQueryTree(display, DefaultRootWindow(display), &root_return, &parent_return, &top_windows,
-                     &number);
+        ::XQueryTree(display, DefaultRootWindow(display), &root, &parent, &top_windows, &number);
         defer(::XFree(top_windows));
-
-        // current virtual desktop
-        auto buffer      = xget_property<unsigned long>(display, DefaultRootWindow(display), XA_CARDINAL,
-                                                   "_NET_CURRENT_DESKTOP");
-        auto desktop_idx = buffer.empty() ? 0 : buffer[0];
 
         for (unsigned int i = 0; i < number; ++i) {
             auto window = xget_window_info(display, top_windows[i]);
@@ -268,8 +292,6 @@ namespace probe::graphics
                 (!window.visible || (window.geometry.width * window.geometry.height < 16))) {
                 continue;
             }
-
-            if (window.desktop != desktop_idx) continue;
 
             ret.emplace_front(window);
 
@@ -295,11 +317,11 @@ namespace probe::graphics
 
     std::optional<window_t> active_window()
     {
-        auto display = ::XOpenDisplay(nullptr);
+        const auto display = ::XOpenDisplay(nullptr);
         if (!display) return {};
         defer(::XCloseDisplay(display));
 
-        auto buffer =
+        const auto buffer =
             xget_property<Window>(display, DefaultRootWindow(display), XA_WINDOW, "_NET_ACTIVE_WINDOW");
         if (buffer.empty()) return std::nullopt;
 
@@ -310,8 +332,7 @@ namespace probe::graphics
     {
         Window handle{};
 
-        auto display = ::XOpenDisplay(nullptr);
-        if (display) {
+        if (const auto display = ::XOpenDisplay(nullptr); display) {
             handle = DefaultRootWindow(display);
             ::XCloseDisplay(display);
         }

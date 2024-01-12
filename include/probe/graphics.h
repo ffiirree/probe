@@ -97,6 +97,15 @@ namespace probe::graphics
 #endif
     };
 
+    struct display_mode_t
+    {
+        std::string name{};
+        bool        actived{};
+        uint32_t    width{};
+        uint32_t    height{};
+        double      frequency{}; // Hz
+    };
+
     struct display_t
     {
         std::string name{};
@@ -107,6 +116,9 @@ namespace probe::graphics
         std::string driver{}; // for registry
 #endif
 
+        // virtual
+        //  Windows: == physical resolution
+        //  Linux X: ==  render  resolution
         geometry_t geometry{};
         double     frequency{};  // Hz
 
@@ -229,7 +241,7 @@ namespace probe::graphics
 
 namespace probe
 {
-    PROBE_API std::string to_string(geometry_t);
+    PROBE_API std::string to_string(const geometry_t&);
     PROBE_API std::string to_string(graphics::orientation_t);
 } // namespace probe
 

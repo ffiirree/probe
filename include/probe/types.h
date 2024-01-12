@@ -117,7 +117,7 @@ namespace probe
 
 namespace probe
 {
-    PROBE_API std::string to_string(version_t);
+    PROBE_API std::string to_string(const version_t&);
 
     PROBE_API inline std::string to_string(vendor_t id) { return vendor_cast(id); }
 

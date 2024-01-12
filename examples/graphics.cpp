@@ -59,7 +59,8 @@ int main()
                   << "    Shared Memory    : " << gpu.shared_memory << " B\n\n";
     }
 
-    auto windows = probe::graphics::windows(static_cast<probe::graphics::window_filter_t>(0x01 | 0x08));
+    auto windows = probe::graphics::windows(probe::graphics::window_filter_t::visible |
+                                            probe::graphics::window_filter_t::children);
 
     std::cout << "Windows: \n";
     for (const auto& win : windows) {

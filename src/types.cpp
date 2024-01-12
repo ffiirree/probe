@@ -91,7 +91,7 @@ namespace probe
         // clang-format on
     }
 
-    std::string to_string(version_t ver)
+    std::string to_string(const version_t& ver)
     {
         std::string vstr =
             std::to_string(ver.major) + '.' + std::to_string(ver.minor) + '.' + std::to_string(ver.patch);
