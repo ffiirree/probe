@@ -132,6 +132,8 @@ namespace probe::graphics
     PROBE_API std::vector<display_t> displays();
 
 #ifdef _WIN32
+    uint32_t retrieve_dpi_for_window(uint64_t wid);
+
     // probe the display information with handle mid
     PROBE_API std::optional<display_t> display_info_of(uint64_t mid);
 

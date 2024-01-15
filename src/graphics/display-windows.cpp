@@ -37,7 +37,7 @@ namespace probe::graphics
         { "Qt5153QWindowToolSaveBits|Microsoft OneDrive", "\\bOneDrive\\b" }
     };
 
-    static std::pair<std::string, std::string> display_name_and_driver_of(WCHAR *device)
+    static std::pair<std::string, std::string> display_name_and_driver_of(const WCHAR *device)
     {
         DISPLAY_DEVICE device_info{};
         device_info.cb = sizeof(DISPLAY_DEVICE);
@@ -50,10 +50,10 @@ namespace probe::graphics
                 // example: L"MONITOR\\AOC2790\\{4d36e96e-e325-11ce-bfc1-08002be10318}\\0001"
                 //          - name:     AOC2790
                 //          - driver:   {4d36e96e-e325-11ce-bfc1-08002be10318}\\0001
-                auto device_id = probe::util::to_utf8(device_info.DeviceID);
+                const auto device_id = util::to_utf8(device_info.DeviceID);
 
-                auto _1 = device_id.find_first_of('\\');
-                auto _2 = device_id.find_first_of('\\', _1 + 1);
+                const auto _1 = device_id.find_first_of('\\');
+                const auto _2 = device_id.find_first_of('\\', _1 + 1);
 
                 return std::pair{ device_id.substr(_1 + 1, _2 - _1 - 1), device_id.substr(_2 + 1) };
             }
@@ -83,8 +83,21 @@ namespace probe::graphics
         return dpi;
     }
 
+    // >= Windows 10, 1607
+    uint32_t retrieve_dpi_for_window(uint64_t hwnd)
+    {
+        const auto PRE_DAC = ::SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+        defer(::SetThreadDpiAwarenessContext(PRE_DAC));
+
+        return ::GetDpiForWindow(reinterpret_cast<HWND>(hwnd));
+    }
+
     std::optional<display_t> display_info_of(uint64_t mid)
     {
+        // prevent the GetMonitorInfo from being affected by the process dpi awareness
+        const auto PRE_DAC = ::SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_UNAWARE);
+        defer(::SetThreadDpiAwarenessContext(PRE_DAC));
+
         MONITORINFOEX info = { sizeof(MONITORINFOEX) };
         if (::GetMonitorInfo(reinterpret_cast<HMONITOR>(mid), &info)) {
 
@@ -96,7 +109,7 @@ namespace probe::graphics
                 const auto [name, driver] = display_name_and_driver_of(info.szDevice);
                 return display_t{
                     .name   = name,
-                    .id     = probe::util::to_utf8(info.szDevice),
+                    .id     = util::to_utf8(info.szDevice),
                     .handle = mid,
                     .driver = driver,
                     .geometry =
@@ -152,18 +165,14 @@ namespace probe::graphics
     {
         std::vector<display_t> ret{};
 
-        // prevent the GetMonitorInfo from being affected by the process dpi awareness
-        auto PRE_DAC = ::SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_UNAWARE);
-        defer(::SetThreadDpiAwarenessContext(PRE_DAC));
-
         // retrieve all monitors
         ::EnumDisplayMonitors(
             nullptr, nullptr,
             [](auto monitor, auto, auto, auto userdata) -> BOOL {
-                auto ret = reinterpret_cast<std::vector<display_t> *>(userdata);
+                const auto ret = reinterpret_cast<std::vector<display_t> *>(userdata);
 
-                auto display = display_info_of(reinterpret_cast<uint64_t>(monitor));
-                if (display.has_value()) {
+                if (const auto display = display_info_of(reinterpret_cast<uint64_t>(monitor));
+                    display.has_value()) {
                     ret->push_back(display.value());
                 }
 
@@ -190,7 +199,7 @@ namespace probe::graphics
 
     std::optional<display_t> display_contains(const geometry_t& r)
     {
-        auto rect = RECT{
+        const auto rect = RECT{
             static_cast<LONG>(r.left()),
             static_cast<LONG>(r.top()),
             static_cast<LONG>(r.right()),
@@ -215,12 +224,12 @@ namespace probe::graphics
 
         // classname
         std::wstring classname(256, {});
-        auto         cn_len = ::GetClassName(hwnd, classname.data(), 256);
+        const auto   cn_len = ::GetClassName(hwnd, classname.data(), 256);
 
-        auto u8name = probe::util::trim(probe::util::to_utf8(name.c_str(), name_len));
+        const auto u8name = util::trim(util::to_utf8(name.c_str(), name_len));
         return {
             u8name.substr(0, u8name.find_first_of("\n\r")),
-            probe::util::to_utf8(classname.c_str(), cn_len),
+            util::to_utf8(classname.c_str(), cn_len),
         };
     }
 
@@ -237,7 +246,7 @@ namespace probe::graphics
 
     static bool IsWindowBlocked(const window_t& win)
     {
-        auto key = win.classname + "|" + win.name;
+        const auto key = win.classname + "|" + win.name;
 
         return blacklist.contains(key) &&
                std::regex_search(win.pname, std::regex(blacklist[key], std::regex_constants::icase));
@@ -245,7 +254,7 @@ namespace probe::graphics
 
     static bool IsWindowCapturable(const window_t& win)
     {
-        auto key = win.classname + "|" + win.name;
+        const auto key = win.classname + "|" + win.name;
 
         return !(uncapturable_windows.contains(key) &&
                  std::regex_search(win.pname,
@@ -259,7 +268,7 @@ namespace probe::graphics
         std::string pname{};
         if (::GetWindowThreadProcessId(hwnd, &pid) != 0) {
             if (pid != 0 && ::GetCurrentProcessId() != pid) {
-                pname = probe::process::name(pid);
+                pname = process::name(pid);
             }
         }
 
@@ -275,7 +284,7 @@ namespace probe::graphics
         ::DwmGetWindowAttribute(hwnd, DWMWA_EXTENDED_FRAME_BOUNDS, &rect, sizeof(RECT));
 
         // visible
-        bool visible = ::IsWindowVisible(hwnd) && !IsWindowCloaked(hwnd);
+        const bool visible = ::IsWindowVisible(hwnd) && !IsWindowCloaked(hwnd);
 
         // process
         auto [pid, pname] = process_of(hwnd);
@@ -302,12 +311,12 @@ namespace probe::graphics
         std::pair<std::vector<window_t>, HWND> bundle{ {}, hwnd };
 
         ::EnumChildWindows(
-            reinterpret_cast<HWND>(hwnd),
+            hwnd,
             [](HWND chwnd, LPARAM userdata) -> BOOL {
                 // invisible
                 if (!::IsWindowVisible(chwnd) || IsWindowCloaked(chwnd)) return TRUE;
 
-                auto bundle = reinterpret_cast<std::pair<std::vector<window_t>, HWND> *>(userdata);
+                const auto bundle = reinterpret_cast<std::pair<std::vector<window_t>, HWND> *>(userdata);
 
                 // classname - name
                 auto [name, cname] = window_name_of(chwnd);
@@ -351,7 +360,7 @@ namespace probe::graphics
 
     std::deque<window_t> windows(window_filter_t flags)
     {
-        auto desktop_geo = virtual_screen_geometry();
+        const auto desktop_geo = virtual_screen_geometry();
 
         std::deque<window_t> ret;
 
@@ -367,7 +376,7 @@ namespace probe::graphics
                 if (!window.visible) continue;
 
                 // out of sight
-                auto winrect = desktop_geo.intersected(window.geometry);
+                const auto winrect = desktop_geo.intersected(window.geometry);
                 if (winrect.width * winrect.height < 16) continue;
 
                 // ignored
@@ -409,8 +418,7 @@ namespace probe::graphics
 
     std::optional<window_t> active_window()
     {
-        auto hwnd = ::GetForegroundWindow();
-        if (hwnd) {
+        if (const auto hwnd = ::GetForegroundWindow()) {
             return window_info_of(hwnd);
         }
         return std::nullopt;
