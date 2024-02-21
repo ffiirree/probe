@@ -46,7 +46,10 @@ namespace probe::util::registry
 
         return to_utf8(value);
     }
+} // namespace probe::util::registry
 
+namespace probe::util::registry
+{
     int RegistryListener::listen(const std::any& obj, const std::function<void(const std::any&)>& callback)
     {
         const auto& [key, subkey] = std::any_cast<std::pair<HKEY, std::string>>(obj);
@@ -55,24 +58,24 @@ namespace probe::util::registry
             return -1;
         }
 
-        if ((STOP_EVENT = ::CreateEvent(nullptr, TRUE, FALSE, L"Registry Stop Event")) == nullptr) {
+        if (STOP_EVENT.attach(::CreateEvent(nullptr, TRUE, FALSE, L"Stop")); !STOP_EVENT) {
             return -1;
         }
 
-        if ((NOTIFY_EVENT = ::CreateEvent(nullptr, FALSE, FALSE, L"Registry Notify Evnent")) == nullptr) {
+        if (NOTIFY_EVENT.attach(::CreateEvent(nullptr, FALSE, FALSE, L"Notify")); !NOTIFY_EVENT) {
             return -1;
         }
 
         running_ = true;
-        thread_  = std::thread([=, this]() {
+        thread_  = std::jthread([=, this] {
             probe::thread::set_name("listen-" + subkey);
 
-            const HANDLE events[] = { STOP_EVENT, NOTIFY_EVENT };
+            const HANDLE events[] = { STOP_EVENT.get(), NOTIFY_EVENT.get() };
 
             while (running_) {
-                if (::RegNotifyChangeKeyValue(key_, TRUE, REG_LEGAL_CHANGE_FILTER, NOTIFY_EVENT, TRUE) !=
-                    ERROR_SUCCESS) {
-                    ::SetEvent(STOP_EVENT);
+                if (::RegNotifyChangeKeyValue(key_, TRUE, REG_LEGAL_CHANGE_FILTER, NOTIFY_EVENT.get(),
+                                               TRUE) != ERROR_SUCCESS) {
+                    ::SetEvent(STOP_EVENT.get());
                 }
 
                 switch (::WaitForMultipleObjects(2, events, false, INFINITE)) {
@@ -96,15 +99,15 @@ namespace probe::util::registry
     {
         auto expected = true;
         if (running_.compare_exchange_strong(expected, false)) {
-            ::SetEvent(STOP_EVENT);
+            ::SetEvent(STOP_EVENT.get());
 
             if (thread_.joinable()) thread_.join();
 
-            ::CloseHandle(NOTIFY_EVENT);
-            ::CloseHandle(STOP_EVENT);
             ::RegCloseKey(key_);
         }
     }
+
+    RegistryListener::~RegistryListener() { stop(); }
 } // namespace probe::util::registry
 
 namespace probe::util::setup

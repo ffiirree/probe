@@ -7,6 +7,8 @@
 #include <vector>
 #include <Windows.h>
 
+constexpr auto CPU0_KEY = R"(HARDWARE\DESCRIPTION\System\CentralProcessor\0)";
+
 namespace probe::cpu
 {
     static std::vector<SYSTEM_LOGICAL_PROCESSOR_INFORMATION> processor_info()
@@ -49,9 +51,7 @@ namespace probe::cpu
 
     uint64_t frequency()
     {
-        return probe::util::registry::read<DWORD>(
-                   HKEY_LOCAL_MACHINE, R"(HARDWARE\DESCRIPTION\System\CentralProcessor\0)", "~MHz")
-                   .value_or(0) *
+        return probe::util::registry::read<DWORD>(HKEY_LOCAL_MACHINE, CPU0_KEY, "~MHz").value_or(0) *
                1'000'000;
     }
 
@@ -105,17 +105,14 @@ namespace probe::cpu
     vendor_t vendor()
     {
         auto name =
-            probe::util::registry::read<std::string>(
-                HKEY_LOCAL_MACHINE, R"(HARDWARE\DESCRIPTION\System\CentralProcessor\0)", "VendorIdentifier")
+            probe::util::registry::read<std::string>(HKEY_LOCAL_MACHINE, CPU0_KEY, "VendorIdentifier")
                 .value_or("");
         return vendor_cast(name);
     }
 
     std::string name()
     {
-        return probe::util::registry::read<std::string>(HKEY_LOCAL_MACHINE,
-                                                        R"(HARDWARE\DESCRIPTION\System\CentralProcessor\0)",
-                                                        "ProcessorNameString")
+        return probe::util::registry::read<std::string>(HKEY_LOCAL_MACHINE, CPU0_KEY, "ProcessorNameString")
             .value_or("");
     }
 

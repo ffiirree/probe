@@ -139,9 +139,9 @@ namespace probe
 
         virtual int listen(const std::any&, const std::function<void(const std::any&)>&) = 0;
 
-        virtual void stop() = 0;
-
         virtual bool running() = 0;
+
+        virtual void stop() = 0;
     };
 } // namespace probe
 
@@ -150,34 +150,33 @@ namespace probe
 namespace probe
 {
     // clang-format off
-    // https://en.wikipedia.org/wiki/List_of_Microsoft_Windows_versions
+    // https://en.wikipedia.org/wiki/List_of_Microsoft_Windows_versions, stable version
     // Windows 3.1, 1992-04-06
-    inline const version_t WIN_3_1_1ST{  3, 10,   102,     0,   "Sparta" };
+    inline const version_t WIN_3_1    {  3, 10,   102,     0,   "Sparta" };
 
     // Windows 95, 1995-08-24
-    inline const version_t WIN_95_1ST {  4,  0,   950,     0,   "Chicago" };
+    inline const version_t WIN_95     {  4,  0,   950,     0,   "Chicago" };
 
     // Windows 98, 1998-06-25
-    inline const version_t WIN_98_1ST {  4, 10,  1998,     0,   "Memphis" };
+    inline const version_t WIN_98     {  4, 10,  1998,     0,   "Memphis" };
 
     // Windows 2000
-    inline const version_t WIN_2000_1ST{ 5,  0,  2195,     0,   "Janus" };
+    inline const version_t WIN_2000   {  5,  0,  2195,     0,   "Janus" };
 
     // Windows xp
-    inline const version_t WIN_XP_1ST {  5,  2,  2600,     0,   "Whistler" };
+    inline const version_t WIN_XP     {  5,  2,  2600,     0,   "Whistler" };
 
     // Windows vista
-    inline const version_t WIN_VISTA_1ST{ 6,  0, 6000,     0,   "Longhorn" };
+    inline const version_t WIN_VISTA  {  6,  0, 6000,     0,   "Longhorn" };
 
     // Windows 7
-    inline const version_t WIN_7_1ST  {  6,  1,  7600,     0,   "7" };
+    inline const version_t WIN_7      {  6,  1,  7600,     0,   "7" };
 
     // Windows 8
-    inline const version_t WIN_8_0_1ST{  6,  2,  9200,     0,   "8" };
-    inline const version_t WIN_8_1_1ST{  6,  3,  9600,     0,   "Blue" };
+    inline const version_t WIN_8_0    {  6,  2,  9200,     0,   "8" };
+    inline const version_t WIN_8_1    {  6,  3,  9600,     0,   "Blue" };
 
     // Windows 10
-    inline const version_t WIN_10_1ST { 10,  0, 10240, 16405,   "1507" };
     inline const version_t WIN_10_1507{ 10,  0, 10240, 16405,   "1507" };
     inline const version_t WIN_10_1511{ 10,  0, 10586,     3,   "1511" };
     inline const version_t WIN_10_1607{ 10,  0, 14393,    10,   "1607" };
@@ -193,10 +192,14 @@ namespace probe
     inline const version_t WIN_10_21H2{ 10,  0, 19044,   288,   "21H2" };
     inline const version_t WIN_10_22H2{ 10,  0, 19045,  2130,   "22H2" };
 
+    inline const version_t WIN_10 = WIN_10_1507;
+
     // Windows 11
-    inline const version_t WIN_11_1ST { 10,  0, 22000,   194,   "21H2" };
     inline const version_t WIN_11_21H2{ 10,  0, 22000,   194,   "21H2" };
-    inline const version_t WIN_11_22H2{ 10,  0, 22621,   521,   "22H2" };
+    inline const version_t WIN_11_22H2{ 10,  0, 22621,   382,   "22H2" };
+    inline const version_t WIN_11_23H2{ 10,  0, 22631,  2428,   "23H2" };
+
+    inline const version_t WIN_11 = WIN_11_21H2;
     // clang-format on
 } // namespace probe
 #endif

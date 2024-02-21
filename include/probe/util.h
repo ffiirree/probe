@@ -12,6 +12,7 @@
 #include <Windows.h>
 #include <SetupAPI.h>
 #include <cfgmgr32.h>
+#include <winrt/base.h>
 // clang-format on
 #endif
 
@@ -75,10 +76,10 @@ namespace probe::util::registry
 
     template<> PROBE_API std::optional<DWORD> read<DWORD>(HKEY, const std::string&, const std::string&);
 
-    class RegistryListener : public Listener
+    class RegistryListener final : public Listener
     {
     public:
-        PROBE_API ~RegistryListener() override { stop(); }
+        PROBE_API ~RegistryListener() override;
 
         PROBE_API int  listen(const std::any&, const std::function<void(const std::any&)>&) override;
         PROBE_API void stop() override;
@@ -86,10 +87,10 @@ namespace probe::util::registry
         PROBE_API bool running() override { return running_; }
 
     private:
-        HKEY              key_;
-        HANDLE            STOP_EVENT{ nullptr };
-        HANDLE            NOTIFY_EVENT{ nullptr };
-        std::thread       thread_;
+        HKEY              key_{};
+        winrt::handle     STOP_EVENT{};
+        winrt::handle     NOTIFY_EVENT{};
+        std::jthread      thread_{};
         std::atomic<bool> running_{ false };
     };
 } // namespace probe::util::registry

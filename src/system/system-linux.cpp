@@ -11,11 +11,63 @@
 #include <sys/utsname.h>
 #include <unordered_map>
 
+static std::unordered_map<std::string, std::string> parse_kv(std::ifstream& fstream)
+{
+    std::unordered_map<std::string, std::string> kvs{};
+
+    for (std::string line; std::getline(fstream, line);) {
+        auto pos = line.find('=');
+        if (pos != std::string::npos) {
+            auto value = line.substr(pos + 1);
+            if (std::count(value.begin(), value.end(), '"') == 2) {
+                if (value[0] == value.back() && value.back() == '"') {
+                    value = value.substr(1, value.size() - 2);
+                }
+            }
+            kvs.emplace(std::string(line.c_str(), pos), value);
+        }
+    }
+
+    return kvs;
+}
+
 namespace probe::system
 {
+    std::string name()
+    {
+        if (std::filesystem::exists("/etc/os-release")) {
+            std::ifstream release("/etc/os-release");
+            if (release && release.is_open()) {
+                auto kvs = parse_kv(release);
+                if (auto pretty_name = kvs.find("PRETTY_NAME"); pretty_name != kvs.end()) {
+                    return pretty_name->second;
+                }
+                else if (auto name = kvs.find("NAME"); name != kvs.end()) {
+                    return name->second;
+                }
+            }
+        }
+        else if (std::filesystem::exists("/etc/lsb-release")) {
+            std::ifstream release("/etc/lsb-release");
+            if (release && release.is_open()) {
+                auto kvs = parse_kv(release);
+
+                if (auto desc = kvs.find("DISTRIB_DESCRIPTION"); desc != kvs.end()) {
+                    return desc->second;
+                }
+                else if (auto name = kvs.find("DISTRIB_ID"); name != kvs.end()) {
+                    return name->second;
+                }
+            }
+        }
+
+        return "Linux";
+    }
+
     theme_t theme()
     {
-        if (desktop() == desktop_t::GNOME || desktop() == desktop_t::Unity) {
+        if (desktop_environment() == desktop_environment_t::GNOME ||
+            desktop_environment() == desktop_environment_t::Unity) {
 
             auto color_scheme = probe::util::exec_sync(
                 { "gsettings", "get", "org.gnome.desktop.interface", "color-scheme" });
@@ -44,42 +96,8 @@ namespace probe::system
         return theme_t::light;
     }
 
-    std::string kernel_name() { return "Linux"; }
-
-    version_t kernel_version()
-    {
-        utsname uts{};
-        if (uname(&uts) == -1) {
-            return {};
-        }
-
-        return to_version(uts.release);
-    }
-
-    kernel_info_t kernel_info() { return { kernel_name(), kernel_version() }; }
-
-    static std::unordered_map<std::string, std::string> parse_kv(std::ifstream& fstream)
-    {
-        std::unordered_map<std::string, std::string> kvs{};
-
-        for (std::string line; std::getline(fstream, line);) {
-            auto pos = line.find('=');
-            if (pos != std::string::npos) {
-                auto value = line.substr(pos + 1);
-                if (std::count(value.begin(), value.end(), '"') == 2) {
-                    if (value[0] == value.back() && value.back() == '"') {
-                        value = value.substr(1, value.size() - 2);
-                    }
-                }
-                kvs.emplace(std::string(line.c_str(), pos), value);
-            }
-        }
-
-        return kvs;
-    }
-
     // https://gist.github.com/natefoo/814c5bf936922dad97ff
-    version_t os_version()
+    version_t version()
     {
         version_t ver{};
         if (std::filesystem::exists("/etc/os-release")) {
@@ -120,39 +138,6 @@ namespace probe::system
         return ver;
     }
 
-    std::string os_name()
-    {
-        if (std::filesystem::exists("/etc/os-release")) {
-            std::ifstream release("/etc/os-release");
-            if (release && release.is_open()) {
-                auto kvs = parse_kv(release);
-                if (auto pretty_name = kvs.find("PRETTY_NAME"); pretty_name != kvs.end()) {
-                    return pretty_name->second;
-                }
-                else if (auto name = kvs.find("NAME"); name != kvs.end()) {
-                    return name->second;
-                }
-            }
-        }
-        else if (std::filesystem::exists("/etc/lsb-release")) {
-            std::ifstream release("/etc/lsb-release");
-            if (release && release.is_open()) {
-                auto kvs = parse_kv(release);
-
-                if (auto desc = kvs.find("DISTRIB_DESCRIPTION"); desc != kvs.end()) {
-                    return desc->second;
-                }
-                else if (auto name = kvs.find("DISTRIB_ID"); name != kvs.end()) {
-                    return name->second;
-                }
-            }
-        }
-
-        return "Linux";
-    }
-
-    os_info_t os_info() { return { os_name(), theme(), os_version() }; }
-
     std::string hostname()
     {
         char buffer[256]{};
@@ -170,6 +155,21 @@ namespace probe::system
         }
         return {};
     }
+
+    namespace kernel
+    {
+        std::string name() { return "Linux"; }
+
+        version_t version()
+        {
+            utsname uts{};
+            if (uname(&uts) == -1) {
+                return {};
+            }
+
+            return to_version(uts.release);
+        }
+    } // namespace kernel
 } // namespace probe::system
 
 static probe::version_t gnome_version();
@@ -178,45 +178,45 @@ static probe::version_t kde_version();
 
 namespace probe::system
 {
-    desktop_t desktop()
+    desktop_environment_t desktop_environment()
     {
         const std::string de = probe::util::env("XDG_CURRENT_DESKTOP");
         // GNOME
         if (std::regex_search(de, std::regex("gnome", std::regex_constants::icase))) {
-            return desktop_t::GNOME;
+            return desktop_environment_t::GNOME;
         }
         // Unity
         if (std::regex_search(de, std::regex("unity", std::regex_constants::icase))) {
-            return desktop_t::Unity;
+            return desktop_environment_t::Unity;
         }
         // Cinnamon
         if (std::regex_search(de, std::regex("\\bcinnamon\\b", std::regex_constants::icase))) {
-            return desktop_t::Cinnamon;
+            return desktop_environment_t::Cinnamon;
         }
         // KDE
         if (std::regex_search(de, std::regex("\\bKDE\\b", std::regex_constants::icase))) {
-            return desktop_t::KDE;
+            return desktop_environment_t::KDE;
         }
         // Xfce
         if (std::regex_search(de, std::regex("\\bXfce\\b", std::regex_constants::icase))) {
-            return desktop_t::Xfce;
+            return desktop_environment_t::Xfce;
         }
         // MATE
         if (std::regex_search(de, std::regex("\\bMATE\\b", std::regex_constants::icase))) {
-            return desktop_t::MATE;
+            return desktop_environment_t::MATE;
         }
-        return desktop_t::Unknown;
+        return desktop_environment_t::Unknown;
     }
 
-    version_t desktop_version()
+    version_t desktop_environment_version()
     {
-        switch (desktop()) {
-        case desktop_t::Unity:
-        case desktop_t::GNOME:    return gnome_version();
-        case desktop_t::Cinnamon: return cinnamon_version();
-        case desktop_t::KDE:      return kde_version();
+        switch (desktop_environment()) {
+        case desktop_environment_t::Unity:
+        case desktop_environment_t::GNOME:    return gnome_version();
+        case desktop_environment_t::Cinnamon: return cinnamon_version();
+        case desktop_environment_t::KDE:      return kde_version();
         // TODO:
-        default:                  return {};
+        default:                              return {};
         }
     }
 } // namespace probe::system
@@ -227,10 +227,10 @@ namespace probe::system
     // XDG_SESSION_ID / XDG_SESSION_TYPE may be not set
     // loginctl show-session $(loginctl | grep $(whoami) | awk '{print $1}') -p Type
 
-    window_system_t window_system()
+    windowing_system_t windowing_system()
     {
         auto whoami  = probe::system::username();
-        auto ws_type = window_system_t::Unknown;
+        auto ws_type = windowing_system_t::Unknown;
 
         probe::util::exec_sync({ "loginctl" }, [&](const std::string& line) -> bool {
             if (std::regex_search(line, std::regex(whoami))) {
@@ -247,10 +247,10 @@ namespace probe::system
                 if (type.empty()) return false;
 
                 if (std::regex_search(type[0], std::regex("\\bx11\\b", std::regex_constants::icase)))
-                    ws_type = window_system_t::X11;
+                    ws_type = windowing_system_t::X11;
 
                 if (std::regex_search(type[0], std::regex("\\bwayland\\b", std::regex_constants::icase)))
-                    ws_type = window_system_t::Wayland;
+                    ws_type = windowing_system_t::Wayland;
 
                 return false;
             }

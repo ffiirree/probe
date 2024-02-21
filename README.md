@@ -18,17 +18,18 @@
 
 int main()
 {
-    auto os     = probe::system::os_info();
-    auto kernel = probe::system::kernel_info();
-    auto mem    = probe::memory::status();
+    const auto mem = probe::memory::status();
 
     std::cout << "Operating System:\n"
-              << "    Name             : " << os.name << '\n'
-              << "    Version          : " << probe::to_string(os.version) << '\n'
-              << "    Kernel           : " << kernel.name << '\n'
-              << "    Kernel Version   : " << probe::to_string(kernel.version) << '\n'
-              << "    Theme            : " << probe::to_string(os.theme) << '\n'
-              << "    Desktop ENV      : " << probe::to_string(probe::system::desktop()) << '\n'
+              << "    System Name      : " << probe::system::name() << '\n'
+              << "    System Version   : " << probe::to_string(probe::system::version()) << '\n'
+              << "    Kernel Name      : " << probe::system::kernel::name() << '\n'
+              << "    Kernel Version   : " << probe::to_string(probe::system::kernel::version()) << '\n'
+              << "    Device Name      : " << probe::system::hostname() << '\n'
+              << "    Theme            : " << probe::to_string(probe::system::theme()) << '\n'
+              << "    Desktop ENV      : " << probe::to_string(probe::system::desktop_environment()) << " ("
+              << probe::to_string(probe::system::desktop_environment_version()) << ")\n"
+              << "    Windowing System : " << probe::to_string(probe::system::windowing_system()) << '\n'
               << "    Memory           : " << probe::util::GB(mem.avail) << " / "
               << probe::util::GB(mem.total) << " GB\n";
     return 0;
@@ -38,14 +39,16 @@ int main()
 Output:
 
 ```yaml
-Operating System:                                   |   Operating System:
-    Name             : Windows 11 Pro               |       Name             : Ubuntu 20.04.6 LTS
-    Version          : 10.0.25346-1001 (22H2)       |       Version          : 20.4.6 (focal)
-    Kernel           : Windows NT                   |       Kernel           : Linux
-    Kernel Version   : 10.0.25346-1001              |       Kernel Version   : 5.15.0-72 (generic)
-    Theme            : dark                         |       Theme            : light
-    Desktop ENV      : Windows                      |       Desktop ENV      : GNOME (3.36.8)
-    Memory           : 15.2921 / 31.9388 GB         |       Memory           : 9.82002 / 15.6046 GB
+Operating System:                                                Operating System:
+    System Name      : Windows 11 Pro                         |      System Name      : Ubuntu 22.04.3 LTS
+    System Version   : 10.0.26058-1000 (24H2)                 |      System Version   : 22.4.3 (jammy)
+    Kernel Name      : Windows NT                             |      Kernel Name      : Linux
+    Kernel Version   : 10.0.26058-1000                        |      Kernel Version   : 6.5.0-18 (generic)
+    Device Name      : EVA-0                                  |      Device Name      : EVA-2204
+    Theme            : dark                                   |      Theme            : light
+    Desktop ENV      : Windows Shell (10.0.26058-1000 (24H2)) |      Desktop ENV      : GNOME (42.9.0)
+    Windowing System : Desktop Window Manager                 |      Windowing System : X11
+    Memory           : 4.62131 / 31.9358 GB                   |      Memory           : 11.8134 / 15.5742 GB
 ```
 
 ## Details
@@ -61,9 +64,9 @@ Operating System:                                   |   Operating System:
 | hostname            |      &#10004;      |    &#10004;    | Device Name/Computer Name                    |
 | username            |      &#10004;      |    &#10004;    | Name of Current User                         |
 | dark/light mode     |      &#10004;      | `Ubuntu 22.04` | dark                                         |
-| desktop environment |    `= Windows`     |    &#10004;    | GNOME / Unity / Cinnamon / KDE / Xfce / MATE |
+| desktop environment |  `Windows Shell`   |    &#10004;    | GNOME / Unity / Cinnamon / KDE / Xfce / MATE |
 | DE version          | same as os version |    &#10004;    | GNOME (3.28.2.0) / Unity / Cinnamon / KDE    |
-| window system       |    `= Windows`     |    &#10004;    | Windows / X11 / Wayland                      |
+| windowing system    |       `DWM`        |    &#10004;    | DWM / X11 / Wayland                          |
 | memory              |      &#10004;      |    &#10004;    | 15.29 / 31.94 GB                             |
 
 ### CPU
