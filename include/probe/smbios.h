@@ -7,9 +7,10 @@
 #include <cstdint>
 #include <vector>
 
+// System Management BIOS
 namespace probe::smbios
 {
-    enum class smbios_type_t : uint8_t
+    enum class type_t : uint8_t
     {
         // OEM
         BIOS                                       = 0x00, // Required
@@ -104,26 +105,92 @@ namespace probe::smbios
         DELL_IRPort                                = 0xd3,
     };
 
-    struct smbios_header_t
+    struct header_t
     {
-        smbios_type_t type{};
-        uint8_t       length{};
-        uint16_t      handle{};
+        type_t   type;
+        uint8_t  length;
+        uint16_t handle;
+    };
+
+    struct item_t
+    {
+        type_t                    type;
+        uint8_t                   length;
+        uint16_t                  handle;
+        uint8_t                  *fields{};
+        std::vector<const char *> strings{};
     };
 
     // System Management BIOS
     struct smbios_t
     {
-        version_t                      version{};
-        std::vector<uint8_t>           data{};
-        std::vector<smbios_header_t *> table{};
+        version_t            version{};
+        std::vector<uint8_t> data{};
+        std::vector<item_t>  table{};
     };
 
     PROBE_API smbios_t smbios();
+
+#pragma pack(push, 1)
+
+    struct PhysicalMemoryArray
+    {
+        uint8_t  Location{};                    // 2.1+
+        uint8_t  Use{};                         // 2.1+
+        uint8_t  MemoryErrorCorrection{};       // 2.1+
+        uint32_t MaximumCapacity{};             // 2.1+
+        uint16_t MemoryErrorInfomationHandle{}; // 2.1+
+        uint16_t NumberOfMemoryDevices{};       // 2.1+
+        uint64_t ExtendedMaximumCapacity{};     // 2.7+
+    };
+
+    struct MemoryDevice
+    {
+        uint16_t PhysicalMemeoryArrayHandle{};              // 2.1+
+        uint16_t MemoryErrorInformationHandle{};            // 2.1+
+        uint16_t TotalWidth{};                              // 2.1+, in bits
+        uint16_t DataWidth{};                               // 2.1+, in bits
+        uint16_t Size{};                                    // 2.1+,
+        uint8_t  FormFactor{};                              // 2.1+,
+        uint8_t  DeviceSet{};                               // 2.1+,
+        uint8_t  DeviceLocator{};                           // 2.1+,
+        uint8_t  BankLocator{};                             // 2.1+,
+        uint8_t  MemoryType{};                              // 2.1+,
+        uint16_t TypeDetail{};                              // 2.1+,
+        uint16_t Speed{};                                   // 2.3+
+        uint8_t  Manufacturer{};                            // 2.3+
+        uint8_t  SerialNumber{};                            // 2.3+
+        uint8_t  AssetTag{};                                // 2.3+
+        uint8_t  PartNumber{};                              // 2.3+
+        uint8_t  Attributes{};                              // 2.6+
+        uint32_t ExtendedSize{};                            // 2.7+
+        uint16_t ConfiguredMemeorySpeed{};                  // 2.7+
+        uint16_t MinimumVoltage{};                          // 2.8+
+        uint16_t MaximumVoltage{};                          // 2.8+
+        uint16_t ConfiguredVoltage{};                       // 2.8+
+        uint8_t  MemoryTechnology{};                        // 3.2+
+        uint16_t MemoryOperatingModeCapability{};           // 3.2+
+        uint8_t  FirmwareVersion{};                         // 3.2+
+        uint16_t ModuleManufacturerID{};                    // 3.2+
+        uint16_t ModuleProductID{};                         // 3.2+
+        uint16_t MemorySubsystemControllerManufacturerID{}; // 3.2+
+        uint16_t MemorySubsystemControllerProductID{};      // 3.2+
+        uint64_t NonvolatileSize{};                         // 3.2+
+        uint64_t VolatileSize{};                            // 3.2+
+        uint64_t CacheSize{};                               // 3.2+
+        uint64_t LogicalSize{};                             // 3.2+
+        uint32_t ExtendedSpeed{};                           // 3.3+
+        uint32_t ExtendedConfiguredMemeorySpeed{};          // 3.3+
+        uint16_t PMIC0ManufacturerID{};                     // 3.7+
+        uint16_t PMIC0RevisionNumber{};                     // 3.7+
+        uint16_t RCDManufacturerID{};                       // 3.7+
+        uint16_t RCDRevisionNumber{};                       // 3.7+
+    };
+#pragma pack(pop)
 } // namespace probe::smbios
 
 namespace probe
 {
-    PROBE_API std::string to_string(smbios::smbios_type_t);
+    PROBE_API std::string to_string(smbios::type_t);
 }
 #endif //! PROBE_SMBIOS_H

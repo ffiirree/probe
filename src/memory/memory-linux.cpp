@@ -16,6 +16,10 @@ namespace probe::memory
             .total = info.totalram,
         };
     }
+
+    std::vector<MemoryDevice> devices() { return {}; }
+
+    std::vector<PhysicalMemoryArray> physical_device_arrays() { return {}; }
 } // namespace probe::memory
 
 #endif

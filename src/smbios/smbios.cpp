@@ -2,9 +2,9 @@
 
 namespace probe
 {
-    std::string to_string(smbios::smbios_type_t type)
+    std::string to_string(const smbios::type_t type)
     {
-        using enum smbios::smbios_type_t;
+        using enum smbios::type_t;
         switch (type) {
         case BIOS:                                     return "BIOS Information";
         case System:                                   return "System Information";
