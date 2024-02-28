@@ -63,6 +63,7 @@ target_link_libraries(${PROJECT_NAME}
         $<$<PLATFORM_ID:Windows>:SetupAPI>
         $<$<PLATFORM_ID:Windows>:Iphlpapi>
         $<$<PLATFORM_ID:Windows>:Ws2_32>
+        $<$<PLATFORM_ID:Windows>:Shlwapi>
         $<$<PLATFORM_ID:Linux>:pthread>
         $<$<AND:$<PLATFORM_ID:Linux>,$<BOOL:${X11_Xrandr_FOUND}>>:X11::Xrandr>
         $<$<PLATFORM_ID:Linux>:dl>

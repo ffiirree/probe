@@ -6,9 +6,13 @@
 #include "probe/util.h"
 
 #include <dwmapi.h>
+#include <ExDisp.h>
 #include <map>
 #include <regex>
 #include <ShellScalingApi.h>
+#include <ShlGuid.h>
+#include <ShlObj_core.h>
+#include <Shlwapi.h>
 
 namespace probe::graphics
 {
@@ -437,6 +441,78 @@ namespace probe::graphics
             .handle    = reinterpret_cast<uint64_t>(handle),
         };
     }
+} // namespace probe::graphics
+
+namespace probe::graphics
+{
+    std::string explorer_focused(uint64_t wid)
+    {
+        TCHAR path_buf[MAX_PATH]{};
+        TCHAR item_buf[MAX_PATH]{};
+
+        try {
+            winrt::com_ptr<IShellWindows> shell_windows{};
+            winrt::check_hresult(::CoCreateInstance(winrt::guid_of<ShellWindows>(), nullptr, CLSCTX_ALL,
+                                                    winrt::guid_of<IShellWindows>(),
+                                                    shell_windows.put_void()));
+
+            VARIANT i{};
+            V_VT(&i) = VT_I4;
+            winrt::com_ptr<IDispatch>      dispatch{};
+            winrt::com_ptr<IWebBrowserApp> wba{};
+
+            for (V_I4(&i) = 0; shell_windows->Item(i, dispatch.put()) == S_OK; V_I4(&i)++) {
+
+                auto cur = dispatch.as<IWebBrowserApp>();
+
+                HWND hwnd{};
+                if (SUCCEEDED(cur->get_HWND(reinterpret_cast<LONG_PTR *>(&hwnd))) && hwnd == (HWND)(wid)) {
+                    wba = cur;
+                    break;
+                }
+            }
+
+            if (!wba) return {};
+
+            auto provider = wba.as<IServiceProvider>();
+
+            winrt::com_ptr<IShellBrowser> browser{};
+            winrt::check_hresult(
+                provider->QueryService(SID_STopLevelBrowser, IID_IShellBrowser, browser.put_void()));
+
+            winrt::com_ptr<IShellView> sv{};
+            winrt::check_hresult(browser->QueryActiveShellView(sv.put()));
+
+            auto                            fv = sv.as<IFolderView>();
+            winrt::com_ptr<IPersistFolder2> pf{};
+            pf.capture(fv, &IFolderView::GetFolder);
+
+            LPITEMIDLIST pidf{};
+            defer(CoTaskMemFree(pidf));
+            winrt::check_hresult(pf->GetCurFolder(&pidf));
+
+            if (!SHGetPathFromIDList(pidf, path_buf)) return {};
+
+            int idx{};
+            winrt::check_hresult(fv->GetFocusedItem(&idx));
+
+            LPITEMIDLIST item{};
+            defer(CoTaskMemFree(item));
+            winrt::check_hresult(fv->Item(idx, &item));
+
+            auto   sf = pf.as<IShellFolder>();
+            STRRET str;
+            winrt::check_hresult(sf->GetDisplayNameOf(item, SHGDN_INFOLDER, &str));
+
+            StrRetToBuf(&str, item, item_buf, MAX_PATH);
+        }
+        catch (const winrt::hresult_error& e) {
+            return {};
+        }
+
+        return probe::util::to_utf8(path_buf) + "\\" + probe::util::to_utf8(item_buf);
+    }
+
 } // namespace probe::graphics
 
 #endif // _WIN32

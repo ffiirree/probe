@@ -148,6 +148,8 @@ namespace probe::graphics
         return display_contains(point_t{ x, y });
     }
 
+    PROBE_API std::string explorer_focused(uint64_t wid);
+
 #ifdef BUILD_WITH_QT
     PROBE_API inline std::optional<display_t> display_contains(const QPoint& point)
     {
