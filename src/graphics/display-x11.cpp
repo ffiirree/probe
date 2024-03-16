@@ -264,7 +264,7 @@ namespace probe::graphics
     // least one window for each application program. Child windows may in turn have their own children. In
     // this way, an application program can create an arbitrarily deep tree on each screen. X provides
     // graphics, text, and raster operations for windows.
-    std::deque<window_t> windows(window_filter_t flags)
+    std::deque<window_t> windows(window_filter_t flags, bool)
     {
         std::deque<window_t> ret;
 

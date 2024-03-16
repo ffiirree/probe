@@ -13,7 +13,7 @@ int main()
 
     // example for registry::read,
     auto theme = probe::system::theme_t::light;
-    if (probe::system::os_version() >= probe::WIN_10) {
+    if (probe::system::version() >= probe::WIN_10) {
         if (!probe::util::registry::read<DWORD>(HKEY_CURRENT_USER, theme_key, "AppsUseLightTheme")
                  .value_or(1)) {
             theme = probe::system::theme_t::dark;

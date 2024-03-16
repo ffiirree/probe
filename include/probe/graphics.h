@@ -217,7 +217,7 @@ namespace probe::graphics
         uint64_t desktop{};      // index of the desktop, not used on Windows
     };
 
-    PROBE_API std::deque<window_t> windows(window_filter_t = window_filter_t::visible);
+    PROBE_API std::deque<window_t> windows(window_filter_t = window_filter_t::visible, bool pinfo = true);
 
     PROBE_API std::optional<window_t> active_window();
 

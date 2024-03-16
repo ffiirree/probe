@@ -6,7 +6,7 @@ namespace probe::graphics
 {
     std::vector<display_t> displays() { return {}; }
 
-    std::deque<window_t> windows(window_filter_t flags) { return {}; }
+    std::deque<window_t> windows(window_filter_t, bool) { return {}; }
 
     std::optional<window_t> active_window() { return std::nullopt; }
 
