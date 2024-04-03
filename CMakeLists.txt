@@ -23,7 +23,11 @@ else()
 endif()
 
 if(PROBE_BUILD_WITH_QT)
-    find_package(Qt5 COMPONENTS Core REQUIRED)
+    if (NOT QT_DEFAULT_MAJOR_VERSION)
+        set(QT_DEFAULT_MAJOR_VERSION 5 CACHE STRING "Qt major version to use (5 or 6), default: 5.")
+    endif ()
+
+    find_package(Qt${QT_DEFAULT_MAJOR_VERSION} COMPONENTS Core REQUIRED)
 endif()
 
 # dependencies
@@ -67,7 +71,7 @@ target_link_libraries(${PROJECT_NAME}
         $<$<PLATFORM_ID:Linux>:pthread>
         $<$<AND:$<PLATFORM_ID:Linux>,$<BOOL:${X11_Xrandr_FOUND}>>:X11::Xrandr>
         $<$<PLATFORM_ID:Linux>:dl>
-        $<$<BOOL:${PROBE_BUILD_WITH_QT}>:Qt5::Core>
+        $<$<BOOL:${PROBE_BUILD_WITH_QT}>:Qt${QT_DEFAULT_MAJOR_VERSION}::Core>
 )
 
 set_target_properties(${PROJECT_NAME}
