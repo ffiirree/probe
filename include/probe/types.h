@@ -20,10 +20,16 @@ namespace probe
         std::string codename{};
     };
 
+    PROBE_API bool operator>(const version_t&, const version_t&);
     PROBE_API bool operator>=(const version_t&, const version_t&);
+
+    PROBE_API bool operator<(const version_t&, const version_t&);
     PROBE_API bool operator<=(const version_t&, const version_t&);
+
     // not compare codename
     PROBE_API bool operator==(const version_t&, const version_t&);
+    PROBE_API bool operator!=(const version_t&, const version_t&);
+
     // do  compare codename
     PROBE_API bool strict_equal(const version_t&, const version_t&);
 

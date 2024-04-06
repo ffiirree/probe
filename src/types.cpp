@@ -27,6 +27,8 @@ namespace probe
 
     static uint64_t numeric_combined(uint32_t h, uint32_t l) { return static_cast<uint64_t>(h) << 32 | l; }
 
+    bool operator>(const version_t& l, const version_t& r) { return !(l <= r); }
+
     bool operator>=(const version_t& l, const version_t& r)
     {
         if (numeric_combined(l.major, l.minor) > numeric_combined(r.major, r.minor)) return true;
@@ -35,6 +37,8 @@ namespace probe
 
         return numeric_combined(l.patch, l.build) >= numeric_combined(r.patch, r.build);
     }
+
+    bool operator<(const version_t& l, const version_t& r) { return !(l >= r); }
 
     bool operator<=(const version_t& l, const version_t& r)
     {
@@ -49,6 +53,8 @@ namespace probe
     {
         return l.major == r.major && l.minor == r.minor && l.patch == r.patch && l.build == r.build;
     }
+
+    bool operator!=(const version_t& l, const version_t& r) { return !(l == r); }
 
     bool strict_equal(const version_t& l, const version_t& r) { return l == r && l.codename == r.codename; }
 
