@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(probe VERSION 0.5.0 LANGUAGES C CXX)
+project(probe VERSION 0.5.1 LANGUAGES C CXX)
 
 # options
 option(PROBE_EXAMPLES       "Build probe examples."     OFF)

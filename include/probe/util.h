@@ -69,7 +69,7 @@ namespace probe::util
 
 namespace probe::util::registry
 {
-    template<typename T> std::optional<T> read(HKEY key, const std::string&, const std::string&);
+    template<typename T> PROBE_API std::optional<T> read(HKEY key, const std::string&, const std::string&);
 
     template<>
     PROBE_API std::optional<std::string> read<std::string>(HKEY, const std::string&, const std::string&);
@@ -97,13 +97,14 @@ namespace probe::util::registry
 
 namespace probe::util::setup
 {
-    template<typename T> std::optional<T> property(HDEVINFO info_set, PSP_DEVINFO_DATA info, DWORD type);
+    template<typename T>
+    PROBE_API std::optional<T> property(HDEVINFO info_set, PSP_DEVINFO_DATA info, DWORD type);
 
     template<>
     PROBE_API std::optional<std::string> property<std::string>(HDEVINFO info_set, PSP_DEVINFO_DATA info,
                                                                DWORD type);
 
-    std::string device_instance_id(DEVINST inst);
+    PROBE_API std::string device_instance_id(DEVINST inst);
 
 } // namespace probe::util::setup
 
