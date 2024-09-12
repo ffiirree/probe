@@ -7,6 +7,27 @@
 #include <array>
 #include <Windows.h>
 
+namespace probe::util
+{
+    std::string format_system_error(uint64_t ec)
+    {
+        char *msg    = nullptr;
+        DWORD length = ::FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |
+                                            FORMAT_MESSAGE_IGNORE_INSERTS,
+                                        nullptr, static_cast<DWORD>(ec),
+                                        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&msg, 0, nullptr);
+        defer(::LocalFree(msg));
+
+        if (length && msg[length - 1] == '\n') msg[--length] = '\0';
+        if (length && msg[length - 1] == '\r') msg[--length] = '\0';
+        if (length)
+            return msg;
+        else
+            return "system error code: " + std::to_string(errno);
+    };
+
+} // namespace probe::util
+
 namespace probe::util::registry
 {
     // https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-value-types

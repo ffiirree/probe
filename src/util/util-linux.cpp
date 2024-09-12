@@ -8,6 +8,8 @@
 
 namespace probe::util
 {
+    std::string format_system_error(uint64_t ec) { return {}; };
+
     std::pair<FILE *, pid_t> pipe_open(std::vector<const char *> cmd)
     {
         int pipefd[2]; // "r"+"w"

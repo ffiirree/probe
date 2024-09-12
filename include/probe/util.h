@@ -62,6 +62,8 @@ namespace probe::util
 
     // return empty string if such variable is not found.
     PROBE_API std::string env(const std::string&);
+
+    PROBE_API std::string format_system_error(uint64_t ec);
 } // namespace probe::util
 
 // windows registry
