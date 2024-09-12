@@ -28,21 +28,25 @@ namespace probe::port
         if (INVALID_HANDLE_VALUE == info_set) return {};
         defer(::SetupDiDestroyDeviceInfoList(info_set));
 
-        SP_DEVINFO_DATA info{ .cbSize = sizeof(SP_DEVINFO_DATA) };
+        SP_DEVINFO_DATA          info{ .cbSize = sizeof(SP_DEVINFO_DATA) };
         std::vector<serial_port> list{};
 
         for (DWORD idx = 0; ::SetupDiEnumDeviceInfo(info_set, idx, &info); ++idx) {
 
             auto name = name_of(info_set, &info);
             list.push_back({
-                .name        = name,
+                .name = name,
+                .friendly_name =
+                    probe::util::setup::property<std::string>(info_set, &info, SPDRP_FRIENDLYNAME)
+                        .value_or(""),
                 .device      = name.starts_with("COM") ? R"(\\.\)" + name : name,
                 .instance_id = probe::util::setup::device_instance_id(info.DevInst),
                 .description = probe::util::setup::property<std::string>(info_set, &info, SPDRP_DEVICEDESC)
                                    .value_or(""),
                 .manufacturer =
                     probe::util::setup::property<std::string>(info_set, &info, SPDRP_MFG).value_or(""),
-
+                .driver =
+                    probe::util::setup::property<std::string>(info_set, &info, SPDRP_DRIVER).value_or(""),
             });
         }
 
