@@ -3,12 +3,7 @@
 #include "probe/defer.h"
 #include "probe/serial-port.h"
 #include "probe/util.h"
-
-#include <array>
-#include <cfgmgr32.h>
-#include <Devguid.h>
-#include <SetupAPI.h>
-#include <Windows.h>
+#include "probe/windows/setupapi.h"
 
 namespace probe::port
 {

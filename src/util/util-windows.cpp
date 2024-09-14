@@ -3,9 +3,9 @@
 #include "probe/defer.h"
 #include "probe/thread.h"
 #include "probe/util.h"
+#include "probe/windows/setupapi.h"
 
 #include <array>
-#include <Windows.h>
 
 namespace probe::util
 {

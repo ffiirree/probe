@@ -3,11 +3,9 @@
 #include "probe/defer.h"
 #include "probe/power.h"
 #include "probe/util.h"
+#include "probe/windows/setupapi.h"
 
-#include <devguid.h>
 #include <Poclass.h>
-#include <SetupAPI.h>
-#include <Windows.h>
 
 namespace probe::power
 {

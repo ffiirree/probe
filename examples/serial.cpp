@@ -18,9 +18,11 @@ int main()
     for (const auto& port : ports) {
         std::cout << "  " << port.device << ":\n"
                   << "    Name                  : " << port.name << "\n"
+                  << "    Friendly Name         : " << port.friendly_name << "\n"
                   << "    Device Instance ID    : " << port.instance_id << "\n"
                   << "    Description           : " << port.description << "\n"
-                  << "    Manufacturer          : " << port.manufacturer << "\n\n";
+                  << "    Manufacturer          : " << port.manufacturer << "\n"
+                  << "    Driver                : " << port.driver << "\n\n";
     }
 
     return 0;

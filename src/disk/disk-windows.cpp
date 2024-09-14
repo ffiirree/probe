@@ -3,12 +3,11 @@
 #include "probe/defer.h"
 #include "probe/disk.h"
 #include "probe/util.h"
+#include "probe/windows/setupapi.h"
 
 #include <array>
 #include <bitset>
 #include <format>
-#include <SetupAPI.h>
-#include <Windows.h>
 
 namespace probe::disk
 {

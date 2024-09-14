@@ -9,9 +9,8 @@
 #include <iphlpapi.h>
 #include <ws2ipdef.h>
 #include <WS2tcpip.h>
-#include <SetupAPI.h>
-#include <Devguid.h>
 #include "probe/util.h"
+#include "probe/windows/setupapi.h"
 // clang-format on
 
 #include <format>
