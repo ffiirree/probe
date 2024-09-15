@@ -4,11 +4,11 @@
 #include "probe/util.h"
 
 #include <cstring>
-#include <signal.h>
+#include <csignal>
 
 namespace probe::util
 {
-    std::string format_system_error(uint64_t ec) { return {}; };
+    std::string format_system_error(uint64_t) { return {}; }
 
     std::pair<FILE *, pid_t> pipe_open(std::vector<const char *> cmd)
     {
@@ -26,7 +26,7 @@ namespace probe::util
             // close read endpoint
             ::close(pipefd[0]);
 
-            // redirect standrd output to the pipe
+            // redirect standard output to the pipe
             ::dup2(pipefd[1], 1);
 
             // it has been duplicated, close the original descriptor we got from pipe()

@@ -101,7 +101,7 @@ namespace probe::graphics
                 .frequency = actived_mode.frequency,
                 .bpp       = static_cast<uint32_t>(DefaultDepth(display, 0)),   // global
                 .dpi       = static_cast<uint32_t>((DisplayWidth(display, 0) * 25.4) /
-                                             DisplayWidthMM(display, 0)), // global
+                                                   DisplayWidthMM(display, 0)), // global
                 .orientation =
                     static_cast<orientation_t>((crtc_info->rotation & 0x000f) |
                                                static_cast<uint32_t>(!!(crtc_info->rotation & 0x00f0))),

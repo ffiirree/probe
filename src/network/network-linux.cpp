@@ -9,7 +9,6 @@
 #include <filesystem>
 #include <fstream>
 #include <ifaddrs.h>
-#include <iostream>
 #include <linux/ethtool.h>
 #include <linux/sockios.h>
 #include <map>
@@ -17,7 +16,7 @@
 #include <net/if_arp.h>
 #include <netinet/in.h>
 #include <regex>
-#include <string.h>
+#include <cstring>
 #include <sys/ioctl.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -145,7 +144,7 @@ namespace probe::network
             ret[i].id                       = device_path;
 
             if (std::regex_search(device_path.filename().string(),
-                                  std::regex("^\\d\\d\\d\\d:\\d\\d:\\d\\d.\\d$"))) {
+                                  std::regex(R"(^\d\d\d\d:\d\d:\d\d.\d$)"))) {
                 ret[i].bus_info = device_path.filename();
             }
 

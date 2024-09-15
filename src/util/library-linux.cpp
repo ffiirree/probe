@@ -1,4 +1,5 @@
 #ifdef __linux__
+
 #include "probe/library.h"
 
 #include <dlfcn.h>
@@ -25,4 +26,5 @@ namespace probe::library
         return ::dlsym(lib->handle, sym.c_str());
     }
 } // namespace probe::library
+
 #endif
