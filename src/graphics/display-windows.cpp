@@ -24,6 +24,7 @@ namespace probe::graphics
         { "YNoteShadowWnd|", "\\bYoudaoDict\\b" }, // Shadow Window of Youdao Dict
         { "popupshadow|", "\\bWeChat\\b" },        // Shadow Window of WeChat
         { "QMShadowWndClass|", "\\bQQMusic\\b" },  // Shadow Window of QQMusic
+        { "CEF-OSC-WIDGET|NVIDIA GeForce Overlay", "\\bNVIDIA Share\\b" },
         // children
         { "Windows.UI.Composition.DesktopWindowContentBridge|DesktopWindowXamlSource", ".*" },
         { "DRAG_BAR_WINDOW_CLASS|", ".*" },              // windows terminal
