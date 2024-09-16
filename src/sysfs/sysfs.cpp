@@ -1,4 +1,5 @@
 #ifdef __linux__
+
 #include "probe/sysfs.h"
 
 #include "probe/types.h"
@@ -29,7 +30,7 @@ namespace probe::sys
 
         std::vector<std::tuple<std::string, std::filesystem::path, std::filesystem::path>> ret;
         for (const auto& entry : std::filesystem::directory_iterator(path)) {
-            std::string name = entry.path().filename();
+            std::string           name = entry.path().filename();
             std::filesystem::path device_path{}, driver_path{};
             if (std::filesystem::exists(entry.path() / "device")) {
                 device_path = std::filesystem::canonical(entry.path() / "device");

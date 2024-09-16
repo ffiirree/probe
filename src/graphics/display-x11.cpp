@@ -55,7 +55,7 @@ namespace probe::graphics
     //
     // ATTENTION: our 'display' concept is equal to the 'screen' concept in X.
     //
-    // TODO: Fracional Scaling
+    // TODO: Fractional Scaling
     //  https://wiki.gnome.org/Initiatives/FracionalScaling
     //  https://askubuntu.com/a/1435227
     //  3840(application) x 2 / 1.5(scaling) = 5120(framebuffer|screen) / 1.3 = 3840(physical)
@@ -101,7 +101,7 @@ namespace probe::graphics
                 .frequency = actived_mode.frequency,
                 .bpp       = static_cast<uint32_t>(DefaultDepth(display, 0)),   // global
                 .dpi       = static_cast<uint32_t>((DisplayWidth(display, 0) * 25.4) /
-                                             DisplayWidthMM(display, 0)), // global
+                                                   DisplayWidthMM(display, 0)), // global
                 .orientation =
                     static_cast<orientation_t>((crtc_info->rotation & 0x000f) |
                                                static_cast<uint32_t>(!!(crtc_info->rotation & 0x00f0))),
@@ -296,20 +296,22 @@ namespace probe::graphics
             ret.emplace_front(window);
 
             // children windows
-            auto       children = xget_window_children(display, top_windows[i]); // top->bottom
-            geometry_t last_geometry{};
-            std::for_each(children.rbegin(), children.rend(), [&](const auto& subwind) {
-                // ignore the children which completely cover their parent
-                if (!subwind.geometry.contains(window.geometry)) {
-                    // keep the last one of children with same rect
-                    if (last_geometry != geometry_t{} && subwind.geometry == last_geometry) {
-                        ret.pop_back();
-                    }
+            if (any(flags & window_filter_t::children)) {
+                auto       children = xget_window_children(display, top_windows[i]); // top->bottom
+                geometry_t last_geometry{};
+                std::for_each(children.rbegin(), children.rend(), [&](const auto& subwind) {
+                    // ignore the children which completely cover their parent
+                    if (!subwind.geometry.contains(window.geometry)) {
+                        // keep the last one of children with same rect
+                        if (last_geometry != geometry_t{} && subwind.geometry == last_geometry) {
+                            ret.pop_back();
+                        }
 
-                    last_geometry = subwind.geometry;
-                    ret.emplace_front(subwind);
-                }
-            });
+                        last_geometry = subwind.geometry;
+                        ret.emplace_front(subwind);
+                    }
+                });
+            }
         }
 
         return ret;

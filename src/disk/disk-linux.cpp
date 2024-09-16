@@ -1,14 +1,11 @@
 #ifdef __linux__
 
-#include "probe/defer.h"
 #include "probe/disk.h"
 #include "probe/sysfs.h"
 #include "probe/util.h"
 
-#include <array>
 #include <bitset>
 #include <filesystem>
-#include <iostream>
 
 namespace probe::disk
 {

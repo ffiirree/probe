@@ -26,6 +26,6 @@ namespace probe::port
 
         return list;
     }
-}; // namespace probe::port
+} // namespace probe::port
 
 #endif

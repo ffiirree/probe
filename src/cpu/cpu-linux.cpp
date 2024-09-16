@@ -138,16 +138,16 @@ namespace probe::cpu
 
         std::map<std::string, cache_t> caches;
 
-        for (size_t i = 0; i < cpus.size(); ++i) {
+        for (const auto& cpu : cpus) {
             for (size_t idx = 0; idx < 8; ++idx) {
 
                 std::string subdir = "cache/index" + std::to_string(idx);
 
-                if (std::filesystem::exists(cpus[i] / subdir)) {
-                    auto level = file_read_lu(cpus[i] / subdir / "level");
+                if (std::filesystem::exists(cpu / subdir)) {
+                    auto level = file_read_lu(cpu / subdir / "level");
                     if (!level.has_value()) continue;
 
-                    auto size_str = file_read(cpus[i] / subdir / "size");
+                    auto size_str = file_read(cpu / subdir / "size");
                     if (size_str.empty()) continue;
                     auto size = std::stoul(size_str);
                     auto upos = size_str.find_first_not_of("0123456789 ");
@@ -157,17 +157,17 @@ namespace probe::cpu
                         if (size_str[upos] == 'G') size *= 1'024 * 1'024 * 1'024;
                     }
 
-                    auto line_size = file_read_lu(cpus[i] / subdir / "coherency_line_size");
+                    auto line_size = file_read_lu(cpu / subdir / "coherency_line_size");
                     if (!line_size.has_value()) continue;
 
-                    auto associativity = file_read_lu(cpus[i] / subdir / "ways_of_associativity");
+                    auto associativity = file_read_lu(cpu / subdir / "ways_of_associativity");
                     if (!associativity.has_value()) continue;
 
-                    auto id = file_read_lu(cpus[i] / subdir / "id");
+                    auto id = file_read_lu(cpu / subdir / "id");
                     if (!id.has_value()) continue;
 
                     // type
-                    auto type_str = probe::util::trim(file_read(cpus[i] / subdir / "type"));
+                    auto type_str = probe::util::trim(file_read(cpu / subdir / "type"));
                     if (type_str.empty()) continue;
                     auto type = to_cache_type(type_str);
 
@@ -185,7 +185,7 @@ namespace probe::cpu
         std::vector<cache_t> ret;
 
         for (const auto& [k, v] : caches) {
-            ret.emplace_back(std::move(v));
+            ret.emplace_back(v);
         }
 
         return ret;

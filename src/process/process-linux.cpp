@@ -1,11 +1,9 @@
 #ifdef __linux__
 
 #include "probe/process.h"
-#include "probe/time.h"
 
 #include <filesystem>
-#include <inttypes.h>
-#include <optional>
+#include <cinttypes>
 #include <unistd.h>
 
 namespace probe::process
