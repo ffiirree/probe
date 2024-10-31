@@ -1,6 +1,7 @@
 #ifndef PROBE_UTIL_H
 #define PROBE_UTIL_H
 
+#include <algorithm>
 #include <atomic>
 #include <optional>
 #include <string>
@@ -63,8 +64,8 @@ namespace probe::util
 
     PROBE_API std::string format_system_error(uint64_t ec);
 
-    template<typename Container>
-    PROBE_API void unique(Container& c) {
+    template<typename Container> PROBE_API void unique(Container& c)
+    {
         std::ranges::sort(c);
         const auto [first, last] = std::ranges::unique(c);
         c.erase(first, last);
