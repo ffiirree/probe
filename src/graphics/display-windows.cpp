@@ -457,41 +457,12 @@ namespace probe::graphics
 
 namespace probe::graphics
 {
-    std::string explorer_focused(uint64_t wid)
+    static std::string explorer_selected_path(const winrt::com_ptr<IShellBrowser>& browser)
     {
         TCHAR path_buf[MAX_PATH]{};
         TCHAR item_buf[MAX_PATH]{};
 
         try {
-            winrt::com_ptr<IShellWindows> shell_windows{};
-            winrt::check_hresult(::CoCreateInstance(winrt::guid_of<ShellWindows>(), nullptr, CLSCTX_ALL,
-                                                    winrt::guid_of<IShellWindows>(),
-                                                    shell_windows.put_void()));
-
-            VARIANT i{};
-            V_VT(&i) = VT_I4;
-            winrt::com_ptr<IDispatch>      dispatch{};
-            winrt::com_ptr<IWebBrowserApp> wba{};
-
-            for (V_I4(&i) = 0; shell_windows->Item(i, dispatch.put()) == S_OK; V_I4(&i)++) {
-
-                auto cur = dispatch.as<IWebBrowserApp>();
-
-                HWND hwnd{};
-                if (SUCCEEDED(cur->get_HWND(reinterpret_cast<LONG_PTR *>(&hwnd))) && hwnd == (HWND)(wid)) {
-                    wba = cur;
-                    break;
-                }
-            }
-
-            if (!wba) return {};
-
-            auto provider = wba.as<IServiceProvider>();
-
-            winrt::com_ptr<IShellBrowser> browser{};
-            winrt::check_hresult(
-                provider->QueryService(SID_STopLevelBrowser, IID_IShellBrowser, browser.put_void()));
-
             winrt::com_ptr<IShellView> sv{};
             winrt::check_hresult(browser->QueryActiveShellView(sv.put()));
 
@@ -503,7 +474,7 @@ namespace probe::graphics
             defer(CoTaskMemFree(pidf));
             winrt::check_hresult(pf->GetCurFolder(&pidf));
 
-            if (!SHGetPathFromIDList(pidf, path_buf)) return {};
+            winrt::check_bool(SHGetPathFromIDList(pidf, path_buf));
 
             int idx{};
             winrt::check_hresult(fv->GetFocusedItem(&idx));
@@ -514,15 +485,85 @@ namespace probe::graphics
 
             auto   sf = pf.as<IShellFolder>();
             STRRET str;
-            winrt::check_hresult(sf->GetDisplayNameOf(item, SHGDN_INFOLDER, &str));
+            winrt::check_hresult(sf->GetDisplayNameOf(item, SHGDN_INFOLDER | SHGDN_FORPARSING, &str));
 
-            StrRetToBuf(&str, item, item_buf, MAX_PATH);
+            winrt::check_hresult(StrRetToBuf(&str, item, item_buf, MAX_PATH));
+
+            return probe::util::to_utf8(path_buf) + "\\" + probe::util::to_utf8(item_buf);
+        }
+        catch (const winrt::hresult_error&) {
+            return {};
+        }
+    }
+
+    // https://devblogs.microsoft.com/oldnewthing/20040720-00/?p=38393
+    // https://github.com/QL-Win/QuickLook/blob/master/QuickLook.Native/QuickLook.Native32/Shell32.cpp
+    std::string explorer_focused(uint64_t wid)
+    {
+        try {
+            winrt::com_ptr<IShellWindows> shell_windows{};
+            winrt::check_hresult(::CoCreateInstance(winrt::guid_of<ShellWindows>(), nullptr, CLSCTX_ALL,
+                                                    winrt::guid_of<IShellWindows>(),
+                                                    shell_windows.put_void()));
+
+            auto child = ::FindWindowEx((HWND)(wid), nullptr, L"ShellTabWindowClass", nullptr);
+
+            long count = 0;
+            shell_windows->get_Count(&count);
+            for (auto i = 0; i < count; i++) {
+
+                VARIANT vi{};
+                VariantInit(&vi);
+                V_VT(&vi) = VT_I4;
+                V_I4(&vi) = i;
+
+                winrt::com_ptr<IDispatch> dispatch{};
+                winrt::check_hresult(shell_windows->Item(vi, dispatch.put()));
+
+                winrt::com_ptr<IShellBrowser> browser{};
+                winrt::check_hresult(dispatch.as<IServiceProvider>()->QueryService(
+                    IID_IShellBrowser, IID_IShellBrowser, browser.put_void()));
+
+                HWND hwnd;
+                winrt::check_hresult(browser->GetWindow(&hwnd));
+
+                if ((HWND)(wid) != hwnd && (child != nullptr && child != hwnd)) continue;
+
+                return explorer_selected_path(browser);
+            }
         }
         catch (const winrt::hresult_error&) {
             return {};
         }
 
-        return probe::util::to_utf8(path_buf) + "\\" + probe::util::to_utf8(item_buf);
+        return {};
+    }
+
+    std::string desktop_focused()
+    {
+        try {
+            winrt::com_ptr<IShellWindows> shell_windows{};
+            winrt::check_hresult(::CoCreateInstance(winrt::guid_of<ShellWindows>(), nullptr, CLSCTX_ALL,
+                                                    winrt::guid_of<IShellWindows>(),
+                                                    shell_windows.put_void()));
+
+            winrt::com_ptr<IWebBrowserApp> wba{};
+            VARIANT                        empty;
+            VariantInit(&empty);
+            long hwnd;
+            winrt::check_hresult(shell_windows->FindWindowSW(&empty, &empty, SWC_DESKTOP, &hwnd,
+                                                             SWFO_NEEDDISPATCH,
+                                                             reinterpret_cast<IDispatch **>(wba.put())));
+
+            winrt::com_ptr<IShellBrowser> browser{};
+            winrt::check_hresult(wba.as<IServiceProvider>()->QueryService(
+                IID_IShellBrowser, IID_IShellBrowser, browser.put_void()));
+
+            return explorer_selected_path(browser);
+        }
+        catch (const winrt::hresult_error&) {
+            return {};
+        }
     }
 
 } // namespace probe::graphics

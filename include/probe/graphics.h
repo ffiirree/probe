@@ -150,6 +150,8 @@ namespace probe::graphics
 
     PROBE_API std::string explorer_focused(uint64_t wid);
 
+    PROBE_API std::string desktop_focused();
+
 #ifdef BUILD_WITH_QT
     PROBE_API inline std::optional<display_t> display_contains(const QPoint& point)
     {
