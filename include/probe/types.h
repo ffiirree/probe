@@ -204,6 +204,7 @@ namespace probe
     inline const version_t WIN_11_21H2{ 10,  0, 22000,   194,   "21H2" };
     inline const version_t WIN_11_22H2{ 10,  0, 22621,   382,   "22H2" };
     inline const version_t WIN_11_23H2{ 10,  0, 22631,  2428,   "23H2" };
+    inline const version_t WIN_11_24H2{ 10,  0, 26100,   863,   "24H2" };
 
     inline const version_t WIN_11 = WIN_11_21H2;
     // clang-format on
