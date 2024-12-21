@@ -111,108 +111,106 @@ namespace probe
 
     bus_type_t bus_cast(const std::string& str)
     {
-        using enum bus_type_t;
 #define SEARCH_IF(REGEX, RES)                                                                              \
     if (std::regex_search(                                                                                 \
             str, std::regex(REGEX, std::regex_constants::ECMAScript | std::regex_constants::icase)))       \
     return RES
 
-        SEARCH_IF("\\bAC97\\b", AC97);
-        SEARCH_IF("\\bACPI\\b|Advanced[ _-]Configuration[ _-]and[ _-]Power[ _-]Interface", ACPI);
-        SEARCH_IF("\\bAuxiliary\\b", Auxiliary);
-        SEARCH_IF("\\bATA\\b|Advanced[ _-]?Technology[ _-]?Attachment", ATA);
-        SEARCH_IF("\\bCAN\\b|Controller[ _-]?Area[ _-]?Network", CAN);
-        SEARCH_IF("\\bCEC\\b|Consumer[ _-]?Electronics[ _-]?Control", CEC);
-        SEARCH_IF("\\bCPU\\b", CPU);
+        SEARCH_IF("\\bAC97\\b", bus_type_t::AC97);
+        SEARCH_IF("\\bACPI\\b|Advanced[ _-]Configuration[ _-]and[ _-]Power[ _-]Interface", bus_type_t::ACPI);
+        SEARCH_IF("\\bAuxiliary\\b", bus_type_t::Auxiliary);
+        SEARCH_IF("\\bATA\\b|Advanced[ _-]?Technology[ _-]?Attachment", bus_type_t::ATA);
+        SEARCH_IF("\\bCAN\\b|Controller[ _-]?Area[ _-]?Network", bus_type_t::CAN);
+        SEARCH_IF("\\bCEC\\b|Consumer[ _-]?Electronics[ _-]?Control", bus_type_t::CEC);
+        SEARCH_IF("\\bCPU\\b", bus_type_t::CPU);
         SEARCH_IF("\\bEISA\\b|Extended[ _-]?ISA|Extended[ _-]?Industry[ _-]?Standard[ _-]?Architecture",
-                  EISA);
-        SEARCH_IF("\\bFibre\\b", Fibre);
-        SEARCH_IF("File[ _-]?Backed[ _-]?Virtual", FileBackedVirtual);
-        SEARCH_IF("\\bGPIO\\b|General[ _-]?Purpose[ _-]?Input/Output", GPIO);
-        SEARCH_IF("HD[ _-]?Audio", HDAudio);
-        SEARCH_IF("\\bID\\b|Human[ _-]?Interface[ _-]?Device", HID);
-        SEARCH_IF("IEEE[ _-]?1394", IEEE1394);
-        SEARCH_IF("\\bI2C\\b|IIC|Inter[ _-]?Integrated[ _-]?Circuit", I2C);
-        SEARCH_IF("\\bIDE\\b", IDE);
-        SEARCH_IF("\\bISA\\b|Industry[ _-]?Standard[ _-]?Architecture", ISA);
-        SEARCH_IF("\\biSCSI\\b|Internet[ _-]?Small[ _-]?Computer[ _-]?Systems[ _-]?Interface", iSCSI);
-        SEARCH_IF("\\bMAX\\b", MAX);
-        SEARCH_IF("\\bMDIO\\b|Management[ _-]?Data[ _-]?Input/Output", MDIO); // also known as SMI/MIIM
-        SEARCH_IF("\\bSMI\\b|Serial[ _-]?Management[ _-]?Interface", MDIO);
-        SEARCH_IF("\\bMIIM\\b|Media[ _-]?Independent[ _-]?Interface Management", MDIO);
-        SEARCH_IF("\\bMMC\\b|Multi[ _-]Media[ _-]Card", MMC);
-        SEARCH_IF("\\bNVMEM\\b", NVMEM);
-        SEARCH_IF("\\bNVMe\\b|NVMHCIS|NVM[ _-]?Express", NVMe);
-        SEARCH_IF("\\bPCI\\b|Peripheral[ _-]?Component[ _-]?Interconnect", PCI);
+                  bus_type_t::EISA);
+        SEARCH_IF("\\bFibre\\b", bus_type_t::Fibre);
+        SEARCH_IF("File[ _-]?Backed[ _-]?Virtual", bus_type_t::FileBackedVirtual);
+        SEARCH_IF("\\bGPIO\\b|General[ _-]?Purpose[ _-]?Input/Output", bus_type_t::GPIO);
+        SEARCH_IF("HD[ _-]?Audio", bus_type_t::HDAudio);
+        SEARCH_IF("\\bID\\b|Human[ _-]?Interface[ _-]?Device", bus_type_t::HID);
+        SEARCH_IF("IEEE[ _-]?1394", bus_type_t::IEEE1394);
+        SEARCH_IF("\\bI2C\\b|IIC|Inter[ _-]?Integrated[ _-]?Circuit", bus_type_t::I2C);
+        SEARCH_IF("\\bIDE\\b", bus_type_t::IDE);
+        SEARCH_IF("\\bISA\\b|Industry[ _-]?Standard[ _-]?Architecture", bus_type_t::ISA);
+        SEARCH_IF("\\biSCSI\\b|Internet[ _-]?Small[ _-]?Computer[ _-]?Systems[ _-]?Interface", bus_type_t::iSCSI);
+        SEARCH_IF("\\bMAX\\b", bus_type_t::MAX);
+        SEARCH_IF("\\bMDIO\\b|Management[ _-]?Data[ _-]?Input/Output", bus_type_t::MDIO); // also known as SMI/MIIM
+        SEARCH_IF("\\bSMI\\b|Serial[ _-]?Management[ _-]?Interface", bus_type_t::MDIO);
+        SEARCH_IF("\\bMIIM\\b|Media[ _-]?Independent[ _-]?Interface Management", bus_type_t::MDIO);
+        SEARCH_IF("\\bMMC\\b|Multi[ _-]Media[ _-]Card", bus_type_t::MMC);
+        SEARCH_IF("\\bNVMEM\\b", bus_type_t::NVMEM);
+        SEARCH_IF("\\bNVMe\\b|NVMHCIS|NVM[ _-]?Express", bus_type_t::NVMe);
+        SEARCH_IF("\\bPCI\\b|Peripheral[ _-]?Component[ _-]?Interconnect", bus_type_t::PCI);
         SEARCH_IF(
             "\\bPCI\\b[ _-]?e|PCI[ _-]?Express|Peripheral[ _-]?Component[ _-]?Interconnect[ _-]?Express",
-            PCIe);
-        SEARCH_IF("\\bPnP\\b|Plug[ _-]?and[ _-]?Play", PnP);
-        SEARCH_IF("\\bRAID\\b", RAID);
-        SEARCH_IF("\\bSAS\\b|Serial[ _-]?Attached[ _-]?SCSI", SAS);
-        SEARCH_IF("\\bSATA\\b|Serial[ _-]?ATA|Serial[ _-]?AT[ _-]?Attachment", SATA);
-        SEARCH_IF("\\bSCM\\b", SCM);
-        SEARCH_IF("\\bSCSI\\b", SCSI);
-        SEARCH_IF("\\bSDIO\\b|\\bSD\\b", SDIO);
-        SEARCH_IF("\\bSpaces\\b", Spaces);
-        SEARCH_IF("\\bSPI\\b|Serial[ _-]Peripheral[ _-]Interface", SPI);
-        SEARCH_IF("\\bSSA\\b|Serial[ _-]Storage[ _-]Architecture", SSA);
-        SEARCH_IF("\\bUFS\\b|Universal[ _-]Flash[ _-]Storage", UFS);
-        SEARCH_IF("\\bUSB\\b|Universal[ _-]Serial[ _-]Bus", USB);
-        SEARCH_IF("\\bVirtio\\b", Virtio);
-        SEARCH_IF("\\bVirtual\\b", Virtual);
-        SEARCH_IF("\\bVME\\b|Versa[ _-]Module[ _-]Eurocard", VME);
-        SEARCH_IF("\\bXen\\b", Xen);
+            bus_type_t::PCIe);
+        SEARCH_IF("\\bPnP\\b|Plug[ _-]?and[ _-]?Play", bus_type_t::PnP);
+        SEARCH_IF("\\bRAID\\b", bus_type_t::RAID);
+        SEARCH_IF("\\bSAS\\b|Serial[ _-]?Attached[ _-]?SCSI", bus_type_t::SAS);
+        SEARCH_IF("\\bSATA\\b|Serial[ _-]?ATA|Serial[ _-]?AT[ _-]?Attachment", bus_type_t::SATA);
+        SEARCH_IF("\\bSCM\\b", bus_type_t::SCM);
+        SEARCH_IF("\\bSCSI\\b", bus_type_t::SCSI);
+        SEARCH_IF("\\bSDIO\\b|\\bSD\\b", bus_type_t::SDIO);
+        SEARCH_IF("\\bSpaces\\b", bus_type_t::Spaces);
+        SEARCH_IF("\\bSPI\\b|Serial[ _-]Peripheral[ _-]Interface", bus_type_t::SPI);
+        SEARCH_IF("\\bSSA\\b|Serial[ _-]Storage[ _-]Architecture", bus_type_t::SSA);
+        SEARCH_IF("\\bUFS\\b|Universal[ _-]Flash[ _-]Storage", bus_type_t::UFS);
+        SEARCH_IF("\\bUSB\\b|Universal[ _-]Serial[ _-]Bus", bus_type_t::USB);
+        SEARCH_IF("\\bVirtio\\b", bus_type_t::Virtio);
+        SEARCH_IF("\\bVirtual\\b", bus_type_t::Virtual);
+        SEARCH_IF("\\bVME\\b|Versa[ _-]Module[ _-]Eurocard", bus_type_t::VME);
+        SEARCH_IF("\\bXen\\b", bus_type_t::Xen);
 #undef SEARCH_IF
-        return Unknown;
+        return bus_type_t::Unknown;
     }
 
     std::string bus_cast(bus_type_t bus)
     {
-        using enum bus_type_t;
         switch (bus) {
-        case AC97:              return "AC97";
-        case ACPI:              return "ACPI";
-        case Auxiliary:         return "Auxiliary";
-        case ATA:               return "ATA";
-        case ATAPI:             return "ATAPI";
-        case CAN:               return "CAN";
-        case CEC:               return "CEC";
-        case CPU:               return "CPU";
-        case EISA:              return "EISA";
-        case Fibre:             return "Fibre";
-        case FileBackedVirtual: return "FileBackedVirtual";
-        case GPIO:              return "GPIO";
-        case HDAudio:           return "HDAudio";
-        case HID:               return "HID";
-        case IEEE1394:          return "1394";
-        case I2C:               return "I2C";
-        case IDE:               return "IDE";
-        case ISA:               return "ISA";
-        case iSCSI:             return "iSCSI";
-        case MAX:               return "MAX";
-        case MDIO:              return "MDIO";
-        case MMC:               return "MMC";
-        case NVMe:              return "NVMe";
-        case NVMEM:             return "NVMEM";
-        case PCI:               return "PCI";
-        case PCIe:              return "PCIe";
-        case PnP:               return "PnP";
-        case RAID:              return "RAID";
-        case SAS:               return "SAS";
-        case SATA:              return "SATA";
-        case SCM:               return "SCM";
-        case SCSI:              return "SCSI";
-        case SDIO:              return "SDIO";
-        case Spaces:            return "Spaces";
-        case SPI:               return "SPI";
-        case SSA:               return "SSA";
-        case UFS:               return "UFS";
-        case USB:               return "USB";
-        case Virtio:            return "Virtio";
-        case Virtual:           return "Virtual";
-        case VME:               return "VME";
-        case Xen:               return "Xen";
+        case bus_type_t::AC97:              return "AC97";
+        case bus_type_t::ACPI:              return "ACPI";
+        case bus_type_t::Auxiliary:         return "Auxiliary";
+        case bus_type_t::ATA:               return "ATA";
+        case bus_type_t::ATAPI:             return "ATAPI";
+        case bus_type_t::CAN:               return "CAN";
+        case bus_type_t::CEC:               return "CEC";
+        case bus_type_t::CPU:               return "CPU";
+        case bus_type_t::EISA:              return "EISA";
+        case bus_type_t::Fibre:             return "Fibre";
+        case bus_type_t::FileBackedVirtual: return "FileBackedVirtual";
+        case bus_type_t::GPIO:              return "GPIO";
+        case bus_type_t::HDAudio:           return "HDAudio";
+        case bus_type_t::HID:               return "HID";
+        case bus_type_t::IEEE1394:          return "1394";
+        case bus_type_t::I2C:               return "I2C";
+        case bus_type_t::IDE:               return "IDE";
+        case bus_type_t::ISA:               return "ISA";
+        case bus_type_t::iSCSI:             return "iSCSI";
+        case bus_type_t::MAX:               return "MAX";
+        case bus_type_t::MDIO:              return "MDIO";
+        case bus_type_t::MMC:               return "MMC";
+        case bus_type_t::NVMe:              return "NVMe";
+        case bus_type_t::NVMEM:             return "NVMEM";
+        case bus_type_t::PCI:               return "PCI";
+        case bus_type_t::PCIe:              return "PCIe";
+        case bus_type_t::PnP:               return "PnP";
+        case bus_type_t::RAID:              return "RAID";
+        case bus_type_t::SAS:               return "SAS";
+        case bus_type_t::SATA:              return "SATA";
+        case bus_type_t::SCM:               return "SCM";
+        case bus_type_t::SCSI:              return "SCSI";
+        case bus_type_t::SDIO:              return "SDIO";
+        case bus_type_t::Spaces:            return "Spaces";
+        case bus_type_t::SPI:               return "SPI";
+        case bus_type_t::SSA:               return "SSA";
+        case bus_type_t::UFS:               return "UFS";
+        case bus_type_t::USB:               return "USB";
+        case bus_type_t::Virtio:            return "Virtio";
+        case bus_type_t::Virtual:           return "Virtual";
+        case bus_type_t::VME:               return "VME";
+        case bus_type_t::Xen:               return "Xen";
 
         default:                return "Unknown";
         }
