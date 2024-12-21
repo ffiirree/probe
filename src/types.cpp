@@ -117,7 +117,8 @@ namespace probe
     return RES
 
         SEARCH_IF("\\bAC97\\b", bus_type_t::AC97);
-        SEARCH_IF("\\bACPI\\b|Advanced[ _-]Configuration[ _-]and[ _-]Power[ _-]Interface", bus_type_t::ACPI);
+        SEARCH_IF("\\bACPI\\b|Advanced[ _-]Configuration[ _-]and[ _-]Power[ _-]Interface",
+                  bus_type_t::ACPI);
         SEARCH_IF("\\bAuxiliary\\b", bus_type_t::Auxiliary);
         SEARCH_IF("\\bATA\\b|Advanced[ _-]?Technology[ _-]?Attachment", bus_type_t::ATA);
         SEARCH_IF("\\bCAN\\b|Controller[ _-]?Area[ _-]?Network", bus_type_t::CAN);
@@ -134,9 +135,11 @@ namespace probe
         SEARCH_IF("\\bI2C\\b|IIC|Inter[ _-]?Integrated[ _-]?Circuit", bus_type_t::I2C);
         SEARCH_IF("\\bIDE\\b", bus_type_t::IDE);
         SEARCH_IF("\\bISA\\b|Industry[ _-]?Standard[ _-]?Architecture", bus_type_t::ISA);
-        SEARCH_IF("\\biSCSI\\b|Internet[ _-]?Small[ _-]?Computer[ _-]?Systems[ _-]?Interface", bus_type_t::iSCSI);
+        SEARCH_IF("\\biSCSI\\b|Internet[ _-]?Small[ _-]?Computer[ _-]?Systems[ _-]?Interface",
+                  bus_type_t::iSCSI);
         SEARCH_IF("\\bMAX\\b", bus_type_t::MAX);
-        SEARCH_IF("\\bMDIO\\b|Management[ _-]?Data[ _-]?Input/Output", bus_type_t::MDIO); // also known as SMI/MIIM
+        SEARCH_IF("\\bMDIO\\b|Management[ _-]?Data[ _-]?Input/Output",
+                  bus_type_t::MDIO); // also known as SMI/MIIM
         SEARCH_IF("\\bSMI\\b|Serial[ _-]?Management[ _-]?Interface", bus_type_t::MDIO);
         SEARCH_IF("\\bMIIM\\b|Media[ _-]?Independent[ _-]?Interface Management", bus_type_t::MDIO);
         SEARCH_IF("\\bMMC\\b|Multi[ _-]Media[ _-]Card", bus_type_t::MMC);
@@ -212,7 +215,7 @@ namespace probe
         case bus_type_t::VME:               return "VME";
         case bus_type_t::Xen:               return "Xen";
 
-        default:                return "Unknown";
+        default:                            return "Unknown";
         }
     }
 } // namespace probe

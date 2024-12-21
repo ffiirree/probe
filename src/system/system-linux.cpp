@@ -4,13 +4,13 @@
 #include "probe/system.h"
 #include "probe/util.h"
 
-#include <unistd.h>
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
 #include <regex>
 #include <sys/stat.h>
 #include <sys/utsname.h>
+#include <unistd.h>
 #include <unordered_map>
 
 static std::unordered_map<std::string, std::string> parse_kv(std::ifstream& fstream)
