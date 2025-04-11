@@ -10,7 +10,7 @@
 
 namespace probe::util
 {
-    std::string format_system_error(uint64_t) { return {}; }
+    std::string format_system_error(uint64_t err) { return strerror(static_cast<int>(err)); }
 
     std::pair<FILE *, pid_t> pipe_open(std::vector<const char *> cmd)
     {
